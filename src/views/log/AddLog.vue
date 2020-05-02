@@ -1,21 +1,8 @@
 <template>
   <el-card class="box-card">
     <div slot="header" class="clearfix">
-      <span>日志查询</span>
-      <el-button style="float: right; padding-right: 3px;" type="text"><span style="color: red">删除</span></el-button>
-      <el-button style="float: right; padding-right: 3px;" type="text">编辑</el-button>
-      <el-button style="float: right; padding-right: 3px;" type="text"><router-link to="addlog">新建</router-link></el-button>
-    </div>
-    <div class="text item">
-      <el-select v-model="value" placeholder="请选择"  value="">
-        <el-option
-          v-for="item in options"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value">
-        </el-option>
-      </el-select>
-      <el-button round>查询</el-button>
+      <span>新建日志查询</span>
+      <el-button style="float: right; padding-right: 3px;" type="text"><span style="color: red">保存</span></el-button>
     </div>
     <div class="form">
       <el-table
@@ -42,7 +29,7 @@
         </el-table-column>
       </el-table>
     </div>
-    <span>共0条记录</span>
+    <span>取消</span>
   </el-card>
 </template>
 <script>

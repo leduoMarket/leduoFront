@@ -1,8 +1,15 @@
 <template>
+  <div>
+    <router-view></router-view>
   <el-card class="box-card">
     <div slot="header" class="clearfix">
       <span>员工基本信息</span>
-      <el-button style="float: right; padding: 3px 0" type="text">新建</el-button>
+      <el-button style="float: right; padding-right: 3px;" type="text"><span style="color: red">删除</span></el-button>
+      <el-button style="float: right; padding-right: 3px;" type="text">编辑</el-button>
+      <el-button style="float: right; padding-right: 3px;" type="text">
+        <router-link to="addemployee">新建</router-link>
+
+      </el-button>
     </div>
     <div class="text item">
       <el-select v-model="value" placeholder="请选择"  value="">
@@ -44,8 +51,9 @@
         </el-table-column>
       </el-table>
     </div>
-    <span>共0条记录</span>
+    <span>共{{itemCount}}条记录</span>
   </el-card>
+  </div>
 </template>
 
 <script>
@@ -55,12 +63,22 @@
             return {
                 options: [],
                 tableData: [],
+                itemCount:[],
             }
         },
+        // methods:{
+        //     addEmployee(){
+        //         this.$router.replace({path: 'addemployee'})
+        //         console.log("addEmploee")
+        //     },
+        // },
         created() {
                 this.$axios.get("/emps").then(res=>{
                     if(res.data){
                         console.log(res)
+                        this.tableData = res.data;
+                        this.itemCount = res.data.length;
+                        console.log(this.itemCount);
                     }
                 }).catch(failResponse=>{
 
