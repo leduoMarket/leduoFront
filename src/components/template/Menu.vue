@@ -127,15 +127,6 @@
             },
             handleClose(key, keyPath) {
                 console.log(key, keyPath)
-            },
-            getInfo(){
-              this.$axios.get("/emps").then(succesResponse=>{
-                  if(succesResponse!=null){
-                      console.log("success!")
-                  }
-              }).catch(failResponse=>{
-
-              })
             }
         }
     }

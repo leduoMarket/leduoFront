@@ -56,7 +56,16 @@
                 options: [],
                 tableData: [],
             }
-        }
+        },
+        created() {
+                this.$axios.get("/emps").then(res=>{
+                    if(res.data){
+                        console.log(res)
+                    }
+                }).catch(failResponse=>{
+
+                })
+            }
     }
 </script>
 
