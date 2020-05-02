@@ -1,7 +1,8 @@
 <template>
+
   <el-card class="box-card">
     <div slot="header" class="clearfix">
-      <span>员工基本信息</span>
+      <span>尚未结清款项</span>
       <el-button style="float: right; padding: 3px 0" type="text">新建</el-button>
     </div>
     <div class="text item">
@@ -21,26 +22,38 @@
         border
         style="width: 100%">
         <el-table-column
-          prop="eid"
-          label="员工编号"
+          prop="vid"
+          label="供应商代码"
           width="180">
         </el-table-column>
         <el-table-column
-          prop="ename"
-          label="姓名"
+          prop="vname"
+          label="供应商名称"
           width="180">
         </el-table-column>
         <el-table-column
-          prop="ephone"
-          label="手机号">
+          prop="gid"
+          label="商品代码">
         </el-table-column>
         <el-table-column
-          prop="erole"
-          label="角色">
+          prop="gid"
+          label="商品名称">
         </el-table-column>
         <el-table-column
-          prop="esalary"
-          label="工资/月">
+          prop="inumber"
+          label="单号">
+        </el-table-column>
+        <el-table-column
+          prop="ddate"
+          label="日期">
+        </el-table-column>
+        <el-table-column
+          prop="vcredit"
+          label="信誉">
+        </el-table-column>
+        <el-table-column
+          prop="dpayment"
+          label="贷款结算">
         </el-table-column>
       </el-table>
     </div>
@@ -70,7 +83,7 @@
 
   }
   .box-card {
-    width: 83%;
+    width: 75%;
   }
   .form {
     height: 200px;

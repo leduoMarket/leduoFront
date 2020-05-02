@@ -1,7 +1,7 @@
 <template>
   <el-card class="box-card">
     <div slot="header" class="clearfix">
-      <span>出库单</span>
+      <span>日志查询</span>
       <el-button style="float: right; padding: 3px 0" type="text">新建</el-button>
     </div>
     <div class="text item">
@@ -21,41 +21,28 @@
         border
         style="width: 100%">
         <el-table-column
-          prop="gid"
-          label="商品代码"
+          prop="ddate"
+          label="操作日期"
           width="180">
         </el-table-column>
         <el-table-column
-          prop="vname"
-          label="供应商名称"
+          prop="dname"
+          label="操作人员"
           width="180">
         </el-table-column>
         <el-table-column
-          prop="onumber"
-          label="出库单号">
+          prop="dposition"
+          label="职位">
         </el-table-column>
         <el-table-column
-          prop="odate"
-          label="出库日期">
-        </el-table-column>
-        <el-table-column
-          prop="oprice"
-          label="价格">
-        </el-table-column>
-        <el-table-column
-          prop="opayment"
-          label="已付款项">
-        </el-table-column>
-        <el-table-column
-          prop="ocount"
-          label="数量">
+          prop="devent"
+          label="操作事件">
         </el-table-column>
       </el-table>
     </div>
     <span>共0条记录</span>
   </el-card>
 </template>
-
 <script>
     export default {
         name: "StockIn",
@@ -67,18 +54,15 @@
         }
     }
 </script>
-
 <style scoped>
   .text {
     font-size: 14px;
   }
-
   .item {
     margin-bottom: 50px;
-
   }
   .box-card {
-    width: 83%;
+    width: 75%;
   }
   .form {
     height: 200px;

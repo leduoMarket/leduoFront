@@ -1,10 +1,10 @@
 <template>
   <div class="GoodClass">
-    <div id="tabletop">商品分类表</div>
     <el-table
       :data="tableData"
       height="450"
       style="width: 81%">
+      <el-table-column label="商品分类">
       <el-table-column label="商品大类">
         <el-table-column
           prop="id1"
@@ -60,6 +60,7 @@
           width="100">
         </el-table-column>
       </el-table-column>
+      </el-table-column>
     </el-table>
 
   </div>
@@ -68,10 +69,6 @@
 </template>
 
 <script>
-
-  import Menu from "../template/Menu";
-  import TopBar from "../template/TopBar";
-
     export default {
         data() {
             return {
@@ -997,6 +994,8 @@
   }
   .GoodClass{
     border-left: 3px;
+    width: 75%;
+    display: flex;
   }
 
 </style>

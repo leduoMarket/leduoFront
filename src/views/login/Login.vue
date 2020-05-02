@@ -1,7 +1,7 @@
 <template >
   <body id="poster">
   <div id="logo">
-    <img src="../assets/pic/logo.png" style="width: 100px; height: 100px"/>
+    <img src="../../assets/pic/logo.png" style="width: 100px; height: 100px"/>
   </div>
 
   <el-form class="login-container" label-position="left"
@@ -9,7 +9,7 @@
     <h3 class="login_title">系统登录</h3>
     <el-form-item>
       <el-col :span="2"><i class="el-icon-s-custom"></i></el-col>
-      <el-col :span="22"><el-input type="text" v-model="loginForm.username"
+      <el-col :span="22"><el-input type="text" v-model="loginForm.userName"
                                    auto-complete="off" placeholder="账号"></el-input></el-col>
     </el-form-item>
     <el-form-item>
@@ -30,7 +30,7 @@
         data () {
             return {
                 loginForm: {
-                    username: '',
+                    userName: '',
                     password: ''
                 },
                 responseResult: []
@@ -40,12 +40,12 @@
             login () {
                 this.$axios
                     .post('/login', {
-                        username: this.loginForm.username,
+                        userName: this.loginForm.userName,
                         password: this.loginForm.password
                     })
                     .then(successResponse => {
                         if (successResponse.data.code === 200) {
-                            this.$router.replace({path: '/index'})
+                            this.$router.replace({path: '/home'})
                         }
                     })
                     .catch(failResponse => {
@@ -73,7 +73,7 @@
   }
 
   #poster {
-    background:url("../assets/pic/background.jpg") no-repeat;
+    background:url("../../assets/pic/background.jpg") no-repeat;
     height: 100%;
     width: 100%;
     background-size: cover;

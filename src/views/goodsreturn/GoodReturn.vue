@@ -43,7 +43,7 @@
 <style scoped>
 
   .box-card {
-    width: 83%;
+    width: 75%;
   }
   .form {
     height: 200px;

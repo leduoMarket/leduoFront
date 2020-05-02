@@ -1,7 +1,7 @@
 <template>
   <el-card class="box-card">
     <div slot="header" class="clearfix">
-      <span>商品定价</span>
+      <span>员工基本信息</span>
       <el-button style="float: right; padding: 3px 0" type="text">新建</el-button>
     </div>
     <div class="text item">
@@ -21,34 +21,26 @@
         border
         style="width: 100%">
         <el-table-column
-          prop="gid"
-          label="商品编号"
+          prop="eid"
+          label="员工编号"
           width="180">
         </el-table-column>
         <el-table-column
-          prop="gname"
-          label="商品名称"
+          prop="ename"
+          label="姓名"
           width="180">
         </el-table-column>
         <el-table-column
-          prop="pold_price"
-          label="历史价格">
+          prop="ephone"
+          label="手机号">
         </el-table-column>
         <el-table-column
-          prop="pnew_price"
-          label="调整价格">
+          prop="erole"
+          label="角色">
         </el-table-column>
         <el-table-column
-          prop="preason"
-          label="调整原因">
-        </el-table-column>
-        <el-table-column
-          prop="pdate"
-          label="日期">
-        </el-table-column>
-        <el-table-column
-          prop="phandler"
-          label="操作人">
+          prop="esalary"
+          label="工资/月">
         </el-table-column>
       </el-table>
     </div>
@@ -78,7 +70,7 @@
 
   }
   .box-card {
-    width: 83%;
+    width: 75%;
   }
   .form {
     height: 200px;

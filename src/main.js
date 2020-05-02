@@ -8,7 +8,7 @@ import 'element-ui/lib/theme-chalk/index.css'
 Vue.use(ElementUI)
 import axios from 'axios'
 Vue.prototype.$axios = axios
-axios.defaults.baseURL = 'http://localhost:8443/api'
+axios.defaults.baseURL = 'http://localhost:8088/api'
 Vue.config.productionTip = false
 new Vue({
   el: '#app',

@@ -1,7 +1,7 @@
 <template>
   <el-card class="box-card">
     <div slot="header" class="clearfix">
-      <span>供应商表</span>
+      <span>库存流水账</span>
       <el-button style="float: right; padding: 3px 0" type="text">新建</el-button>
     </div>
     <div class="text item">
@@ -31,28 +31,28 @@
           width="180">
         </el-table-column>
         <el-table-column
-          prop="vaddress"
-          label="地址">
+          prop="inumber"
+          label="单号">
         </el-table-column>
         <el-table-column
-          prop="iphone"
-          label="电话">
+          prop="type"
+          label="类型">
         </el-table-column>
         <el-table-column
-          prop="iemail"
-          label="E-mail">
+          prop="idate"
+          label="日期">
         </el-table-column>
         <el-table-column
-          prop="ifax"
-          label="传真">
+          prop="iprice"
+          label="价格">
         </el-table-column>
         <el-table-column
-          prop="vcredit"
-          label="信誉">
+          prop="ipayment"
+          label="已付款项">
         </el-table-column>
         <el-table-column
-          prop="vsettle_account"
-          label="贷款结算">
+          prop="icount"
+          label="数量">
         </el-table-column>
       </el-table>
     </div>
@@ -82,7 +82,7 @@
 
   }
   .box-card {
-    width: 83%;
+    width: 75%;
   }
   .form {
     height: 200px;

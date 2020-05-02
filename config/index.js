@@ -13,7 +13,7 @@ module.exports = {
     //跨域支持，后端能够访问到前端
     proxyTable: {
     '/api':{
-      target: 'http://localhost:8443',
+      target: 'http://localhost:8088/api',
       changeOrigin: true,
       pathRewrite: {
         '^/api':''

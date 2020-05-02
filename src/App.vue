@@ -1,7 +1,6 @@
 <template>
   <div id="app">
-    <Menu></Menu>
-    <TopBar></TopBar>
+<!--    决定最外层的组件的显示-->
     <router-view/>
   </div>
 </template>
@@ -16,13 +15,12 @@
         }
 }
 </script>
-
 <style>
 #app {
 }
   body{
     padding: 0;
     margin: 0;
-    background-color: #EAEAFD;
+    background-color: #6495ED;
   }
 </style>

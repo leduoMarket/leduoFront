@@ -24,7 +24,7 @@
             <el-table-column
               prop="id"
               label="序号"
-              width="100">
+              width=50%>
             </el-table-column>
             <el-table-column
               prop="role"
@@ -39,7 +39,7 @@
             <el-table-column
               prop="rmember"
               label="成员"
-              width="335">
+              width="">
             </el-table-column>
             <el-table-column label="操作">
               <template slot-scope="scope">
@@ -117,15 +117,11 @@
     background-color: #F7F7FB;
     height: 30px;
   }
+  .box-card{
+    width: 75%;
+  }
   .header-info span{
-    margin-right: 25px;
+    /*margin-right: 25px;*/
     vertical-align: middle;
   }
-  .el-breadcrumb{
-    height: 30px;
-    background-color: #EAEAFD;
-    line-height: 30px;
-    /*设置居中*/
-  }
-
 </style>

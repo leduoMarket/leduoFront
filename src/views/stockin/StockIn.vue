@@ -1,7 +1,8 @@
 <template>
+
   <el-card class="box-card">
     <div slot="header" class="clearfix">
-      <span>尚未结清款项</span>
+      <span>入库单</span>
       <el-button style="float: right; padding: 3px 0" type="text">新建</el-button>
     </div>
     <div class="text item">
@@ -21,8 +22,8 @@
         border
         style="width: 100%">
         <el-table-column
-          prop="vid"
-          label="供应商代码"
+          prop="gid"
+          label="商品代码"
           width="180">
         </el-table-column>
         <el-table-column
@@ -31,28 +32,24 @@
           width="180">
         </el-table-column>
         <el-table-column
-          prop="gid"
-          label="商品代码">
-        </el-table-column>
-        <el-table-column
-          prop="gid"
-          label="商品名称">
-        </el-table-column>
-        <el-table-column
           prop="inumber"
-          label="单号">
+          label="入库单号">
         </el-table-column>
         <el-table-column
-          prop="ddate"
-          label="日期">
+          prop="idate"
+          label="入库日期">
         </el-table-column>
         <el-table-column
-          prop="vcredit"
-          label="信誉">
+          prop="iprice"
+          label="价格">
         </el-table-column>
         <el-table-column
-          prop="dpayment"
-          label="贷款结算">
+          prop="ipayment"
+          label="已付款项">
+        </el-table-column>
+        <el-table-column
+          prop="icount"
+          label="数量">
         </el-table-column>
       </el-table>
     </div>
@@ -73,6 +70,7 @@
 </script>
 
 <style scoped>
+
   .text {
     font-size: 14px;
   }
@@ -82,7 +80,7 @@
 
   }
   .box-card {
-    width: 83%;
+    width: 75%;
   }
   .form {
     height: 200px;

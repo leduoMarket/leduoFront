@@ -1,7 +1,7 @@
 <template>
   <el-card class="box-card">
     <div slot="header" class="clearfix">
-      <span>入库单</span>
+      <span>供应商表</span>
       <el-button style="float: right; padding: 3px 0" type="text">新建</el-button>
     </div>
     <div class="text item">
@@ -21,8 +21,8 @@
         border
         style="width: 100%">
         <el-table-column
-          prop="gid"
-          label="商品代码"
+          prop="vid"
+          label="供应商代码"
           width="180">
         </el-table-column>
         <el-table-column
@@ -31,24 +31,28 @@
           width="180">
         </el-table-column>
         <el-table-column
-          prop="inumber"
-          label="入库单号">
+          prop="vaddress"
+          label="地址">
         </el-table-column>
         <el-table-column
-          prop="idate"
-          label="入库日期">
+          prop="iphone"
+          label="电话">
         </el-table-column>
         <el-table-column
-          prop="iprice"
-          label="价格">
+          prop="iemail"
+          label="E-mail">
         </el-table-column>
         <el-table-column
-          prop="ipayment"
-          label="已付款项">
+          prop="ifax"
+          label="传真">
         </el-table-column>
         <el-table-column
-          prop="icount"
-          label="数量">
+          prop="vcredit"
+          label="信誉">
+        </el-table-column>
+        <el-table-column
+          prop="vsettle_account"
+          label="贷款结算">
         </el-table-column>
       </el-table>
     </div>
@@ -69,7 +73,6 @@
 </script>
 
 <style scoped>
-
   .text {
     font-size: 14px;
   }
@@ -79,7 +82,7 @@
 
   }
   .box-card {
-    width: 83%;
+    width: 75%;
   }
   .form {
     height: 200px;
