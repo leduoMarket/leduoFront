@@ -46,7 +46,6 @@
                 tableData: [],
             }
         },
-        dialogTableVisible: false,
         // created() {
         //     this.$axios.get("/emps").then(res=>{
         //         if(res.data){

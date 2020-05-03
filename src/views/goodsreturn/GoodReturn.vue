@@ -2,6 +2,26 @@
   <el-card class="box-card">
     <div slot="header" class="clearfix">
       <span>退货单</span>
+      <el-button style="float: right; padding: 3px 0" type="text" >编辑</el-button>
+      <el-button style="float: right; padding: 3px 0" type="text" >删除</el-button>
+      <el-button style="float: right; padding: 3px 0" type="text" @click="dialogFormVisible = true">新建</el-button>
+      <el-dialog title="退货单" :visible.sync="dialogFormVisible">
+        <el-form :model="form">
+          <el-form-item label="商品代码" :label-width="formLabelWidth">
+            <el-input v-model="form.gid" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="退货日期" :label-width="formLabelWidth">
+            <el-input v-model="form.rdate" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="退货原因" :label-width="formLabelWidth">
+            <el-input v-model="form.rreason" autocomplete="off"></el-input>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="dialogFormVisible = false">取 消</el-button>
+          <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+        </div>
+      </el-dialog>
     </div>
     <div class="form">
       <el-table
@@ -35,6 +55,21 @@
             return {
                 options: [],
                 tableData: [],
+                gridData: [],
+                dialogTableVisible: false,
+                dialogFormVisible: false,
+                form: {
+                    gid: '',
+                    rdate: '',
+                    rreason: '',
+                    date1: '',
+                    date2: '',
+                    delivery: false,
+                    type: [],
+                    resource: '',
+                    desc: ''
+                },
+                formLabelWidth: '120px'
             }
         }
     }

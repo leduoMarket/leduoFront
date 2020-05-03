@@ -2,7 +2,41 @@
   <el-card class="box-card">
     <div slot="header" class="clearfix">
       <span>支付流水帐</span>
-      <el-button style="float: right; padding: 3px 0" type="text">新建</el-button>
+      <el-button style="float: right; padding: 3px 0" type="text" >编辑</el-button>
+      <el-button style="float: right; padding: 3px 0" type="text" >删除</el-button>
+      <el-button style="float: right; padding: 3px 0" type="text" @click="dialogFormVisible = true">新建</el-button>
+      <el-dialog title="支付流水帐" :visible.sync="dialogFormVisible">
+        <el-form :model="form">
+          <el-form-item label="供应商代码" :label-width="formLabelWidth">
+            <el-input v-model="form.vid" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="供应商名称" :label-width="formLabelWidth">
+            <el-input v-model="form.vname" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="商品代码" :label-width="formLabelWidth">
+            <el-input v-model="form.gid" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="商品名称" :label-width="formLabelWidth">
+            <el-input v-model="form.gname" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="单号" :label-width="formLabelWidth">
+            <el-input v-model="form.inumber" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="日期" :label-width="formLabelWidth">
+            <el-input v-model="form.pdate" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="类型" :label-width="formLabelWidth">
+            <el-input v-model="form.ptype" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="已付款项" :label-width="formLabelWidth">
+            <el-input v-model="form.ppayment" autocomplete="off"></el-input>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="dialogFormVisible = false">取 消</el-button>
+          <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+        </div>
+      </el-dialog>
     </div>
     <div class="text item">
       <el-select v-model="value" placeholder="请选择"  value="">
@@ -67,6 +101,26 @@
             return {
                 options: [],
                 tableData: [],
+                gridData: [],
+                dialogTableVisible: false,
+                dialogFormVisible: false,
+                form: {
+                    vid: '',
+                    vname: '',
+                    gid: '',
+                    gname: '',
+                    inumber: '',
+                    pdate: '',
+                    ptype: '',
+                    ppayment: '',
+                    date1: '',
+                    date2: '',
+                    delivery: false,
+                    type: [],
+                    resource: '',
+                    desc: ''
+                },
+                formLabelWidth: '120px'
             }
         }
     }
