@@ -1,27 +1,35 @@
 <template>
   <div>
-    <router-view></router-view>
   <el-card class="box-card">
     <div slot="header" class="clearfix">
       <span>员工基本信息</span>
-      <el-button style="float: right; padding-right: 3px;" type="text"><span style="color: red">删除</span></el-button>
-      <el-button style="float: right; padding-right: 3px;" type="text">编辑</el-button>
-      <el-button style="float: right; padding-right: 3px;" type="text">
-        <router-link to="addemployee">新建</router-link>
 
-      </el-button>
+<!--      新增员工弹出框-->
+      <el-button type="text" @click="dialogTableVisible = true" style="float: right">新增员工</el-button>
+      <el-dialog title="新增员工" :visible.sync="dialogTableVisible" >
+        <el-table :data="gridData">
+          <el-table-column property="date" label="日期" width="150"></el-table-column>
+          <el-table-column property="name" label="姓名" width="200"></el-table-column>
+          <el-table-column property="address" label="地址"></el-table-column>
+        </el-table>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="dialogTableVisible= false">取 消</el-button>
+          <el-button type="primary" @click="dialogTableVisible = false">确 定</el-button>
+        </div>
+      </el-dialog>
     </div>
+
+<!--员工信息查询框-->
     <div class="text item">
-      <el-select v-model="value" placeholder="请选择"  value="">
+      <el-select v-model="value" placeholder="请输入员工编号"  @change="currentOperatorChange">
         <el-option
           v-for="item in options"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value">
+          :value="item">
         </el-option>
       </el-select>
       <el-button round>查询</el-button>
     </div>
+
     <div class="form">
       <el-table
         :data="tableData"
@@ -49,6 +57,16 @@
           prop="esalary"
           label="工资/月">
         </el-table-column>
+        <el-table-column
+          prop="esalary"
+          label="操作">
+
+          <template slot-scope="scope">
+<!--            <el-button style="float: left; padding-right: 3px;" type="text"><span style="color: red" @click="delemp">删除</span></el-button>-->
+            <el-button style="float: right; padding-right: 3px;" type="text" @click="editemp">编辑</el-button>
+          </template>
+
+        </el-table-column>
       </el-table>
     </div>
     <span>共{{itemCount}}条记录</span>
@@ -61,37 +79,78 @@
         name: "StockIn",
         data() {
             return {
-                options: [],
+                options: ['员工编号','员工姓名'],
                 tableData: [],
-                itemCount:[],
+                itemCount: [],
+                dialogTableVisible: false,
+                userInfo: {
+                    eid: "20171103337",
+                    ename: "wx",
+                    ephone: "12675897623",
+                    erole: "员工",
+                    esalary: "20000"
+                },
+                delItem: 0
             }
-        },
-        // methods:{
-        //     addEmployee(){
-        //         this.$router.replace({path: 'addemployee'})
-        //         console.log("addEmploee")
-        //     },
-        // },
-        created() {
-                this.$axios.get("/emps").then(res=>{
-                    if(res.data){
-                        console.log(res)
-                        this.tableData = res.data;
+        },  created() {
+            console.log("vue被创建");
+            this.$axios.get("/emps").then(res => {
+                if (res.data) {
+                    console.log(res)
+                    this.tableData = res.data;
+                    if(res.data.length==0){
+                        this.itemCount = 0;
+                    }else{
                         this.itemCount = res.data.length;
-                        console.log(this.itemCount);
                     }
-                }).catch(failResponse=>{
+                    console.log(this.itemCount);
+                }
+            }).catch(failResponse => {
 
-                })
-            }
+            })
+        },
+        methods: {
+            currentOperatorChange(val){
+                console.log("selected is changed!",val);
+                this.showValue = val;
+            },
+            addemp() {
+                this.tableData.push(this.userInfo);
+                console.log("新增被点击")
+            },
+            // delemp(index){
+            //     console.log("删除被点击"+index);
+            //     delItem = this.tableData.splice(index,1);
+            //     console.log(delItem);
+            // },
+            editemp() {
+                console.log("编辑被点击")
+            },
+            // delemp() {
+            //     this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+            //         confirmButtonText: '确定',
+            //         cancelButtonText: '取消',
+            //         type: 'warning'
+            //     }).then(() => {
+            //         this.$message({
+            //             type: 'success',
+            //             message: '删除成功!'
+            //         });
+            //     }).catch(() => {
+            //         this.$message({
+            //             type: 'info',
+            //             message: '已取消删除'
+            //         });
+            //     });
+            // }
+        }
     }
 </script>
 
 <style scoped>
-  .text {
-    font-size: 14px;
+  .handle{
+   text-align: center;
   }
-
   .item {
     margin-bottom: 50px;
 
@@ -102,4 +161,5 @@
   .form {
     height: 200px;
   }
+
 </style>

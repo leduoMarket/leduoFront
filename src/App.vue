@@ -23,4 +23,7 @@
     margin: 0;
     background-color: #6495ED;
   }
+a:link {
+  text-decoration: none;
+}
 </style>

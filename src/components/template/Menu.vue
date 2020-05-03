@@ -146,17 +146,15 @@
     color: white;
   }
 
-  a:link {
-    text-decoration: none;
-  }
+
 
   a:visited {
     color: purple;
     text-decoration: none;
   }
-
   a:hover {
     color: red;
     text-decoration: none;
   }
+
 </style>
