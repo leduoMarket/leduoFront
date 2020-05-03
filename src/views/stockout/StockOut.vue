@@ -2,7 +2,38 @@
   <el-card class="box-card">
     <div slot="header" class="clearfix">
       <span>出库单</span>
-      <el-button style="float: right; padding: 3px 0" type="text">新建</el-button>
+      <el-button style="float: right; padding: 3px 0" type="text" >编辑</el-button>
+      <el-button style="float: right; padding: 3px 0" type="text" >删除</el-button>
+      <el-button style="float: right; padding: 3px 0" type="text" @click="dialogFormVisible = true">新建</el-button>
+      <el-dialog title="入库单" :visible.sync="dialogFormVisible">
+        <el-form :model="form">
+          <el-form-item label="商品代码" :label-width="formLabelWidth">
+            <el-input v-model="form.gid" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="供应商名称" :label-width="formLabelWidth">
+            <el-input v-model="form.vname" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="出库单号" :label-width="formLabelWidth">
+            <el-input v-model="form.onumber" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="出库日期" :label-width="formLabelWidth">
+            <el-input v-model="form.odate" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="价格" :label-width="formLabelWidth">
+            <el-input v-model="form.oprice" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="已付款项" :label-width="formLabelWidth">
+            <el-input v-model="form.opayment" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="数量" :label-width="formLabelWidth">
+            <el-input v-model="form.oaccount" autocomplete="off"></el-input>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="dialogFormVisible = false">取 消</el-button>
+          <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+        </div>
+      </el-dialog>
     </div>
     <div class="text item">
       <el-select v-model="value" placeholder="请选择"  value="">
@@ -63,6 +94,25 @@
             return {
                 options: [],
                 tableData: [],
+                gridData: [],
+                dialogTableVisible: false,
+                dialogFormVisible: false,
+                form: {
+                    gid: '',
+                    vname: '',
+                    onumber: '',
+                    odate: '',
+                    oprice: '',
+                    opayment: '',
+                    oaccount: '',
+                    date1: '',
+                    date2: '',
+                    delivery: false,
+                    type: [],
+                    resource: '',
+                    desc: ''
+                },
+                formLabelWidth: '120px'
             }
         }
     }

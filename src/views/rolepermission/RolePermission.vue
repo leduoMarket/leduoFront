@@ -1,62 +1,62 @@
 <template>
-    <div class="RolePermission">
-      <el-card class="box-card">
-        <div slot="header" class="clearfix">
-          <span>权限管理</span>
-          <el-button style="float: right; padding: 3px 0" type="text">新建</el-button>
-        </div>
-        <div class="text item">
-          <el-select v-model="value" placeholder="请选择"  value="">
-            <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-            </el-option>
-          </el-select>
-          <el-button round>查询</el-button>
-        </div>
-        <div>
-          <el-table
-            :data="tableData"
-            border
-            style="width: 100%">
-            <el-table-column
-              prop="id"
-              label="序号"
-              width=50%>
-            </el-table-column>
-            <el-table-column
-              prop="role"
-              label="权限角色"
-              width="100">
-            </el-table-column>
-            <el-table-column
-              prop="ability"
-              label="描述"
-              width="335">
-            </el-table-column>
-            <el-table-column
-              prop="rmember"
-              label="成员"
-              width="">
-            </el-table-column>
-            <el-table-column label="操作">
-              <template slot-scope="scope">
-                <el-button
-                  size="mini"
-                  @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-                <el-button
-                  size="mini"
-                  type="danger"
-                  @click="handleDelete(scope.$index, scope.row)">删除</el-button>
-              </template>
-            </el-table-column>
-          </el-table>
-        </div>
-      </el-card>
+  <div class="RolePermission">
+    <el-card class="box-card">
+      <div slot="header" class="clearfix">
+        <span>权限管理</span>
+        <el-button style="float: right; padding: 3px 0" type="text">新建</el-button>
+      </div>
+      <div class="text item">
+        <el-select v-model="value" placeholder="请选择"  value="">
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+        <el-button round>查询</el-button>
+      </div>
+      <div>
+        <el-table
+          :data="tableData"
+          border
+          style="width: 100%">
+          <el-table-column
+            prop="id"
+            label="序号"
+            width=50%>
+          </el-table-column>
+          <el-table-column
+            prop="role"
+            label="权限角色"
+            width="100">
+          </el-table-column>
+          <el-table-column
+            prop="ability"
+            label="描述"
+            width="335">
+          </el-table-column>
+          <el-table-column
+            prop="rmember"
+            label="成员"
+            width="">
+          </el-table-column>
+          <el-table-column label="操作">
+            <template slot-scope="scope">
+              <el-button
+                size="mini"
+                @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+              <el-button
+                size="mini"
+                type="danger"
+                @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
+    </el-card>
 
-    </div>
+  </div>
 </template>
 
 <script>

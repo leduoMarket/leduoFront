@@ -3,33 +3,60 @@
   <el-card class="box-card">
     <div slot="header" class="clearfix">
       <span>员工基本信息</span>
-
-<!--      新增员工弹出框-->
-      <el-button type="text" @click="dialogTableVisible = true" style="float: right">新增员工</el-button>
-      <el-dialog title="新增员工" :visible.sync="dialogTableVisible" >
-        <el-table :data="gridData">
-          <el-table-column property="date" label="日期" width="150"></el-table-column>
-          <el-table-column property="name" label="姓名" width="200"></el-table-column>
-          <el-table-column property="address" label="地址"></el-table-column>
-        </el-table>
+      <el-button style="float: right; padding-right: 3px;" type="text"><span style="color: red">删除</span></el-button>
+      <el-button style="float: right; padding-right: 3px;" type="text">编辑</el-button>
+      <el-button style="float: right; padding-right: 3px;" type="text">
+        <router-link to="addemployee">新建</router-link>
+      </el-button>
+      <el-dialog title="员工基本信息" :visible.sync="dialogFormVisible">
+        <el-form :model="form">
+          <el-form-item label="员工编号" :label-width="formLabelWidth">
+            <el-input v-model="form.eid" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="员工姓名" :label-width="formLabelWidth">
+            <el-input v-model="form.ename" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="电话" :label-width="formLabelWidth">
+            <el-input v-model="form.ephone" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="角色" :label-width="formLabelWidth">
+            <el-input v-model="form.erole" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="工资" :label-width="formLabelWidth">
+            <el-input v-model="form.esalary" autocomplete="off"></el-input>
+          </el-form-item>
+        </el-form>
+        <!--      新增员工弹出框-->
+        <el-button type="text" @click="dialogTableVisible = true" style="float: right">新增员工</el-button>
+        <el-dialog title="新增员工" :visible.sync="dialogTableVisible" >
+          <el-table :data="gridData">
+            <el-table-column property="date" label="日期" width="150"></el-table-column>
+            <el-table-column property="name" label="姓名" width="200"></el-table-column>
+            <el-table-column property="address" label="地址"></el-table-column>
+          </el-table>
+          <div slot="footer" class="dialog-footer">
+            <el-button @click="dialogTableVisible= false">取 消</el-button>
+            <el-button type="primary" @click="dialogTableVisible = false">确 定</el-button>
+          </div>
+        </el-dialog>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="dialogTableVisible= false">取 消</el-button>
-          <el-button type="primary" @click="dialogTableVisible = false">确 定</el-button>
+          <el-button @click="dialogFormVisible = false">取 消</el-button>
+          <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
         </div>
       </el-dialog>
-    </div>
 
-<!--员工信息查询框-->
+    </div>
     <div class="text item">
-      <el-select v-model="value" placeholder="请输入员工编号"  @change="currentOperatorChange">
+      <el-select v-model="value" placeholder="请选择"  value="">
         <el-option
           v-for="item in options"
-          :value="item">
+          :key="item.value"
+          :label="item.label"
+          :value="item.value">
         </el-option>
       </el-select>
       <el-button round>查询</el-button>
     </div>
-
     <div class="form">
       <el-table
         :data="tableData"
@@ -56,16 +83,16 @@
         <el-table-column
           prop="esalary"
           label="工资/月">
-        </el-table-column>
-        <el-table-column
-          prop="esalary"
-          label="操作">
+          <el-table-column
+            prop="esalary"
+            label="操作">
 
-          <template slot-scope="scope">
-<!--            <el-button style="float: left; padding-right: 3px;" type="text"><span style="color: red" @click="delemp">删除</span></el-button>-->
-            <el-button style="float: right; padding-right: 3px;" type="text" @click="editemp">编辑</el-button>
-          </template>
+            <template slot-scope="scope">
+              <!--            <el-button style="float: left; padding-right: 3px;" type="text"><span style="color: red" @click="delemp">删除</span></el-button>-->
+              <el-button style="float: right; padding-right: 3px;" type="text" @click="editemp">编辑</el-button>
+            </template>
 
+          </el-table-column>
         </el-table-column>
       </el-table>
     </div>
@@ -148,9 +175,10 @@
 </script>
 
 <style scoped>
-  .handle{
-   text-align: center;
+  .text {
+    font-size: 14px;
   }
+
   .item {
     margin-bottom: 50px;
 
@@ -161,5 +189,4 @@
   .form {
     height: 200px;
   }
-
 </style>
