@@ -54,7 +54,6 @@
         }
     }
 </script>
-
 <style>
   .login-container {
     border-radius: 15px;

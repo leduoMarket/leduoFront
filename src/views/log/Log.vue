@@ -13,7 +13,6 @@
         </el-input>
         <el-button round>查询</el-button>
       </div>
-      <el-button round>查询</el-button>
     </div>
     <div class="form">
       <el-table
@@ -40,7 +39,6 @@
         </el-table-column>
       </el-table>
     </div>
-    <span>共0条记录</span>
   </el-card>
 </template>
 <script>

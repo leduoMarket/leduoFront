@@ -5,28 +5,22 @@
       <el-button style="float: right; padding: 3px 0" type="text" @click="dialogFormVisible = true">新建</el-button>
       <el-dialog title="支付流水帐" :visible.sync="dialogFormVisible">
         <el-form :model="form">
-          <el-form-item label="供应商代码" :label-width="formLabelWidth">
+          <el-form-item label="支付单号" :label-width="formLabelWidth">
             <el-input v-model="form.vid" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="供应商名称" :label-width="formLabelWidth">
+          <el-form-item label="商品代码" :label-width="formLabelWidth">
             <el-input v-model="form.vname" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="商品代码" :label-width="formLabelWidth">
+          <el-form-item label="供应商名称" :label-width="formLabelWidth">
             <el-input v-model="form.gid" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="商品名称" :label-width="formLabelWidth">
-            <el-input v-model="form.gname" autocomplete="off"></el-input>
-          </el-form-item>
-          <el-form-item label="单号" :label-width="formLabelWidth">
+          <el-form-item label="已付款" :label-width="formLabelWidth">
             <el-input v-model="form.inumber" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="日期" :label-width="formLabelWidth">
+          <el-form-item label="欠款" :label-width="formLabelWidth">
             <el-input v-model="form.pdate" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="类型" :label-width="formLabelWidth">
-            <el-input v-model="form.ptype" autocomplete="off"></el-input>
-          </el-form-item>
-          <el-form-item label="已付款项" :label-width="formLabelWidth">
+          <el-form-item label="日期" :label-width="formLabelWidth">
             <el-input v-model="form.ppayment" autocomplete="off"></el-input>
           </el-form-item>
         </el-form>
@@ -39,13 +33,12 @@
     <div class="text item">
       <div class="text item">
         <el-input style="width: 300px"
-                  placeholder="请输入供应商代码"
+                  placeholder="请输入支付单号"
                   v-model="input"
                   clearable>
         </el-input>
         <el-button round>查询</el-button>
       </div>
-      <el-button round>查询</el-button>
     </div>
     <div class="form">
       <el-table
@@ -54,38 +47,34 @@
         style="width: 100%">
         <el-table-column
           prop="vid"
-          label="供应商代码"
+          label="支付单号"
           width="180">
         </el-table-column>
         <el-table-column
           prop="vname"
-          label="供应商名称"
+          label="商品代码"
           width="180">
         </el-table-column>
         <el-table-column
           prop="gid"
-          label="商品代码">
+          label="供应商名称">
         </el-table-column>
         <el-table-column
           prop="gname"
-          label="商品名称">
+          label="已付款">
         </el-table-column>
         <el-table-column
           prop="inumber"
-          label="单号">
-        </el-table-column>
-        <el-table-column
-          prop="pdate"
-          label="日期">
+          label="欠款">
         </el-table-column>
         <el-table-column
           prop="ptype"
-          label="类型">
+          label="日期">
         </el-table-column>
-        <el-table-column
-          prop="ppayment"
-          label="贷款结算">
-        </el-table-column>
+<!--        <el-table-column-->
+<!--          prop="ppayment"-->
+<!--          label="贷款结算">-->
+<!--        </el-table-column>-->
         <el-table-column
           prop="esalary"
           label="操作">
@@ -96,7 +85,6 @@
         </el-table-column>
       </el-table>
     </div>
-    <span>共0条记录</span>
   </el-card>
 </template>
 

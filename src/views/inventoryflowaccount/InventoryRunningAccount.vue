@@ -2,39 +2,39 @@
   <el-card class="box-card">
     <div slot="header" class="clearfix">
       <span>库存流水账</span>
-      <el-button style="float: right; padding: 3px 0" type="text" @click="dialogFormVisible = true">新建</el-button>
-      <el-dialog title="库存流水账" :visible.sync="dialogFormVisible">
-        <el-form :model="form">
-          <el-form-item label="供应商代码" :label-width="formLabelWidth">
-            <el-input v-model="form.vid" autocomplete="off"></el-input>
-          </el-form-item>
-          <el-form-item label="供应商名称" :label-width="formLabelWidth">
-            <el-input v-model="form.vname" autocomplete="off"></el-input>
-          </el-form-item>
-          <el-form-item label="单号" :label-width="formLabelWidth">
-            <el-input v-model="form.inumber" autocomplete="off"></el-input>
-          </el-form-item>
-          <el-form-item label="类型" :label-width="formLabelWidth">
-            <el-input v-model="form.type" autocomplete="off"></el-input>
-          </el-form-item>
-          <el-form-item label="日期" :label-width="formLabelWidth">
-            <el-input v-model="form.idate" autocomplete="off"></el-input>
-          </el-form-item>
-          <el-form-item label="价格" :label-width="formLabelWidth">
-            <el-input v-model="form.iprice" autocomplete="off"></el-input>
-          </el-form-item>
-          <el-form-item label="已付款项" :label-width="formLabelWidth">
-            <el-input v-model="form.ipayment" autocomplete="off"></el-input>
-          </el-form-item>
-          <el-form-item label="数量" :label-width="formLabelWidth">
-            <el-input v-model="form.icount" autocomplete="off"></el-input>
-          </el-form-item>
-        </el-form>
-        <div slot="footer" class="dialog-footer">
-          <el-button @click="dialogFormVisible = false">取 消</el-button>
-          <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
-        </div>
-      </el-dialog>
+<!--      <el-button style="float: right; padding: 3px 0" type="text" @click="dialogFormVisible = true">新建</el-button>-->
+<!--      <el-dialog title="库存流水账" :visible.sync="dialogFormVisible">-->
+<!--        <el-form :model="form">-->
+<!--          <el-form-item label="供应商代码" :label-width="formLabelWidth">-->
+<!--            <el-input v-model="form.vid" autocomplete="off"></el-input>-->
+<!--          </el-form-item>-->
+<!--          <el-form-item label="供应商名称" :label-width="formLabelWidth">-->
+<!--            <el-input v-model="form.vname" autocomplete="off"></el-input>-->
+<!--          </el-form-item>-->
+<!--          <el-form-item label="单号" :label-width="formLabelWidth">-->
+<!--            <el-input v-model="form.inumber" autocomplete="off"></el-input>-->
+<!--          </el-form-item>-->
+<!--          <el-form-item label="类型" :label-width="formLabelWidth">-->
+<!--            <el-input v-model="form.type" autocomplete="off"></el-input>-->
+<!--          </el-form-item>-->
+<!--          <el-form-item label="日期" :label-width="formLabelWidth">-->
+<!--            <el-input v-model="form.idate" autocomplete="off"></el-input>-->
+<!--          </el-form-item>-->
+<!--          <el-form-item label="价格" :label-width="formLabelWidth">-->
+<!--            <el-input v-model="form.iprice" autocomplete="off"></el-input>-->
+<!--          </el-form-item>-->
+<!--          <el-form-item label="已付款项" :label-width="formLabelWidth">-->
+<!--            <el-input v-model="form.ipayment" autocomplete="off"></el-input>-->
+<!--          </el-form-item>-->
+<!--          <el-form-item label="数量" :label-width="formLabelWidth">-->
+<!--            <el-input v-model="form.icount" autocomplete="off"></el-input>-->
+<!--          </el-form-item>-->
+<!--        </el-form>-->
+<!--        <div slot="footer" class="dialog-footer">-->
+<!--          <el-button @click="dialogFormVisible = false">取 消</el-button>-->
+<!--          <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>-->
+<!--        </div>-->
+<!--      </el-dialog>-->
     </div>
     <div class="text item">
       <div class="text item">
@@ -45,7 +45,6 @@
         </el-input>
         <el-button round>查询</el-button>
       </div>
-      <el-button round>查询</el-button>
     </div>
     <div class="form">
       <el-table
@@ -86,17 +85,16 @@
           prop="icount"
           label="数量">
         </el-table-column>
-        <el-table-column
-          prop="esalary"
-          label="操作">
+<!--        <el-table-column-->
+<!--          prop="esalary"-->
+<!--          label="操作">-->
 
-          <template slot-scope="scope">
-            <el-button style="float: left; padding-right: 3px;" type="text"><span style="color: red" @click="del">删除</span></el-button>
-          </template>
-        </el-table-column>
+<!--          <template slot-scope="scope">-->
+<!--            <el-button style="float: left; padding-right: 3px;" type="text"><span style="color: red" @click="del">删除</span></el-button>-->
+<!--          </template>-->
+<!--        </el-table-column>-->
       </el-table>
     </div>
-    <span>共0条记录</span>
   </el-card>
 </template>
 

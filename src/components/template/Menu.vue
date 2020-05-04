@@ -73,7 +73,7 @@
         </template>
         <el-menu-item-group>
           <el-menu-item index="5-1">
-            <router-link to="/home/debt">尚未结清款项</router-link>
+            <router-link to="/home/debt">欠款单</router-link>
           </el-menu-item>
           <el-menu-item index="5-2">
             <router-link to="/home/flowCount">支付流水账</router-link>

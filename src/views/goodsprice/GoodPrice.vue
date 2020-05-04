@@ -86,7 +86,6 @@
         </el-table-column>
       </el-table>
     </div>
-    <span>共0条记录</span>
   </el-card>
 </template>
 
