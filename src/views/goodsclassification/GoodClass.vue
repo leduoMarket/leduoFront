@@ -1029,7 +1029,7 @@
     margin-bottom: 50px;
   }
   .box-card {
-    width: 75%;
+    width: 77%;
   }
   .form {
     height: 100%;

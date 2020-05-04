@@ -95,7 +95,7 @@
                 },
                 formLabelWidth: '120px',
                 pagesize:5,  //分页数量
-                currentPage:1 //初始页
+                currentPage:1, //初始页
                 // form: {
                 //     gid: '',
                 //     gname: '',
