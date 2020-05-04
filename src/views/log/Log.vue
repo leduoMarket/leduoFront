@@ -2,19 +2,17 @@
   <el-card class="box-card">
     <div slot="header" class="clearfix">
       <span>日志查询</span>
-      <el-button style="float: right; padding-right: 3px;" type="text"><span style="color: red">删除</span></el-button>
-      <el-button style="float: right; padding-right: 3px;" type="text">编辑</el-button>
-      <el-button style="float: right; padding-right: 3px;" type="text"><router-link to="addlog">新建</router-link></el-button>
+      <el-button style="float: right; padding-right: 3px;" type="text">新建</el-button>
     </div>
     <div class="text item">
-      <el-select v-model="value" placeholder="请选择"  value="">
-        <el-option
-          v-for="item in options"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value">
-        </el-option>
-      </el-select>
+      <div class="text item">
+        <el-input style="width: 300px"
+                  placeholder="请输入员工编号"
+                  v-model="input"
+                  clearable>
+        </el-input>
+        <el-button round>查询</el-button>
+      </div>
       <el-button round>查询</el-button>
     </div>
     <div class="form">
@@ -29,7 +27,7 @@
         </el-table-column>
         <el-table-column
           prop="dname"
-          label="操作人员"
+          label="操作人员编号"
           width="180">
         </el-table-column>
         <el-table-column

@@ -2,8 +2,6 @@
   <el-card class="box-card">
     <div slot="header" class="clearfix">
       <span>商品定价</span>
-      <el-button style="float: right; padding: 3px 0" type="text" >编辑</el-button>
-      <el-button style="float: right; padding: 3px 0" type="text" >删除</el-button>
       <el-button style="float: right; padding: 3px 0" type="text" @click="dialogFormVisible = true">新建</el-button>
       <el-dialog title="商品定价" :visible.sync="dialogFormVisible">
         <el-form :model="form">
@@ -36,14 +34,11 @@
       </el-dialog>
     </div>
     <div class="text item">
-      <el-select v-model="value" placeholder="请选择"  value="">
-        <el-option
-          v-for="item in options"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value">
-        </el-option>
-      </el-select>
+      <el-input style="width: 300px"
+                placeholder="请输入商品编号"
+                v-model="input"
+                clearable>
+      </el-input>
       <el-button round>查询</el-button>
     </div>
     <div class="form">
@@ -80,6 +75,14 @@
         <el-table-column
           prop="phandler"
           label="操作人">
+        </el-table-column>
+        <el-table-column
+          prop="esalary"
+          label="操作">
+
+          <template slot-scope="scope">
+            <el-button style="float: left; padding-right: 3px;" type="text"><span style="color: red" @click="del">删除</span></el-button>
+          </template>
         </el-table-column>
       </el-table>
     </div>

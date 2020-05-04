@@ -73,7 +73,7 @@
   }
 
   #poster {
-    background:url("../../assets/pic/background.jpg") no-repeat;
+    /*background:url("../../assets/pic/background.jpg") no-repeat;*/
     height: 100%;
     width: 100%;
     background-size: cover;
