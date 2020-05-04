@@ -42,7 +42,7 @@
   <!--      展示的table表格-->
   <div class="form">
     <el-table
-      :data="tableData"
+      :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)"
       border
       style="width: 100%">
       <el-table-column
@@ -76,8 +76,17 @@
         </template>
       </el-table-column>
     </el-table>
+    <el-pagination
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+      :current-page="currentPage"
+      :page-sizes="[3,5, 10, 20, 40]"
+      :page-size="pagesize"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="tableData.length">
+    </el-pagination>
   </div>
-  <span>共{{itemCount}}条记录</span>
+
   </el-card>
   </div>
 </template>
@@ -116,7 +125,9 @@
                     erole: '',
                     esalary: ''
 
-                }
+                },
+                pagesize:5,
+                currentPage:1 //初始页
             }
         },
         created() {
@@ -137,6 +148,15 @@
             })
         },
         methods: {
+            // 初始页currentPage、初始每页数据数pagesize和数据data
+            handleSizeChange: function (size) {
+                this.pagesize = size;
+                console.log(this.pagesize)
+            },
+            handleCurrentChange: function (currentPage) {
+                this.currentPage = currentPage;
+                console.log(this.currentPage)
+            },
             openAddPage() {
                 this.dialogFormVisible = true;
 
@@ -198,6 +218,6 @@
   }
 
   .form {
-    height: 200px;
+    height: 100%;
   }
 </style>
