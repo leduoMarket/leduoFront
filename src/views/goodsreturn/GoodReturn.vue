@@ -71,6 +71,18 @@
                 },
                 formLabelWidth: '120px'
             }
+        },
+        created() {
+            this.$axios.get("/productreturn").then(res=>{
+                if(res.data){
+                    console.log(res)
+                    this.tableData = res.data;
+                    this.itemCount = res.data.length;
+                    console.log(this.itemCount);
+                }
+            }).catch(failResponse=>{
+
+            })
         }
     }
 </script>
