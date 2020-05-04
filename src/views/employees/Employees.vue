@@ -1,133 +1,133 @@
 <template>
   <div>
-  <el-card class="box-card">
-    <div slot="header" class="clearfix">
-      <span>员工基本信息</span>
-      <el-button style="float: right; padding-right: 3px;" type="text"><span style="color: red">删除</span></el-button>
-      <el-button style="float: right; padding-right: 3px;" type="text">编辑</el-button>
-      <el-button style="float: right; padding-right: 3px;" type="text">
-        <router-link to="addemployee">新建</router-link>
-      </el-button>
-      <el-dialog title="员工基本信息" :visible.sync="dialogFormVisible">
-        <el-form :model="form">
-          <el-form-item label="员工编号" :label-width="formLabelWidth">
-            <el-input v-model="form.eid" autocomplete="off"></el-input>
-          </el-form-item>
-          <el-form-item label="员工姓名" :label-width="formLabelWidth">
-            <el-input v-model="form.ename" autocomplete="off"></el-input>
-          </el-form-item>
-          <el-form-item label="电话" :label-width="formLabelWidth">
-            <el-input v-model="form.ephone" autocomplete="off"></el-input>
-          </el-form-item>
-          <el-form-item label="角色" :label-width="formLabelWidth">
-            <el-input v-model="form.erole" autocomplete="off"></el-input>
-          </el-form-item>
-          <el-form-item label="工资" :label-width="formLabelWidth">
-            <el-input v-model="form.esalary" autocomplete="off"></el-input>
-          </el-form-item>
-        </el-form>
-        <!--      新增员工弹出框-->
-        <el-button type="text" @click="dialogTableVisible = true" style="float: right">新增员工</el-button>
-        <el-dialog title="新增员工" :visible.sync="dialogTableVisible" >
-          <el-table :data="gridData">
-            <el-table-column property="date" label="日期" width="150"></el-table-column>
-            <el-table-column property="name" label="姓名" width="200"></el-table-column>
-            <el-table-column property="address" label="地址"></el-table-column>
-          </el-table>
+    <el-card class="box-card">
+      <div slot="header" class="clearfix">
+        <span>员工基本信息</span>
+<!--        新增员工弹窗-->
+        <el-button style="float: right; padding-right: 3px;" type="text" @click="openAddPage">新增
+        </el-button>
+        <el-dialog title="新增员工基本信息" :visible.sync="dialogFormVisible">
+          <el-form :model="userInfo" >
+<!--             <el-form-item label="员工编号" :label-width="formLabelWidth">-->
+<!--               输入框的内容和数据绑定-->
+              <el-input  placeholder="员工编号" v-model="userInfo.eid" autocomplete="off" clearable></el-input>
+<!--            </el-form-item>-->
+<!--            <el-form-item label="员工姓名" :label-width="formLabelWidth">-->
+              <el-input  placeholder="员工姓名" v-model="userInfo.ename" autocomplete="off" clearable></el-input>
+<!--            </el-form-item>-->
+<!--            <el-form-item label="电话" :label-width="formLabelWidth">-->
+              <el-input  placeholder="电话号码" v-model="userInfo.ephone" autocomplete="off" clearable></el-input>
+<!--            </el-form-item>-->
+<!--            <el-form-item label="角色" :label-width="formLabelWidth">-->
+              <el-input  placeholder="角色" v-model="userInfo.erole" autocomplete="off" clearable></el-input>
+<!--            </el-form-item>-->
+<!--            <el-form-item label="工资" :label-width="formLabelWidth">-->
+              <el-input  placeholder="工资" v-model="userInfo.esalary" autocomplete="off" clearable></el-input>
+<!--            </el-form-item>-->
+          </el-form>
           <div slot="footer" class="dialog-footer">
-            <el-button @click="dialogTableVisible= false">取 消</el-button>
-            <el-button type="primary" @click="dialogTableVisible = false">确 定</el-button>
+            <el-button @click="dialogFormVisible = false">取 消</el-button>
+            <el-button type="primary" @click="addEmployee">确 定</el-button>
           </div>
         </el-dialog>
-        <div slot="footer" class="dialog-footer">
-          <el-button @click="dialogFormVisible = false">取 消</el-button>
-          <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
-        </div>
-      </el-dialog>
+      </div>
+<!--      搜索框-->
+      <div class="text item">
+        <el-input style="width: 300px"
+          placeholder="请输入员工编号"
+          v-model="input"
+          clearable>
+        </el-input>
+        <el-button round>查询</el-button>
+      </div>
 
-    </div>
-    <div class="text item">
-      <el-select v-model="value" placeholder="请选择"  value="">
-        <el-option
-          v-for="item in options"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value">
-        </el-option>
-      </el-select>
-      <el-button round>查询</el-button>
-    </div>
-    <div class="form">
-      <el-table
-        :data="tableData"
-        border
-        style="width: 100%">
-        <el-table-column
-          prop="eid"
-          label="员工编号"
-          width="180">
-        </el-table-column>
-        <el-table-column
-          prop="ename"
-          label="姓名"
-          width="180">
-        </el-table-column>
-        <el-table-column
-          prop="ephone"
-          label="手机号">
-        </el-table-column>
-        <el-table-column
-          prop="erole"
-          label="角色">
-        </el-table-column>
-        <el-table-column
-          prop="esalary"
-          label="工资/月">
+<!--      展示的table表格-->
+      <div class="form">
+        <el-table
+          :data="tableData"
+          border
+          style="width: 100%">
+          <el-table-column
+            prop="eid"
+            label="员工编号"
+            width="180">
+          </el-table-column>
+          <el-table-column
+            prop="ename"
+            label="姓名"
+            width="180">
+          </el-table-column>
+          <el-table-column
+            prop="ephone"
+            label="手机号">
+          </el-table-column>
+          <el-table-column
+            prop="erole"
+            label="角色">
+          </el-table-column>
           <el-table-column
             prop="esalary"
-            label="操作">
-
-            <template slot-scope="scope">
-              <!--            <el-button style="float: left; padding-right: 3px;" type="text"><span style="color: red" @click="delemp">删除</span></el-button>-->
-              <el-button style="float: right; padding-right: 3px;" type="text" @click="editemp">编辑</el-button>
-            </template>
-
+            label="工资/月">
           </el-table-column>
-        </el-table-column>
-      </el-table>
-    </div>
-    <span>共{{itemCount}}条记录</span>
-  </el-card>
+            <el-table-column
+              prop="esalary"
+              label="操作">
+              <template slot-scope="scope">
+                            <el-button style="float: left; padding-right: 3px;" type="text"><span style="color: red" @click="del">删除</span></el-button>
+              </template>
+            </el-table-column>
+        </el-table>
+      </div>
+      <span>共{{itemCount}}条记录</span>
+    </el-card>
   </div>
 </template>
 
+<!--javaScript代码-->
 <script>
     export default {
         name: "StockIn",
         data() {
             return {
-                options: ['员工编号','员工姓名'],
-                tableData: [],
+                tableData: [{
+                    eid:'1',
+                    ename: '',
+                    ephone: '',
+                    erole: '',
+                    esalary: ''},
+                    {
+                    eid:'2',
+                    ename: '',
+                    ephone: '',
+                    erole: '',
+                    esalary: ''
+                }],
+
+                // 计算总共有多少条数据
                 itemCount: [],
-                dialogTableVisible: false,
+                // 控制员工新增页面的form表单可见性
+                dialogFormVisible: false,
+                delItem: 0,
+                // 用于新增员工数据时候的绑定
                 userInfo: {
-                    eid: "20171103337",
-                    ename: "wx",
-                    ephone: "12675897623",
-                    erole: "员工",
-                    esalary: "20000"
-                },
-                delItem: 0
+                    eid: '',
+                    ename: '',
+                    ephone: '',
+                    erole: '',
+                    esalary: ''
+
+                }
             }
-        },  created() {
+        },
+        created() {
             console.log("vue被创建");
             this.$axios.get("/emps").then(res => {
                 if (res.data) {
                     console.log(res)
                     this.tableData = res.data;
-                    if(res.data.length==0){
+                    if (res.data.length == 0) {
                         this.itemCount = 0;
-                    }else{
+                    } else {
                         this.itemCount = res.data.length;
                     }
                     console.log(this.itemCount);
@@ -137,21 +137,30 @@
             })
         },
         methods: {
-            currentOperatorChange(val){
-                console.log("selected is changed!",val);
-                this.showValue = val;
+            openAddPage(){
+                this.dialogFormVisible = true;
+
             },
-            addemp() {
+            addEmployee() {
+                if(!this.userInfo.eid){
+                    console.log("员工号为空");
+                    return;
+                }
                 this.tableData.push(this.userInfo);
+                this.userInfo = {
+                    eid: '',
+                    ename: '',
+                    ephone: '',
+                    erole: '',
+                    esalary: ''
+                }
+                this.dialogFormVisible = false;
                 console.log("新增被点击")
             },
-            // delemp(index){
-            //     console.log("删除被点击"+index);
-            //     delItem = this.tableData.splice(index,1);
-            //     console.log(delItem);
-            // },
-            editemp() {
-                console.log("编辑被点击")
+            del(index){
+                console.log("删除被点击"+index);
+                delItem = this.tableData.splice(index,1);
+                console.log(delItem);
             },
             // delemp() {
             //     this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
@@ -178,7 +187,6 @@
   .text {
     font-size: 14px;
   }
-
   .item {
     margin-bottom: 50px;
 
@@ -186,6 +194,7 @@
   .box-card {
     width: 75%;
   }
+
   .form {
     height: 200px;
   }

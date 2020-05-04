@@ -5,17 +5,6 @@
         <span>权限管理</span>
         <el-button style="float: right; padding: 3px 0" type="text">新建</el-button>
       </div>
-      <div class="text item">
-        <el-select v-model="value" placeholder="请选择"  value="">
-          <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
-          </el-option>
-        </el-select>
-        <el-button round>查询</el-button>
-      </div>
       <div>
         <el-table
           :data="tableData"
@@ -41,15 +30,12 @@
             label="成员"
             width="">
           </el-table-column>
-          <el-table-column label="操作">
+          <el-table-column
+            prop="esalary"
+            label="操作">
+
             <template slot-scope="scope">
-              <el-button
-                size="mini"
-                @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-              <el-button
-                size="mini"
-                type="danger"
-                @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+              <el-button style="float: left; padding-right: 3px;" type="text"><span style="color: red" @click="del">删除</span></el-button>
             </template>
           </el-table-column>
         </el-table>

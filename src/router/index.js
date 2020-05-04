@@ -17,8 +17,6 @@ const GoodReturn = ()=>import("../views/goodsreturn/GoodReturn")
 const GoodPrice = ()=>import("../views/goodsprice/GoodPrice")
 const Debt = ()=>import("../views/debt/Debt")
 const Employees = ()=>import("../views/employees/Employees")
-//const AddEmployee =()=>import("../views/employees/AddEmployee")
-const AddLog = ()=>import("../views/log/AddLog")
 Vue.use(Router)
 export default new Router({
   mode:'history',
@@ -40,10 +38,6 @@ export default new Router({
           path: 'log',
           name: 'log',
           component: Log,
-        },{
-          path: 'addlog',
-          name: 'Addlog',
-          component: AddLog,
         },{
           path: 'stockIn',
           name: 'StockIn',

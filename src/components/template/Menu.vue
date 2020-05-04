@@ -89,13 +89,13 @@
           <span style="font-size: 18px;font-weight: bold">员工</span>
         </template>
         <el-menu-item-group>
-          <el-menu-item index="6-1">
-            <router-link to="/home/rolePermissinon">角色权限</router-link>
-          </el-menu-item>
-          <el-menu-item index="6-2" @click="getInfo">
-            <router-link to="/home/employee">员工基本信息</router-link>
-          </el-menu-item>
-        </el-menu-item-group>
+        <el-menu-item index="6-1">
+          <router-link to="/home/rolePermissinon">角色权限</router-link>
+        </el-menu-item>
+        <el-menu-item index="6-2">
+          <router-link to="/home/employee">员工基本信息</router-link>
+        </el-menu-item>
+      </el-menu-item-group>
       </el-submenu>
       <el-submenu index="7">
         <template slot="title">
@@ -131,7 +131,6 @@
         }
     }
 </script>
-
 <style scoped>
   .leftMenu {
     text-align: left;
@@ -145,9 +144,6 @@
     margin: 20px;
     color: white;
   }
-
-
-
   a:visited {
     color: purple;
     text-decoration: none;
@@ -156,5 +152,4 @@
     color: red;
     text-decoration: none;
   }
-
 </style>
