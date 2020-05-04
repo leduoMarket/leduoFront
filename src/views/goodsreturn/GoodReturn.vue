@@ -31,7 +31,7 @@
     </div>
     <div class="form">
       <el-table
-        :data="tableData"
+        :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)"
         border
         style="width: 100%">
         <el-table-column
@@ -57,7 +57,17 @@
           </template>
         </el-table-column>
       </el-table>
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="currentPage"
+        :page-sizes="[3,5, 10, 20, 40]"
+        :page-size="pagesize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="tableData.length">
+      </el-pagination>
     </div>
+
   </el-card>
 </template>
 
@@ -82,8 +92,33 @@
                     resource: '',
                     desc: ''
                 },
-                formLabelWidth: '120px'
+                formLabelWidth: '120px',
+                pagesize:5,  //分页数量
+                currentPage:1 //初始页
             }
+        },
+        methods: {
+            // 初始页currentPage、初始每页数据数pagesize和数据data
+            handleSizeChange: function (size) {
+                this.pagesize = size;
+                console.log(this.pagesize)
+            },
+            handleCurrentChange: function (currentPage) {
+                this.currentPage = currentPage;
+                console.log(this.currentPage)
+            },
+        },
+        created() {
+            this.$axios.get("/productreturn").then(res=>{
+                if(res.data){
+                    console.log(res)
+                    this.tableData = res.data;
+                    this.itemCount = res.data.length;
+                    console.log(this.itemCount);
+                }
+            }).catch(failResponse=>{
+
+            })
         }
     }
 </script>
@@ -94,7 +129,7 @@
     width: 75%;
   }
   .form {
-    height: 200px;
+    height: 100%;
     margin-top: 30px;
   }
 </style>

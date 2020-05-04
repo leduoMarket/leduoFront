@@ -5,22 +5,28 @@
       <el-button style="float: right; padding: 3px 0" type="text" @click="dialogFormVisible = true">新建</el-button>
       <el-dialog title="支付流水帐" :visible.sync="dialogFormVisible">
         <el-form :model="form">
-          <el-form-item label="支付单号" :label-width="formLabelWidth">
-            <el-input v-model="form.vid" autocomplete="off"></el-input>
+          <el-form-item label="交易号" :label-width="formLabelWidth">
+            <el-input v-model="form.pnumber" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="商品代码" :label-width="formLabelWidth">
-            <el-input v-model="form.vname" autocomplete="off"></el-input>
-          </el-form-item>
-          <el-form-item label="供应商名称" :label-width="formLabelWidth">
-            <el-input v-model="form.gid" autocomplete="off"></el-input>
-          </el-form-item>
-          <el-form-item label="已付款" :label-width="formLabelWidth">
-            <el-input v-model="form.inumber" autocomplete="off"></el-input>
-          </el-form-item>
-          <el-form-item label="欠款" :label-width="formLabelWidth">
+          <el-form-item label="交易时间" :label-width="formLabelWidth">
             <el-input v-model="form.pdate" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="日期" :label-width="formLabelWidth">
+          <el-form-item label="交易类别" :label-width="formLabelWidth">
+            <el-input v-model="form.pcategory" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="来源店铺" :label-width="formLabelWidth">
+            <el-input v-model="form.psource_shop" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="交易金额" :label-width="formLabelWidth">
+            <el-input v-model="form.ptrading_amount" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="现余额" :label-width="formLabelWidth">
+            <el-input v-model="form.premainning_amount" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="类型" :label-width="formLabelWidth">
+            <el-input v-model="form.ptype" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="已付款项" :label-width="formLabelWidth">
             <el-input v-model="form.ppayment" autocomplete="off"></el-input>
           </el-form-item>
         </el-form>
@@ -33,7 +39,7 @@
     <div class="text item">
       <div class="text item">
         <el-input style="width: 300px"
-                  placeholder="请输入支付单号"
+                  placeholder="请输入供应商代码"
                   v-model="input"
                   clearable>
         </el-input>
@@ -42,39 +48,36 @@
     </div>
     <div class="form">
       <el-table
-        :data="tableData"
+        :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)"
         border
         style="width: 100%">
         <el-table-column
-          prop="vid"
-          label="支付单号"
+          prop="pnumber"
+          label="交易号"
           width="180">
         </el-table-column>
         <el-table-column
-          prop="vname"
-          label="商品代码"
+          prop="pdate"
+          label="交易时间"
           width="180">
         </el-table-column>
         <el-table-column
-          prop="gid"
-          label="供应商名称">
+          prop="pcategory"
+          label="交易类别">
         </el-table-column>
         <el-table-column
-          prop="gname"
-          label="已付款">
+          prop="psource_shop"
+          label="来源店铺">
         </el-table-column>
         <el-table-column
-          prop="inumber"
-          label="欠款">
+          prop="ptrading_amount"
+          label="交易金额">
         </el-table-column>
         <el-table-column
-          prop="ptype"
-          label="日期">
+          prop="premainning_amount"
+          label="现余额">
         </el-table-column>
-<!--        <el-table-column-->
-<!--          prop="ppayment"-->
-<!--          label="贷款结算">-->
-<!--        </el-table-column>-->
+
         <el-table-column
           prop="esalary"
           label="操作">
@@ -84,6 +87,15 @@
           </template>
         </el-table-column>
       </el-table>
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="currentPage"
+        :page-sizes="[3,5, 10, 20, 40]"
+        :page-size="pagesize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="tableData.length">
+      </el-pagination>
     </div>
   </el-card>
 </template>
@@ -99,14 +111,12 @@
                 dialogTableVisible: false,
                 dialogFormVisible: false,
                 form: {
-                    vid: '',
-                    vname: '',
-                    gid: '',
-                    gname: '',
-                    inumber: '',
+                    pnumber: '',
                     pdate: '',
-                    ptype: '',
-                    ppayment: '',
+                    pcatecory: '',
+                    psource_shop: '',
+                    ptrading_amount: '',
+                    premainning_amount: '',
                     date1: '',
                     date2: '',
                     delivery: false,
@@ -114,9 +124,23 @@
                     resource: '',
                     desc: ''
                 },
-                formLabelWidth: '120px'
+                formLabelWidth: '120px',
+                pagesize:5,  //分页数量
+                currentPage:1 //初始页
             }
-        }
+        },
+        methods: {
+            // 初始页currentPage、初始每页数据数pagesize和数据data
+            handleSizeChange: function (size) {
+                this.pagesize = size;
+                console.log(this.pagesize)
+            },
+            handleCurrentChange: function (currentPage) {
+                this.currentPage = currentPage;
+                console.log(this.currentPage)
+            },
+        },
+
     }
 </script>
 

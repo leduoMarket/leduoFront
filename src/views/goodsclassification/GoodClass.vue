@@ -1,67 +1,101 @@
 <template>
   <div class="GoodClass">
-    <el-table
-      :data="tableData"
-      height="450"
-      style="width: 81%">
-      <el-table-column label="商品分类">
-      <el-table-column label="商品大类">
-        <el-table-column
-          prop="id1"
-          label="代码"
-          width="100">
-        </el-table-column>
-        <el-table-column
-          prop="name1"
-          label="名称"
-          width="100">
-        </el-table-column>
-      </el-table-column>
-      <el-table-column label="商品中类">
-        <el-table-column
-          prop="id2"
-          label="代码"
-          width="100">
-        </el-table-column>
-        <el-table-column
-          prop="name2"
-          label="名称"
-          width="100">
-        </el-table-column>
-      </el-table-column>
-      <el-table-column label=" 商品小类">
-        <el-table-column
-          prop="id3"
-          label="代码"
-          width="100">
-        </el-table-column>
-        <el-table-column
-          prop="name3"
-          label="名称"
-          width="100">
-        </el-table-column>
-        <el-table-column
-          prop="id4"
-          label="代码"
-          width="100">
-        </el-table-column>
-        <el-table-column
-          prop="name4"
-          label="名称"
-          width="100">
-        </el-table-column><el-table-column
-          prop="id5"
-          label="代码"
-          width="100">
-        </el-table-column>
-        <el-table-column
-          prop="name5"
-          label="名称"
-          width="100">
-        </el-table-column>
-      </el-table-column>
-      </el-table-column>
-    </el-table>
+    <router-view></router-view>
+    <el-card class="box-card">
+      <div slot="header" class="clearfix">
+        <span>商品分类表</span>
+        <el-button style="float: right; padding-right: 3px;" type="text"><span style="color: red">删除</span></el-button>
+        <el-button style="float: right; padding-right: 3px;" type="text">编辑</el-button>
+        <el-button style="float: right; padding-right: 3px;" type="text">
+          <router-link to="addemployee">新建</router-link>
+        </el-button>
+      </div>
+      <div class="text item">
+        <el-select v-model="value" placeholder="请选择"  value="">
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+        <el-button round>查询</el-button>
+      </div>
+      <div class="form">
+        <el-table
+          :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)"
+          border
+          style="width: 100%">
+          <el-table-column label="商品分类">
+            <el-table-column label="商品大类">
+              <el-table-column
+                prop="id1"
+                label="代码"
+                width="100">
+              </el-table-column>
+              <el-table-column
+                prop="name1"
+                label="名称"
+                width="100">
+              </el-table-column>
+            </el-table-column>
+            <el-table-column label="商品中类">
+              <el-table-column
+                prop="id2"
+                label="代码"
+                width="100">
+              </el-table-column>
+              <el-table-column
+                prop="name2"
+                label="名称"
+                width="100">
+              </el-table-column>
+            </el-table-column>
+            <el-table-column label=" 商品小类">
+              <el-table-column
+                prop="id3"
+                label="代码"
+                width="100">
+              </el-table-column>
+              <el-table-column
+                prop="name3"
+                label="名称"
+                width="100">
+              </el-table-column>
+              <el-table-column
+                prop="id4"
+                label="代码"
+                width="100">
+              </el-table-column>
+              <el-table-column
+                prop="name4"
+                label="名称"
+                width="100">
+              </el-table-column><el-table-column
+              prop="id5"
+              label="代码"
+              width="100">
+            </el-table-column>
+              <el-table-column
+                prop="name5"
+                label="名称"
+                width="100">
+              </el-table-column>
+            </el-table-column>
+          </el-table-column>
+        </el-table>
+        <el-pagination
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="currentPage"
+          :page-sizes="[3,5, 10, 20, 40]"
+          :page-size="pagesize"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="tableData.length">
+        </el-pagination>
+      </div>
+    </el-card>
+
 
   </div>
 
@@ -72,6 +106,11 @@
     export default {
         data() {
             return {
+                pagesize:5,  //分页数量
+                currentPage:1,//初始页
+                listSearch:"", //搜索框的内容存储
+                options: [],
+                itemCount:[],
                 tableData: [{
                     id1: "1",
                     name1: "包装食品",
@@ -968,34 +1007,32 @@
                 ]
             }
         },
+        methods: {
+            // 初始页currentPage、初始每页数据数pagesize和数据data
+            handleSizeChange: function (size) {
+                this.pagesize = size;
+                console.log(this.pagesize)
+            },
+            handleCurrentChange: function (currentPage) {
+                this.currentPage = currentPage;
+                console.log(this.currentPage)
+            },
+        },
     }
 </script>
 
 <style scoped>
-  .header-info{
-    text-align: right;
-    background-color: #F7F7FB;
-    height: 30px;
+  .text {
+    font-size: 14px;
   }
-  .header-info span{
-    margin-right: 25px;
-    vertical-align: middle;
+  .item {
+    margin-bottom: 50px;
   }
-  .el-breadcrumb{
-    height: 30px;
-    background-color: #EAEAFD;
-    line-height: 30px;
-    /*设置居中*/
-  }
-
-  #tabletop {
-    padding: 15px;
-    text-align: center;
-  }
-  .GoodClass{
-    border-left: 3px;
+  .box-card {
     width: 75%;
-    display: flex;
+  }
+  .form {
+    height: 100%;
   }
 
 </style>
