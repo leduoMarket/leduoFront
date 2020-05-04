@@ -5,23 +5,23 @@
       <el-button style="float: right; padding: 3px 0" type="text" @click="dialogFormVisible = true">新建</el-button>
       <el-dialog title="支付流水帐" :visible.sync="dialogFormVisible">
         <el-form :model="form">
-          <el-form-item label="供应商代码" :label-width="formLabelWidth">
-            <el-input v-model="form.vid" autocomplete="off"></el-input>
+          <el-form-item label="交易号" :label-width="formLabelWidth">
+            <el-input v-model="form.pnumber" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="供应商名称" :label-width="formLabelWidth">
-            <el-input v-model="form.vname" autocomplete="off"></el-input>
-          </el-form-item>
-          <el-form-item label="商品代码" :label-width="formLabelWidth">
-            <el-input v-model="form.gid" autocomplete="off"></el-input>
-          </el-form-item>
-          <el-form-item label="商品名称" :label-width="formLabelWidth">
-            <el-input v-model="form.gname" autocomplete="off"></el-input>
-          </el-form-item>
-          <el-form-item label="单号" :label-width="formLabelWidth">
-            <el-input v-model="form.inumber" autocomplete="off"></el-input>
-          </el-form-item>
-          <el-form-item label="日期" :label-width="formLabelWidth">
+          <el-form-item label="交易时间" :label-width="formLabelWidth">
             <el-input v-model="form.pdate" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="交易类别" :label-width="formLabelWidth">
+            <el-input v-model="form.pcategory" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="来源店铺" :label-width="formLabelWidth">
+            <el-input v-model="form.psource_shop" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="交易金额" :label-width="formLabelWidth">
+            <el-input v-model="form.ptrading_amount" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="现余额" :label-width="formLabelWidth">
+            <el-input v-model="form.premainning_amount" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item label="类型" :label-width="formLabelWidth">
             <el-input v-model="form.ptype" autocomplete="off"></el-input>
@@ -45,7 +45,6 @@
         </el-input>
         <el-button round>查询</el-button>
       </div>
-      <el-button round>查询</el-button>
     </div>
     <div class="form">
       <el-table
@@ -53,39 +52,32 @@
         border
         style="width: 100%">
         <el-table-column
-          prop="vid"
-          label="供应商代码"
+          prop="pnumber"
+          label="交易号"
           width="180">
-        </el-table-column>
-        <el-table-column
-          prop="vname"
-          label="供应商名称"
-          width="180">
-        </el-table-column>
-        <el-table-column
-          prop="gid"
-          label="商品代码">
-        </el-table-column>
-        <el-table-column
-          prop="gname"
-          label="商品名称">
-        </el-table-column>
-        <el-table-column
-          prop="inumber"
-          label="单号">
         </el-table-column>
         <el-table-column
           prop="pdate"
-          label="日期">
+          label="交易时间"
+          width="180">
         </el-table-column>
         <el-table-column
-          prop="ptype"
-          label="类型">
+          prop="pcategory"
+          label="交易类别">
         </el-table-column>
         <el-table-column
-          prop="ppayment"
-          label="贷款结算">
+          prop="psource_shop"
+          label="来源店铺">
         </el-table-column>
+        <el-table-column
+          prop="ptrading_amount"
+          label="交易金额">
+        </el-table-column>
+        <el-table-column
+          prop="premainning_amount"
+          label="现余额">
+        </el-table-column>
+
         <el-table-column
           prop="esalary"
           label="操作">
@@ -111,14 +103,12 @@
                 dialogTableVisible: false,
                 dialogFormVisible: false,
                 form: {
-                    vid: '',
-                    vname: '',
-                    gid: '',
-                    gname: '',
-                    inumber: '',
+                    pnumber: '',
                     pdate: '',
-                    ptype: '',
-                    ppayment: '',
+                    pcatecory: '',
+                    psource_shop: '',
+                    ptrading_amount: '',
+                    premainning_amount: '',
                     date1: '',
                     date2: '',
                     delivery: false,
