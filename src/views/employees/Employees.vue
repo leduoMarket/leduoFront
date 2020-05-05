@@ -236,16 +236,12 @@
   .text {
     font-size: 14px;
   }
-
   .item {
     margin-bottom: 50px;
-
   }
-
   .box-card {
     width: 75%;
   }
-
   .form {
     height: 100%;
   }
