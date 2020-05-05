@@ -79,7 +79,7 @@
             <router-link to="/home/flowCount">支付流水账</router-link>
           </el-menu-item>
           <el-menu-item index="5-3">
-            <router-link to="">盈亏分析</router-link>
+            <router-link to="/home/profitAnalysis">盈亏分析</router-link>
           </el-menu-item>
         </el-menu-item-group>
       </el-submenu>

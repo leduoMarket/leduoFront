@@ -17,9 +17,7 @@ const GoodReturn = ()=>import("../views/goodsreturn/GoodReturn")
 const GoodPrice = ()=>import("../views/goodsprice/GoodPrice")
 const Debt = ()=>import("../views/debt/Debt")
 const Employees = ()=>import("../views/employees/Employees")
-const Analysis = ()=>import("../views/analysis/Analysis")
-//const AddEmployee =()=>import("../views/employees/AddEmployee")
-//const AddLog = ()=>import("../views/log/AddLog")
+const ProfitAnalysis=()=>import("../views/analysis/ProfitAnalysis")
 Vue.use(Router)
 export default new Router({
   mode:'history',
@@ -36,6 +34,10 @@ export default new Router({
         path: 'stockOut',
         name: 'StockOut',
         component: StockOut
+      },{
+        path: 'profitAnalysis',
+        name: 'profit',
+        component: ProfitAnalysis
       },
         {
           path: 'log',
@@ -97,10 +99,6 @@ export default new Router({
           path: 'rolePermissinon',
           name: 'RolePermission',
           component: RolePermission,
-         },{
-           path: 'analysis',
-           name: 'Analysis',
-           component: Analysis,
         }
       ]
     }
