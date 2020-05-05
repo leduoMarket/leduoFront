@@ -7,22 +7,19 @@
       <el-dialog title="欠款单" :visible.sync="dialogFormVisible">
         <el-form :model="form">
           <el-form-item label="欠款单号" :label-width="formLabelWidth">
-            <el-input v-model="form.vid" autocomplete="off"></el-input>
+            <el-input v-model="form.dnumber" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item label="商品代码" :label-width="formLabelWidth">
-            <el-input v-model="form.vname" autocomplete="off"></el-input>
-          </el-form-item>
-          <el-form-item label="供应商名称" :label-width="formLabelWidth">
             <el-input v-model="form.gid" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="金额" :label-width="formLabelWidth">
-            <el-input v-model="form.gname" autocomplete="off"></el-input>
+          <el-form-item label="供应商名称" :label-width="formLabelWidth">
+            <el-input v-model="form.vname" autocomplete="off"></el-input>
           </el-form-item>
-<!--          <el-form-item label="信誉" :label-width="formLabelWidth">-->
-<!--            <el-input v-model="form.inumber" autocomplete="off"></el-input>-->
-<!--          </el-form-item>-->
           <el-form-item label="日期" :label-width="formLabelWidth">
-            <el-input v-model="form.date" autocomplete="off"></el-input>
+            <el-input v-model="form.ddate" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="欠款金额" :label-width="formLabelWidth">
+            <el-input v-model="form.ddebt" autocomplete="off"></el-input>
           </el-form-item>
 <!--          <el-form-item label="信誉" :label-width="formLabelWidth">-->
 <!--            <el-input v-model="form.vcredit" autocomplete="off"></el-input>-->
@@ -53,39 +50,32 @@
         border
         style="width: 100%">
         <el-table-column
-          prop="vid"
+          prop="dnumber"
           label="欠款单号"
           width="180">
         </el-table-column>
         <el-table-column
-          prop="vname"
+          prop="gid"
           label="商品代码"
           width="180">
         </el-table-column>
         <el-table-column
-          prop="gid"
+          prop="vname"
           label="供应商名称">
         </el-table-column>
-<!--        <el-table-column-->
-<!--          prop="gid"-->
-<!--          label="已付款">-->
-<!--        </el-table-column>-->
         <el-table-column
-          prop="inumber"
-          label="欠款">
-        </el-table-column>
-<!--        <el-table-column-->
-<!--          prop="ddate"-->
-<!--          label="信誉">-->
-<!--        </el-table-column>-->
-        <el-table-column
-          prop="vcredit"
+          prop="ddate"
           label="日期">
         </el-table-column>
-<!--        <el-table-column-->
-<!--          prop="dpayment"-->
-<!--          label="贷款结算">-->
-<!--        </el-table-column>-->
+        <el-table-column
+          prop="ddebt"
+          label="欠款金额">
+        </el-table-column>
+        <el-table-column
+          prop="ddate"
+          label="日期">
+        </el-table-column>
+
         <el-table-column
           prop="esalary"
           label="操作">
@@ -119,14 +109,11 @@
                 dialogTableVisible: false,
                 dialogFormVisible: false,
                 form: {
-                    vid: '',
-                    vname: '',
+                    dnumber: '',
                     gid: '',
-                    gname: '',
-                    inumber: '',
+                    vname: '',
                     ddate: '',
-                    vcredit: '',
-                    dpayment: '',
+                    ddebt: '',
                     date1: '',
                     date2: '',
                     delivery: false,
