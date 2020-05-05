@@ -2,6 +2,7 @@
   <el-card class="box-card">
     <div slot="header" class="clearfix">
       <span>入库单</span>
+<!--      新建页面-->
       <el-button style="float: right; padding: 3px 0" type="text" @click="dialogFormVisible = true">新建</el-button>
       <el-dialog title="入库单" :visible.sync="dialogFormVisible">
         <el-form :model="form">
@@ -32,6 +33,15 @@
           <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
         </div>
       </el-dialog>
+    </div>
+<!--    查询模块-->
+    <div class="text item">
+      <el-input style="width: 300px"
+                placeholder="请输入商品代码"
+                v-model="searchInput"
+                clearable>
+      </el-input>
+      <el-button round @click="beginSearch">查询</el-button>
     </div>
     <div class="form">
       <el-table
@@ -71,9 +81,9 @@
         <el-table-column
           prop="esalary"
           label="操作">
-
+<!--          默认为每一行增加删除操作，只需要在methods里面定义就好-->
           <template slot-scope="scope">
-            <el-button style="float: left; padding-right: 3px;" type="text"><span style="color: red" @click="del">删除</span></el-button>
+            <el-button style="float: left; padding-right: 3px;" type="text"><span style="color: red" @click="del(scope.row,scope.$index)">删除</span></el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -120,7 +130,8 @@
                 },
                 formLabelWidth: '120px',
                 pagesize:5,
-                currentPage:1 //初始页
+                currentPage:1, //初始页
+                searchInput:''
             }
         },
         methods: {
@@ -133,6 +144,27 @@
                 this.currentPage = currentPage;
                 console.log(this.currentPage)
             },
+            beginSearch(){
+                this.$axios.get('/queiryStockIn',{
+                    params:{
+                        gid:this.searchInput,
+                    }
+                }).then(successfulResponse=>{
+                    console.log('this.tableData'+successfulResponse.data);
+                    this.tableData=[];
+                    this.tableData.push(successfulResponse.data);
+                    this.$message({
+                        message: '成功找到记录',
+                        type: 'success'
+                    });
+                }).catch(failedResponse=>{
+                    this.$message('没有找到记录哦');
+                })
+            },
+            //新增的一条记录里面最后一个操作是删除，默认每一行代码都有，所以必须要有del函数，不然会报错
+            del(delItem,delIndex){
+                console.log("执行了删除函数")
+            }
         },
         created() {
             this.$axios.get("/stock").then(res=>{
@@ -145,7 +177,8 @@
             }).catch(failResponse=>{
 
             })
-        }
+        },
+
     }
 </script>
 

@@ -33,6 +33,14 @@
         </div>
       </el-dialog>
     </div>
+    <div class="text item">
+      <el-input style="width: 300px"
+                placeholder="请输入商品代码"
+                v-model="input"
+                clearable>
+      </el-input>
+      <el-button round>查询</el-button>
+    </div>
     <div class="form">
       <el-table
         :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)"
