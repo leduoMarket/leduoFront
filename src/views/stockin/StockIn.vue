@@ -1,5 +1,4 @@
 <template>
-
   <el-card class="box-card">
     <div slot="header" class="clearfix">
       <span>入库单</span>
