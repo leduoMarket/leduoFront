@@ -4,13 +4,15 @@
     <el-card class="box-card">
       <div slot="header" class="clearfix">
         <span>商品分类表</span>
+        <el-button style="float: right; padding-right: 3px;" type="text">
+          <router-link to="addemployee">新建</router-link>
+        </el-button>
       </div>
       <div class="form">
         <el-table
           :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)"
           border
           style="width: 100%">
-          <el-table-column label="商品分类">
             <el-table-column label="商品大类">
               <el-table-column
                 prop="id1"
@@ -66,13 +68,12 @@
                 width="100">
               </el-table-column>
             </el-table-column>
-          </el-table-column>
         </el-table>
         <el-pagination
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
           :current-page="currentPage"
-          :page-sizes="[3,5, 10, 20]"
+          :page-sizes="[3,5, 10, 20, 40]"
           :page-size="pagesize"
           layout="total, sizes, prev, pager, next, jumper"
           :total="tableData.length">
@@ -1013,7 +1014,7 @@
     margin-bottom: 50px;
   }
   .box-card {
-    width: 77%;
+    width: 78%;
   }
   .form {
     height: 100%;

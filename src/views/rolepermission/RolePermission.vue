@@ -39,15 +39,15 @@
             </template>
           </el-table-column>
         </el-table>
-        <el-pagination
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          :current-page="currentPage"
-          :page-sizes="[3,5, 10, 20]"
-          :page-size="pagesize"
-          layout="total, sizes, prev, pager, next, jumper"
-          :total="tableData.length">
-        </el-pagination>
+<!--        <el-pagination-->
+<!--          @size-change="handleSizeChange"-->
+<!--          @current-change="handleCurrentChange"-->
+<!--          :current-page="currentPage"-->
+<!--          :page-sizes="[3,5, 10, 20, 40]"-->
+<!--          :page-size="pagesize"-->
+<!--          layout="total, sizes, prev, pager, next, jumper"-->
+<!--          :total="tableData.length">-->
+<!--        </el-pagination>-->
       </div>
     </el-card>
 
@@ -97,14 +97,14 @@
                 console.log(index, row);
             },
             // 初始页currentPage、初始每页数据数pagesize和数据data
-            handleSizeChange: function (size) {
-                this.pagesize = size;
-                console.log(this.pagesize)
-            },
-            handleCurrentChange: function (currentPage) {
-                this.currentPage = currentPage;
-                console.log(this.currentPage)
-            },
+            // handleSizeChange: function (size) {
+            //     this.pagesize = size;
+            //     console.log(this.pagesize)
+            // },
+            // handleCurrentChange: function (currentPage) {
+            //     this.currentPage = currentPage;
+            //     console.log(this.currentPage)
+            // },
         }
 
 
