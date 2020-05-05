@@ -4,43 +4,46 @@
       <span>供应商表</span>
       <el-button style="float: right; padding: 3px 0" type="text" @click="dialogFormVisible = true">新建</el-button>
       <el-dialog title="供应商表" :visible.sync="dialogFormVisible">
-        <el-form :model="form">
+        <el-form :model="addform">
           <el-form-item label="供应商代码" :label-width="formLabelWidth">
-            <el-input v-model="form.vid" autocomplete="off"></el-input>
+            <el-input v-model="addform.vid" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item label="供应商名称" :label-width="formLabelWidth">
-            <el-input v-model="form.vname" autocomplete="off"></el-input>
+            <el-input v-model="addform.vname" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item label="地址" :label-width="formLabelWidth">
-            <el-input v-model="form.vaddress" autocomplete="off"></el-input>
+            <el-input v-model="addform.vaddress" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item label="电话" :label-width="formLabelWidth">
-            <el-input v-model="form.vphone" autocomplete="off"></el-input>
+            <el-input v-model="addform.vphone" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="邮箱" :label-width="formLabelWidth">
+          <el-input v-model="addform.vemail" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item label="传真" :label-width="formLabelWidth">
-            <el-input v-model="form.vfax" autocomplete="off"></el-input>
+            <el-input v-model="addform.vfax" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item label="信誉" :label-width="formLabelWidth">
-            <el-input v-model="form.vcredit" autocomplete="off"></el-input>
+            <el-input v-model="addform.vcredit" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item label="贷款结算" :label-width="formLabelWidth">
-            <el-input v-model="form.vsettle_account" autocomplete="off"></el-input>
+            <el-input v-model="addform.vsettle_account" autocomplete="off"></el-input>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisible = false">取 消</el-button>
-          <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+          <el-button type="primary" @click="addVender">确 定</el-button>
         </div>
       </el-dialog>
     </div>
-    <div class="text item">
-      <el-input style="width: 300px"
-                placeholder="请输入供应商代码"
-                v-model="input"
-                clearable>
-      </el-input>
-      <el-button round>查询</el-button>
-    </div>
+<!--    <div class="text item">-->
+<!--      <el-input style="width: 300px"-->
+<!--                placeholder="请输入供应商代码"-->
+<!--                v-model="input"-->
+<!--                clearable>-->
+<!--      </el-input>-->
+<!--      <el-button round>查询</el-button>-->
+<!--    </div>-->
     <div class="form">
       <el-table
         :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)"
@@ -61,15 +64,15 @@
           label="地址">
         </el-table-column>
         <el-table-column
-          prop="iphone"
+          prop="vphone"
           label="电话">
         </el-table-column>
         <el-table-column
-          prop="iemail"
+          prop="vemail"
           label="E-mail">
         </el-table-column>
         <el-table-column
-          prop="ifax"
+          prop="vfax"
           label="传真">
         </el-table-column>
         <el-table-column
@@ -104,29 +107,26 @@
 
 <script>
     export default {
-        name: "StockIn",
+        name: "Vender",
         data() {
             return {
-                options: [],
+                //添加表单成功吗
+                addSuccessful:false,
+                // 在基础表格中展示的数据
                 tableData: [],
-                gridData: [],
+
+                // 控制员工新增页面的form表单可见性
                 dialogTableVisible: false,
                 dialogFormVisible: false,
-                form: {
+                addform: {
                     vid: '',
                     vname: '',
                     vaddress: '',
                     vphone: '',
-                    vemail: '',
+                    vemail:'',
                     vfax: '',
                     vcredit: '',
-                    vsettle_account: '',
-                    date1: '',
-                    date2: '',
-                    delivery: false,
-                    type: [],
-                    resource: '',
-                    desc: ''
+                    vsettle_account: ''
                 },
                 formLabelWidth: '120px',
                 pagesize:5,
@@ -143,14 +143,104 @@
                 this.currentPage = currentPage;
                 console.log(this.currentPage)
             },
+            addVender(){
+                if (!this.addform.vid) {
+                    console.log("供应商代码为空");
+                    return;
+                }
+                this.$axios.post('/vender', {
+                    vid: this.addform.vid,
+                    vname: this.addform.vname,
+                    vaddress: this.addform.vaddress,
+                    vphone: this.addform.vphone,
+                    vemail: this.addform.vemail,
+                    vfax: this.addform.vfax,
+                    vcredit: this.addform.vcredit,
+                    vsettle_account: this.addform.vsettle_account,
+
+                }).then(successResponse => {
+                    if (successResponse.data.code === 200) {
+                        this.addSuccessful = true;
+                        this.$message({
+                            message: '成功添加一条记录',
+                            type: 'success',
+                        });
+                        //将信息刷新到表格中
+                        this.tableData.push(this.addform);
+                        //清空填写单的信息放到请求体中，避免请求延迟已经被清空才刷新在信息到表格中
+                        this.addform = {
+                            vid: '',
+                            vname: '',
+                            vaddress: '',
+                            vphone: '',
+                            vemail:'',
+                            vfax: '',
+                            vcredit: '',
+                            vsettle_account: ''
+                        };
+                    }
+                }).catch(failedResponse => {
+                    this.addSuccessful = false;
+                });
+
+                // 将填写框置空，方便下次填写
+                this.addform = {
+                    vid: '',
+                    vname: '',
+                    vaddress: '',
+                    vphone: '',
+                    vemail:'',
+                    vfax: '',
+                    vcredit: '',
+                    vsettle_account: ''
+                };
+                // 让表格消失
+                this.dialogFormVisible = false;
+
+            },
+            del(delItem, index) {
+                console.log(delItem);
+                this.$confirm('你确定要删除这条记录吗？','提示',{
+                    confirmButtonText:'确定',
+                    cancelButtonText:'取消',
+                    type:'warning'
+                }).then(() =>{
+                    //如果用户确实要删除，则用delete方式删除，并且传递要删除的记录的eid
+                    this.$axios.delete('/delvender',{
+                        params:{
+                            empId: delItem.vid
+                        }
+                    }).then(successResponse =>{
+                        //数据库删除成功在table表里进行删除,
+                        this.tableData.splice(index, 1);
+                        this.$message({
+                            type: 'success',
+                            message: '删除成功!'
+                        });
+                    }).catch(failResponse =>{
+                        //用户同意删除情况下数据库删除失败
+                        this.$message({
+                            type: 'info',
+                            message: '删除失败'
+                        });
+                    })
+                }).catch(() =>{
+                    //用户取消了删除
+                    this.$message({
+                        type: 'info',
+                        message: '已删除取消'
+                    });
+
+                });
+            }
+
         },
         created() {
             this.$axios.get("/vender").then(res=>{
                 if(res.data){
-                    console.log(res)
+                    console.log(res);
                     this.tableData = res.data;
-                    this.itemCount = res.data.length;
-                    console.log(this.itemCount);
+                    console.log(this.tableData.length);
                 }
             }).catch(failResponse=>{
 
