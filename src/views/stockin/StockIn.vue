@@ -30,10 +30,21 @@
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisible = false">取 消</el-button>
-          <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+          <el-button type="primary" @click="addStockIn">确 定</el-button>
         </div>
       </el-dialog>
     </div>
+    <!--      搜索框-->
+    <div class="text item">
+      <el-input style="width: 300px"
+                placeholder="请输入入库单编号"
+                v-model="input"
+                clearable>
+      </el-input>
+      <el-button round>查询</el-button>
+    </div>
+
+    <!-- table展示框-->
     <div class="form">
       <el-table
         :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)"
@@ -96,32 +107,33 @@
         name: "StockIn",
         data() {
             return {
+                // 标记删除或者添加是否成功
+                addSuccessful: false,
                 options: [],
-                //表单数据
+                //显示页面的表单数据
                 tableData: [
 
                 ],
-                gridData: [],
+                //删除的元素是谁
+                delItem: [],
+                // 控制员工新增页面的form表单可见性
                 dialogTableVisible: false,
                 dialogFormVisible: false,
+                // 用于新增表单数据时的绑定
                 form: {
-                    gname: '',
-                    vid: '',
-                    inumber: '',
-                    date: '',
-                    price: '',
-                    payment: '',
-                    account: '',
-                    date1: '',
-                    date2: '',
-                    delivery: false,
-                    type: [],
-                    resource: '',
-                    desc: ''
+                    gid:'',
+                    vname:'',
+                    inumber:'',
+                    date:'',
+                    price:'',
+                    payment:'',
+                    account:''
                 },
                 formLabelWidth: '120px',
                 pagesize:5,
-                currentPage:1 //初始页
+                currentPage:1, //初始页
+                //搜索框查询内容
+                input:'',
             }
         },
         methods: {
@@ -134,6 +146,53 @@
                 this.currentPage = currentPage;
                 console.log(this.currentPage)
             },
+            addStockIn(){
+                if (!this.form.gid){
+                    console.log("员工号为空");
+                    return;
+                }
+                this.$axios.post('/stockIn',{
+                    gid:this.form.gid,
+                    vname:this.form.vname,
+                    inumber:this.form.inumber,
+                    date:this.form.date,
+                    price:this.form.price,
+                    payment:this.form.payment,
+                    account:this.form.account,
+                }).then(successResponse =>{
+                    if(successResponse.data.code === 200){
+                        this.addSuccessful = true;
+                    }
+                }).catch(failedResponse =>{
+                    this.addSuccessful = false;
+                } );
+                if(!this.addSuccessful){
+                    this.message.error('插入数据失败')
+                }else{
+                    this.tableData.push(this.form);
+                    this.$message({
+                        message: '成功添加一条记录',
+                        type: 'success'
+                    });
+                }
+                // 将填写框置空，方便下次填写
+                this.form = {
+                    gid : '',
+                    vname : '',
+                    inumber : '',
+                    date : '',
+                    price: '',
+                    payment: '',
+                    account: '',
+                };
+                // 让表格消失
+                this.dialogFormVisible = false;
+            },
+            // 删除选中下标的一行数据，index由click处的scope.$index传过来的小标，delItem由scope.$row传过来的元素
+            del(delItem, index){
+                console.log('del');
+            }
+
         },
         created() {
             this.$axios.get("/stock").then(res=>{

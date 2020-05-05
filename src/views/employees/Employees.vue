@@ -93,7 +93,7 @@
 <!--javaScript代码-->
 <script>
     export default {
-        name: "StockIn",
+        name: "Employees",
         data() {
             return {
                 // 标记删除或者添加是否成功
@@ -114,6 +114,7 @@
                     esalary: ''
 
                 },
+                formLabelWidth: '120px',
                 pagesize:5,
                 currentPage:1 //初始页
                 }
