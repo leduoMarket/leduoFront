@@ -4,20 +4,20 @@
       <span>退货单</span>
       <el-button style="float: right; padding: 3px 0" type="text" @click="dialogFormVisible = true">新建</el-button>
       <el-dialog title="退货单" :visible.sync="dialogFormVisible">
-        <el-form :model="form">
+        <el-form :model="dataInfo">
           <el-form-item label="商品代码" :label-width="formLabelWidth">
-            <el-input v-model="form.gid" autocomplete="off"></el-input>
+            <el-input v-model="dataInfo.gid" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item label="退货日期" :label-width="formLabelWidth">
-            <el-input v-model="form.rdate" autocomplete="off"></el-input>
+            <el-input v-model="dataInfo.rdate" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item label="退货原因" :label-width="formLabelWidth">
-            <el-input v-model="form.rreason" autocomplete="off"></el-input>
+            <el-input v-model="dataInfo.rreason" autocomplete="off"></el-input>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisible = false">取 消</el-button>
-          <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+          <el-button type="primary" @click="addGoodsReturn">确 定</el-button>
         </div>
       </el-dialog>
     </div>
@@ -73,29 +73,41 @@
 
 <script>
     export default {
-        name: "StockIn",
+        name: "GoodReturn",
         data() {
             return {
-                options: [],
+                // 标记删除或者添加是否成功
+                addSuccessful: false,
+                // delSuccessful: false,
+                // 在基础表格中展示的数据
                 tableData: [],
-                gridData: [],
-                dialogTableVisible: false,
+                // 控制新增页面的form表单可见性
                 dialogFormVisible: false,
-                form: {
+                //删除的元素是谁
+                delItem: [],
+                // 用于新增数据绑定
+                dataInfo: {
                     gid: '',
                     rdate: '',
                     rreason: '',
-                    date1: '',
-                    date2: '',
-                    delivery: false,
-                    type: [],
-                    resource: '',
-                    desc: ''
                 },
                 formLabelWidth: '120px',
                 pagesize:5,  //分页数量
                 currentPage:1 //初始页
             }
+        },
+        // 创建的时候发送请求获取显示数据库所有退货单的列表数据
+        created() {
+            this.$axios.get("/goodsReturn").then(res=>{
+                if(res.data){
+                    console.log(res)
+                    this.tableData = res.data;
+                    this.itemCount = res.data.length;
+                    console.log(this.itemCount);
+                }
+            }).catch(failResponse=>{
+
+            })
         },
         methods: {
             // 初始页currentPage、初始每页数据数pagesize和数据data
@@ -107,18 +119,80 @@
                 this.currentPage = currentPage;
                 console.log(this.currentPage)
             },
-        },
-        created() {
-            this.$axios.get("/productreturn").then(res=>{
-                if(res.data){
-                    console.log(res)
-                    this.tableData = res.data;
-                    this.itemCount = res.data.length;
-                    console.log(this.itemCount);
-                }
-            }).catch(failResponse=>{
+            openAddPage() {
+                this.dialogFormVisible = true;
 
-            })
+            },
+            addGoodsReturn() {
+                if (!this.dataInfo.gid) {
+                    console.log("商品编号为空");
+                    return;
+                }
+                this.$axios.post('/addgoodsReturn', {
+                    gid: this.dataInfo.gid,
+                    rdate: this.dataInfo.rdate,
+                    rreason: this.dataInfo.rreason,
+                }).then(successResponse => {
+                    if (successResponse.data.code === 200) {
+                        this.addSuccessful = true;
+                    }
+                }).catch(failedResponse => {
+                    this.addSuccessful = false;
+                });
+                if (!this.addSuccessful) {
+                    this.$message.error('插入数据失败');
+                } else {
+                    this.tableData.push(this.dataInfo);
+                    this.$message({
+                        message: '成功添加一条记录',
+                        type: 'success'
+                    });
+                }
+                // 将填写框置空，方便下次填写
+                this.dataInfo = {
+                    gid: '',
+                    rdate: '',
+                    rreason: ''
+                };
+                // 让表格消失
+                this.dialogFormVisible = false;
+            },
+
+            // 删除选中下标的一行数据，index由click处的scope.$index传过来的下标，delItem由scope.$row传过来的元素
+            del(delItem, index) {
+                console.log(delItem);
+                this.$confirm('你确定要删这条记录？', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    //如果用户确实要删除，则用delete方式删除，并且传递要删除的记录的eid
+                    this.$axios.delete('/delgoodsReturn', {
+                        params: {
+                            goodsId: delItem.gid
+                        }
+                    }).then(successResponse => {
+                        //数据库删除成功在table表里进行删除,
+                        this.tableData.splice(index, 1);
+                        this.$message({
+                            type: 'success',
+                            message: '删除成功!'
+                        });
+                    }).catch(failedResponse => {
+                        this.$message({
+                            type: 'info',
+                            message: '删除失败'
+                        });
+                    })
+                }).catch(() => {
+                    //用户取消了删除
+                    this.$message({
+                        type: 'info',
+                        message: '已删除取消'
+                    });
+                });
+                console.log(delItem);
+            }
         }
     }
 </script>

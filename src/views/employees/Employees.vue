@@ -87,13 +87,13 @@
         </el-pagination>
       </div>
 
-    </el-card>
+  </el-card>
   </div>
 </template>
 <!--javaScript代码-->
 <script>
     export default {
-        name: "StockIn",
+        name: "Employees",
         data() {
             return {
                 addSuccessful:false,
@@ -111,11 +111,11 @@
                     ephone: '',
                     erole: '',
                     esalary: ''
+
                 },
-                pagesize: 5,
-                currentPage: 1, //初始页
-                formLabelWidth: '120px',
-            }
+                pagesize:5,
+                currentPage:1 //初始页
+                }
         },
         // 创建的时候发送请求获取显示数据库所有员工的列表数据
         created() {
@@ -171,9 +171,19 @@
                         // console.log("userInfo"+this.userInfo.eid);
                     }
                 }).catch(failedResponse => {
-                    this.$message.error('插入数据失败');
+                    this.$message({
+                        message: '添加失败',
+                    });
                 });
                 // 将填写框置空，方便下次填写
+                // 让表格消失
+                this.userInfo = {
+                    eid: '',
+                    ename: '',
+                    ephone: '',
+                    erole: '',
+                    esalary: ''
+                };
                 // 让表格消失
                 this.dialogFormVisible = false;
             },
@@ -193,7 +203,7 @@
                         }
                     }).then(successResponse => {
                         //数据库删除成功在table表里进行删除,
-                        this.tableData.splice(index, 1),
+                        this.tableData.splice(index, 1);
                             this.$message({
                                 type: 'success',
                                 message: '删除成功!'
