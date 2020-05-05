@@ -71,8 +71,7 @@
         prop="esalary"
         label="操作">
         <template slot-scope="scope">
-          <el-button style="float: left; padding-right: 3px;" type="text"><span style="color: red"
-                                                                                @click="del">删除</span></el-button>
+          <el-button style="float: left; padding-right: 3px;" type="text"><span style="color: red" @click="del">删除</span></el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -93,7 +92,7 @@
 <!--javaScript代码-->
 <script>
     export default {
-        name: "StockIn",
+        name: "Employees",
         data() {
             return {
                 // 标记删除或者添加是否成功
@@ -157,7 +156,7 @@
                     erole: this.userInfo.erole,
                     esalary: this.userInfo.esalary,
                 }).then(successResponse => {
-                    if (successResponse.data.code == 200) {
+                    if (successResponse.data.code === 200) {
                         this.addSuccessful = true;
                     }
                 }).catch(failedResponse => {
