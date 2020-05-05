@@ -4,22 +4,6 @@
     <el-card class="box-card">
       <div slot="header" class="clearfix">
         <span>商品分类表</span>
-        <el-button style="float: right; padding-right: 3px;" type="text"><span style="color: red">删除</span></el-button>
-        <el-button style="float: right; padding-right: 3px;" type="text">编辑</el-button>
-        <el-button style="float: right; padding-right: 3px;" type="text">
-          <router-link to="addemployee">新建</router-link>
-        </el-button>
-      </div>
-      <div class="text item">
-        <el-select v-model="value" placeholder="请选择"  value="">
-          <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
-          </el-option>
-        </el-select>
-        <el-button round>查询</el-button>
       </div>
       <div class="form">
         <el-table
@@ -88,7 +72,7 @@
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
           :current-page="currentPage"
-          :page-sizes="[3,5, 10, 20, 40]"
+          :page-sizes="[3,5, 10, 20]"
           :page-size="pagesize"
           layout="total, sizes, prev, pager, next, jumper"
           :total="tableData.length">
