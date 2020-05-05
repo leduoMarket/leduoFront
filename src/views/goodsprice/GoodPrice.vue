@@ -197,27 +197,34 @@
                 this.dialogFormVisible = false;
             },
 
-            // 删除选中下标的一行数据，index由click处的scope.$index传过来的小标，delItem由scope.$row传过来的元素
+            // 删除选中下标的一行数据，index由click处的scope.$index传过来的下标，delItem由scope.$row传过来的元素
             del(delItem, index) {
+                console.log(delItem);
                 this.$confirm('你确定要删这条记录？', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    delItem = this.tableData.splice(index, 1),
-                        this.$axios.get('/delcommodityPricing/'+String(delItem.gid)).then(successResponse => {
-                            this.$message({
-                                type: 'success',
-                                // 删除index处的一条记录
-                                message: '删除成功!'
-                            });
-                        }).catch(failedResponse => {
-                            this.$message({
-                                type: 'info',
-                                message: '删除失败'
-                            });
-                        })
+                    //如果用户确实要删除，则用delete方式删除，并且传递要删除的记录的eid
+                    this.$axios.delete('/delcommodityPricing', {
+                        params: {
+                            priceId: delItem.gid
+                        }
+                    }).then(successResponse => {
+                        //数据库删除成功在table表里进行删除,
+                        this.tableData.splice(index, 1);
+                        this.$message({
+                            type: 'success',
+                            message: '删除成功!'
+                        });
+                    }).catch(failedResponse => {
+                        this.$message({
+                            type: 'info',
+                            message: '删除失败'
+                        });
+                    })
                 }).catch(() => {
+                    //用户取消了删除
                     this.$message({
                         type: 'info',
                         message: '已删除取消'
