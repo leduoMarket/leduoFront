@@ -28,29 +28,17 @@
           </div>
         </el-form-item>
         <div class="label2">
-        <el-form-item label="原始密码" :label-width="formLabelWidth">
-          <el-input v-model="form.name"></el-input>
+        <el-form-item label="原始密码" :label-width="formLabelWidth" >
+          <el-input v-model="form.name" style="width: 125%" placeholder="**********"></el-input>
         </el-form-item>
         <el-form-item label="修改密码" :label-width="formLabelWidth">
-          <el-input v-model="form.name"></el-input>
+          <el-input v-model="form.name" style="width: 125%"></el-input>
         </el-form-item>
           <div class="button1">
-          <el-button type="primary" plain>修改密码</el-button>
+          <el-button style="width: 120%" type="primary" plain>修改密码</el-button>
           </div>
         </div>
       </el-form>
-     <!-- <el-row>
-        <el-col :span="8" style="width: 100%">
-         &lt;!&ndash; <div class="fourth">
-            <span>密码：</span>
-          </div>&ndash;&gt;
-          <div class="fourth1">
-            <span>原始密码：</span><el-input class="fourth2" v-model="form.name"></el-input>
-            <span>修改密码：</span><el-input class="fourth2" v-model="form.name"></el-input>
-            <el-button type="primary" plain>修改密码</el-button>
-          </div>
-        </el-col>
-      </el-row>-->
     </div>
   </el-card>
   </div>
@@ -62,9 +50,9 @@
         data () {
             return {
                 form: {
-                    eid: '1',
-                    ename: '张三',
-                    ephone: '123456',
+                    eid: '2017110936',
+                    ename: '欧阳',
+                    ephone: '15760232967',
                     erole: '经理',
                     date1: '',
                     date2: '',
@@ -95,36 +83,20 @@
     margin-bottom: 200px;
   }
   .box-card{
+    margin-left: 350px;
     width: 65%;
-    height: 500px;
+    height: 520px;
   }
-  /*.third1{*/
-  /*  height: 10px;*/
-  /*  margin-bottom: 60px;*/
-  /*}*/
-  /*.third2{*/
-  /*  height: 20px;*/
-  /*}*/
-  /*!*.fourth{*/
-  /*  background-color: white;*/
-  /*  text-align: left;*/
-  /*}*!*/
-  /*.fourth1{*/
-  /*  text-align: left;*/
-  /*  margin-left: 50px;*/
-  /*}*/
-  /*.fourth2{*/
-  /*  height: 40px;*/
-  /*  width: 100px;*/
-  /*}*/
   .label1{
     width: 35%;
   }
   .label2{
+    margin-left: 30px;
     text-align: right;
     width: 35%;
   }
   .button1{
     text-align: left;
+    margin-left: 50px;
   }
 </style>

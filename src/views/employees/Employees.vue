@@ -71,7 +71,8 @@
         prop="esalary"
         label="操作">
         <template slot-scope="scope">
-          <el-button style="float: left; padding-right: 3px;" type="text"><span style="color: red" @click="del">删除</span></el-button>
+          <el-button style="float: left; padding-right: 3px;" type="text"><span style="color: red"
+                                                                                @click="del">删除</span></el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -130,7 +131,6 @@
             })
         },
         methods: {
-            // 执行新增员工操作
             // 初始页currentPage、初始每页数据数pagesize和数据data
             handleSizeChange: function (size) {
                 this.pagesize = size;
@@ -156,22 +156,29 @@
                     erole: this.userInfo.erole,
                     esalary: this.userInfo.esalary,
                 }).then(successResponse => {
-                    if (successResponse.data.code === 200) {
-                        this.addSuccessful = true;
+                    if (successResponse.data.code == 200) {
+                        this.addSuccessful=true;
+                        this.$message({
+                            message: '成功添加一条记录',
+                            type: 'success',
+                        });
+                        //将信息刷新到表格中
+                        this.tableData.push(this.userInfo);
+                        //清空填写单的信息放到请求体中，避免请求延迟已经被清空才刷新在信息到表格中
+                        this.userInfo = {
+                            eid: '',
+                            ename: '',
+                            ephone: '',
+                            erole: '',
+                            esalary: ''
+                        };
+                        // console.log("userInfo"+this.userInfo.eid);
                     }
                 }).catch(failedResponse => {
-                    this.addSuccessful = false;
+
                 });
-                if (!this.addSuccessful) {
-                    this.$message.error('插入数据失败');
-                } else {
-                    this.tableData.push(this.userInfo);
-                    this.$message({
-                        message: '成功添加一条记录',
-                        type: 'success'
-                    });
-                }
                 // 将填写框置空，方便下次填写
+                // 让表格消失
                 this.userInfo = {
                     eid: '',
                     ename: '',
@@ -182,19 +189,24 @@
                 // 让表格消失
                 this.dialogFormVisible = false;
             },
-
-            // 删除选中下标的一行数据，index由click处的scope.$index传过来的小标，delItem由scope.$row传过来的元素
+            // 删除选中下标的一行数据，index由click处的scope.$index传过来的下标，delItem由scope.$row传过来的元素
             del(delItem, index) {
+                console.log(delItem);
                 this.$confirm('你确定要删这条记录？', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    delItem = this.tableData.splice(index, 1),
-                        this.$axios.get('/delemp/'+String(delItem.eid)).then(successResponse => {
+                    //如果用户确实要删除，则用delete方式删除，并且传递要删除的记录的eid
+                    this.$axios.delete('/delemp', {
+                        params: {
+                            empId: delItem.eid
+                        }
+                    }).then(successResponse => {
+                        //数据库删除成功在table表里进行删除,
+                        this.tableData.splice(index, 1);
                             this.$message({
                                 type: 'success',
-                                // 删除index处的一条记录
                                 message: '删除成功!'
                             });
                         }).catch(failedResponse => {
@@ -204,6 +216,7 @@
                             });
                         })
                 }).catch(() => {
+                    //用户取消了删除
                     this.$message({
                         type: 'info',
                         message: '已删除取消'

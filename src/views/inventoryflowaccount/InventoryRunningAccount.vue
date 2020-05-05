@@ -2,44 +2,23 @@
   <el-card class="box-card">
     <div slot="header" class="clearfix">
       <span>库存流水账</span>
-<!--      <el-button style="float: right; padding: 3px 0" type="text" @click="dialogFormVisible = true">新建</el-button>-->
-<!--      <el-dialog title="库存流水账" :visible.sync="dialogFormVisible">-->
-<!--        <el-form :model="form">-->
-<!--          <el-form-item label="供应商代码" :label-width="formLabelWidth">-->
-<!--            <el-input v-model="form.vid" autocomplete="off"></el-input>-->
-<!--          </el-form-item>-->
-<!--          <el-form-item label="供应商名称" :label-width="formLabelWidth">-->
-<!--            <el-input v-model="form.vname" autocomplete="off"></el-input>-->
-<!--          </el-form-item>-->
-<!--          <el-form-item label="单号" :label-width="formLabelWidth">-->
-<!--            <el-input v-model="form.inumber" autocomplete="off"></el-input>-->
-<!--          </el-form-item>-->
-<!--          <el-form-item label="类型" :label-width="formLabelWidth">-->
-<!--            <el-input v-model="form.type" autocomplete="off"></el-input>-->
-<!--          </el-form-item>-->
-<!--          <el-form-item label="日期" :label-width="formLabelWidth">-->
-<!--            <el-input v-model="form.idate" autocomplete="off"></el-input>-->
-<!--          </el-form-item>-->
-<!--          <el-form-item label="价格" :label-width="formLabelWidth">-->
-<!--            <el-input v-model="form.iprice" autocomplete="off"></el-input>-->
-<!--          </el-form-item>-->
-<!--          <el-form-item label="已付款项" :label-width="formLabelWidth">-->
-<!--            <el-input v-model="form.ipayment" autocomplete="off"></el-input>-->
-<!--          </el-form-item>-->
-<!--          <el-form-item label="数量" :label-width="formLabelWidth">-->
-<!--            <el-input v-model="form.icount" autocomplete="off"></el-input>-->
-<!--          </el-form-item>-->
-<!--        </el-form>-->
-<!--        <div slot="footer" class="dialog-footer">-->
-<!--          <el-button @click="dialogFormVisible = false">取 消</el-button>-->
-<!--          <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>-->
-<!--        </div>-->
-<!--      </el-dialog>-->
     </div>
     <div class="text item">
       <div class="text item">
+        <!--按照商品代码查询-->
+        <!--按照供应商名称查询-->
+        <!--按日期查询-->
+        <!--按价格查询-->
+        <el-select v-model="value" placeholder="请选择" @change="selectGet">
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
         <el-input style="width: 300px"
-                  placeholder="请输入供应商代码"
+                  placeholder="请输入搜索条件"
                   v-model="input"
                   clearable>
         </el-input>
@@ -53,7 +32,7 @@
         style="width: 100%">
         <el-table-column
           prop="vid"
-          label="供应商代码"
+          label="商品代码"
           width="180">
         </el-table-column>
         <el-table-column
@@ -64,10 +43,6 @@
         <el-table-column
           prop="inumber"
           label="单号">
-        </el-table-column>
-        <el-table-column
-          prop="type"
-          label="类型">
         </el-table-column>
         <el-table-column
           prop="idate"
@@ -85,20 +60,12 @@
           prop="icount"
           label="数量">
         </el-table-column>
-<!--        <el-table-column-->
-<!--          prop="esalary"-->
-<!--          label="操作">-->
-
-<!--          <template slot-scope="scope">-->
-<!--            <el-button style="float: left; padding-right: 3px;" type="text"><span style="color: red" @click="del">删除</span></el-button>-->
-<!--          </template>-->
-<!--        </el-table-column>-->
       </el-table>
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
         :current-page="currentPage"
-        :page-sizes="[3,5, 10, 20, 40]"
+        :page-sizes="[3,5, 10, 20]"
         :page-size="pagesize"
         layout="total, sizes, prev, pager, next, jumper"
         :total="tableData.length">
@@ -112,30 +79,27 @@
         name: "StockIn",
         data() {
             return {
-                options: [],
+                // 下拉选项的options列表的展示值和接收值
+                options: [{
+                    value: '商品代码',
+                    label: '商品代码'
+                }, {
+                    value: '供应商名称',
+                    label: '供应商名称'
+                }, {
+                    value: '日期',
+                    label: '日期'
+                }, {
+                    value: '价格',
+                    label: '价格'
+                }],
+                //默认的搜索类型显示
+                value: '商品代码',
                 tableData: [],
-                gridData: [],
                 dialogTableVisible: false,
                 dialogFormVisible: false,
-                form: {
-                    vid: '',
-                    vname: '',
-                    inumber: '',
-                    type: '',
-                    idate: '',
-                    iprice: '',
-                    ipayment: '',
-                    icount: '',
-                    date1: '',
-                    date2: '',
-                    delivery: false,
-                    type: [],
-                    resource: '',
-                    desc: ''
-                },
-                formLabelWidth: '120px',
-                pagesize:5,  //分页数量
-                currentPage:1 //初始页
+                pagesize: 5,  //分页数量
+                currentPage: 1 //初始页
             }
         },
         methods: {
@@ -148,6 +112,9 @@
                 this.currentPage = currentPage;
                 console.log(this.currentPage)
             },
+            selectGet(selectedItem) {
+                console.log(selectedItem);
+            }
         },
     }
 </script>
@@ -161,9 +128,11 @@
     margin-bottom: 50px;
 
   }
+
   .box-card {
     width: 75%;
   }
+
   .form {
     height: 100%;
   }

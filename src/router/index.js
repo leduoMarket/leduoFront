@@ -18,6 +18,7 @@ const GoodPrice = ()=>import("../views/goodsprice/GoodPrice")
 const Debt = ()=>import("../views/debt/Debt")
 const Employees = ()=>import("../views/employees/Employees")
 const ProfitAnalysis=()=>import("../views/analysis/ProfitAnalysis")
+
 Vue.use(Router)
 export default new Router({
   mode:'history',
@@ -99,6 +100,9 @@ export default new Router({
           path: 'rolePermissinon',
           name: 'RolePermission',
           component: RolePermission,
+        },{
+          path: '/404',
+          component: resolve => require(['../views/failvue/404'], resolve)
         }
       ]
     }
