@@ -28,6 +28,10 @@ export default new Router({
       name: 'Login',
       component: Login
     },{
+      path: '/404',
+      component: resolve => require(['../views/failvue/404'], resolve)
+    },
+    {
       path: '/home',
       name: 'Home',
       component: Home,
@@ -101,8 +105,8 @@ export default new Router({
           name: 'RolePermission',
           component: RolePermission,
         },{
-          path: '/404',
-          component: resolve => require(['../views/failvue/404'], resolve)
+          path: 'error',
+          component: resolve => require(['../views/failvue/error'], resolve)
         }
       ]
     }
