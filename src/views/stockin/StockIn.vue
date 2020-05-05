@@ -218,7 +218,7 @@
                     //如果用户确实要删除，则用delete方式删除，并且传递要删除的记录的eid
                     this.$axios.delete('/delstockIn',{
                         params:{
-                            empId: delItem.inumber
+                            stockInId: delItem.inumber
                         }
                     }).then(successResponse =>{
                         //数据库删除成功在table表里进行删除,
