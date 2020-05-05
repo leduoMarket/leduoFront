@@ -2,30 +2,29 @@
   <el-card class="box-card">
     <div slot="header" class="clearfix">
       <span>出库单</span>
-      <!--        出库单弹窗-->
       <el-button style="float: right; padding: 3px 0" type="text" @click="dialogFormVisible = true">新建</el-button>
-      <el-dialog title="出库单" :visible.sync="dialogFormVisible">
-        <el-form :model="addform">
+      <el-dialog title="入库单" :visible.sync="dialogFormVisible">
+        <el-form :model="dataInfo">
           <el-form-item label="商品代码" :label-width="formLabelWidth">
-            <el-input v-model="addform.gid" autocomplete="off"></el-input>
+            <el-input v-model="dataInfo.gid" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item label="供应商名称" :label-width="formLabelWidth">
-            <el-input v-model="addform.vname" autocomplete="off"></el-input>
+            <el-input v-model="dataInfo.vname" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item label="出库单号" :label-width="formLabelWidth">
-            <el-input v-model="addform.onumber" autocomplete="off"></el-input>
+            <el-input v-model="dataInfo.onumber" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item label="出库日期" :label-width="formLabelWidth">
-            <el-input v-model="addform.odate" autocomplete="off"></el-input>
+            <el-input v-model="dataInfo.odate" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item label="价格" :label-width="formLabelWidth">
-            <el-input v-model="addform.oprice" autocomplete="off"></el-input>
+            <el-input v-model="dataInfo.oprice" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item label="已付款项" :label-width="formLabelWidth">
-            <el-input v-model="addform.opayment" autocomplete="off"></el-input>
+            <el-input v-model="dataInfo.opayment" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item label="数量" :label-width="formLabelWidth">
-            <el-input v-model="addform.oaccount" autocomplete="off"></el-input>
+            <el-input v-model="dataInfo.oaccount" autocomplete="off"></el-input>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -34,16 +33,14 @@
         </div>
       </el-dialog>
     </div>
-    <!--      搜索框-->
-<!--    <div class="text item">-->
-<!--      <el-input style="width: 300px"-->
-<!--                placeholder="请输出库单编号"-->
-<!--                v-model="input"-->
-<!--                clearable>-->
-<!--      </el-input>-->
-<!--      <el-button round>查询</el-button>-->
-<!--    </div>-->
-    <!-- table展示框-->
+    <div class="text item">
+      <el-input style="width: 300px"
+                placeholder="请输入商品代码"
+                v-model="input"
+                clearable>
+      </el-input>
+      <el-button round>查询</el-button>
+    </div>
     <div class="form">
       <el-table
         :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)"
@@ -92,7 +89,7 @@
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
         :current-page="currentPage"
-        :page-sizes="[3,5, 10, 20]"
+        :page-sizes="[3,5, 10, 20, 40]"
         :page-size="pagesize"
         layout="total, sizes, prev, pager, next, jumper"
         :total="tableData.length">
@@ -109,27 +106,40 @@
             return {
                 // 标记删除或者添加是否成功
                 addSuccessful: false,
-                //显示页面的表单数据
+                // delSuccessful: false,
+                // 在基础表格中展示的数据
                 tableData: [],
+                // 控制新增页面的form表单可见性
+                dialogFormVisible: false,
                 //删除的元素是谁
                 delItem: [],
-                // 控制员工新增页面的form表单可见性
-                dialogTableVisible: false,
-                dialogFormVisible: false,
-                //新增表单数据的绑定
-                addform: {
+                // 用于新增数据绑定
+                dataInfo: {
                     gid: '',
                     vname: '',
                     onumber: '',
                     odate: '',
                     oprice: '',
                     opayment: '',
-                    oaccount: '',
+                    oaccount: ''
                 },
                 formLabelWidth: '120px',
-                pagesize: 5,
-                currentPage: 1, //初始页
+                pagesize:5,
+                currentPage:1 //初始页
             }
+        },
+        // 创建的时候发送请求获取显示数据库所有退货单的列表数据
+        created() {
+            this.$axios.get("/stockOut").then(res=>{
+                if(res.data){
+                    console.log(res)
+                    this.tableData = res.data;
+                    this.itemCount = res.data.length;
+                    console.log(this.itemCount);
+                }
+            }).catch(failResponse=>{
+
+            })
         },
         methods: {
             // 初始页currentPage、初始每页数据数pagesize和数据data
@@ -141,102 +151,81 @@
                 this.currentPage = currentPage;
                 console.log(this.currentPage)
             },
+            openAddPage() {
+                this.dialogFormVisible = true;
+
+            },
             addStockOut() {
-                if (!this.addform.inumber) {
-                    console.log("单号为空");
+                if (!this.dataInfo.gid) {
+                    console.log("商品编号为空");
                     return;
                 }
-                this.$axios.post('/stockOut', {
-                    gid: this.addform.gid,
-                    vname: this.addform.vname,
-                    onumber: this.addform.onumber,
-                    date: this.addform.odate,
-                    price: this.addform.oprice,
-                    payment: this.addform.opayment,
-                    account: this.addform.oaccount,
+                this.$axios.post('/addstockOut', {
+                    gid: this.dataInfo.gid,
+                    vname: this.dataInfo.vname,
+                    onumber: this.dataInfo.onumber,
+                    odate: this.dataInfo.odate,
+                    oprice: this.dataInfo.oprice,
+                    opayment: this.dataInfo.opayment,
+                    oaccount: this.dataInfo.oaccount
                 }).then(successResponse => {
                     if (successResponse.data.code === 200) {
                         this.addSuccessful = true;
-                        this.$message({
-                            message: '成功添加一条记录',
-                            type: 'success',
-                        });
-                        //将信息刷新到表格中
-                        this.tableData.push(this.addform);
-                        //清空填写单的信息放到请求体中，避免请求延迟已经被清空才刷新在信息到表格中
-                        this.addform = {
-                            gid : '',
-                            vname : '',
-                            onumber : '',
-                            odate : '',
-                            oprice: '',
-                            opayment: '',
-                            oaccount: '',
-                        };
                     }
                 }).catch(failedResponse => {
                     this.addSuccessful = false;
                 });
-
+                if (!this.addSuccessful) {
+                    this.$message.error('插入数据失败');
+                } else {
+                    this.tableData.push(this.dataInfo);
+                    this.$message({
+                        message: '成功添加一条记录',
+                        type: 'success'
+                    });
+                }
                 // 将填写框置空，方便下次填写
-                this.addform = {
+                this.dataInfo = {
                     gid: '',
                     vname: '',
-                    inumber: '',
+                    onumber: '',
                     odate: '',
                     oprice: '',
                     opayment: '',
-                    oaccount: '',
+                    oaccount: ''
                 };
                 // 让表格消失
                 this.dialogFormVisible = false;
             },
+
+            // 删除选中下标的一行数据，index由click处的scope.$index传过来的小标，delItem由scope.$row传过来的元素
             del(delItem, index) {
-                console.log(delItem);
-                this.$confirm('你确定要删除这条记录吗？','提示',{
-                    confirmButtonText:'确定',
-                    cancelButtonText:'取消',
-                    type:'warning'
-                }).then(() =>{
-                    //如果用户确实要删除，则用delete方式删除，并且传递要删除的记录的eid
-                    this.$axios.delete('/delstockOut',{
-                        params:{
-                            empId: delItem.onumber
-                        }
-                    }).then(successResponse =>{
-                        //数据库删除成功在table表里进行删除,
-                        this.tableData.splice(index, 1);
+                this.$confirm('你确定要删这条记录？', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    delItem = this.tableData.splice(index, 1),
+                        this.$axios.get('/delstockOut/'+String(delItem.gid)).then(successResponse => {
                             this.$message({
                                 type: 'success',
+                                // 删除index处的一条记录
                                 message: '删除成功!'
                             });
-                    }).catch(failResponse =>{
-                        //用户同意删除情况下数据库删除失败
-                        this.$message({
-                            type: 'info',
-                            message: '删除失败'
-                        });
-                    })
-                }).catch(() =>{
-                    //用户取消了删除
+                        }).catch(failedResponse => {
+                            this.$message({
+                                type: 'info',
+                                message: '删除失败'
+                            });
+                        })
+                }).catch(() => {
                     this.$message({
                         type: 'info',
                         message: '已删除取消'
                     });
-
                 });
+                console.log(delItem);
             }
-        },
-        created() {
-            console.log("vue被创建");
-            this.$axios.get("/stockout").then(res=>{
-                if(res.data){
-                    console.log(res);
-                    this.tableData = res.data;
-                }
-            }).catch(failResponse=>{
-
-            })
         }
     }
 </script>

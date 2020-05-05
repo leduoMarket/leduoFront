@@ -29,66 +29,65 @@
             <el-button type="primary" @click="addEmployee">确 定</el-button>
           </div>
         </el-dialog>
-      </div>
-      <!--      搜索框-->
-<!--      <div class="text item">-->
-<!--        <el-input style="width: 300px"-->
-<!--                  placeholder="请输入员工编号"-->
-<!--                  v-model="input"-->
-<!--                  clearable>-->
-<!--        </el-input>-->
-<!--        <el-button round>查询</el-button>-->
-<!--      </div>-->
-      <!--      展示的table表格-->
-      <div class="form">
-        <el-table
-          :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)"
-          border
-          style="width: 100%">
-          <el-table-column
-            prop="eid"
-            label="员工编号"
-            width="180">
-          </el-table-column>
-          <el-table-column
-            prop="ename"
-            label="姓名"
-            width="180">
-          </el-table-column>
-          <el-table-column
-            prop="ephone"
-            label="手机号">
-          </el-table-column>
-          <el-table-column
-            prop="erole"
-            label="角色">
-          </el-table-column>
-          <el-table-column
-            prop="esalary"
-            label="工资/月">
-          </el-table-column>
-          <el-table-column
-            prop="esalary"
-            label="操作">
-            <template slot-scope="scope">
-              <el-button style="float: left; padding-right: 3px;" type="text"><span style="color: red"
-                                                                                    @click="del(scope.row,scope.$index)">删除</span>
-              </el-button>
-            </template>
-          </el-table-column>
-        </el-table>
-        <el-pagination
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          :current-page="currentPage"
-          :page-sizes="[3,5, 10, 20]"
-          :page-size="pagesize"
-          layout="total, sizes, prev, pager, next, jumper"
-          :total="tableData.length">
-        </el-pagination>
-      </div>
+  </div>
+  <!--      搜索框-->
+  <div class="text item">
+    <el-input style="width: 300px"
+              placeholder="请输入员工编号"
+              v-model="input"
+              clearable>
+    </el-input>
+    <el-button round>查询</el-button>
+  </div>
+  <!--      展示的table表格-->
+  <div class="form">
+    <el-table
+      :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)"
+      border
+      style="width: 100%">
+      <el-table-column
+        prop="eid"
+        label="员工编号"
+        width="180">
+      </el-table-column>
+      <el-table-column
+        prop="ename"
+        label="姓名"
+        width="180">
+      </el-table-column>
+      <el-table-column
+        prop="ephone"
+        label="手机号">
+      </el-table-column>
+      <el-table-column
+        prop="erole"
+        label="角色">
+      </el-table-column>
+      <el-table-column
+        prop="esalary"
+        label="工资/月">
+      </el-table-column>
+      <el-table-column
+        prop="esalary"
+        label="操作">
+        <template slot-scope="scope">
+          <el-button style="float: left; padding-right: 3px;" type="text"><span style="color: red"
+                                                                                @click="del">删除</span></el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+    <el-pagination
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+      :current-page="currentPage"
+      :page-sizes="[3,5, 10, 20, 40]"
+      :page-size="pagesize"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="tableData.length">
+    </el-pagination>
+  </div>
 
-    </el-card>
+  </el-card>
   </div>
 </template>
 <!--javaScript代码-->
@@ -97,7 +96,8 @@
         name: "Employees",
         data() {
             return {
-                addSuccessful:false,
+                // 标记删除或者添加是否成功
+                addSuccessful: false,
                 // delSuccessful: false,
                 // 在基础表格中展示的数据
                 tableData: [],
@@ -112,18 +112,18 @@
                     ephone: '',
                     erole: '',
                     esalary: ''
+
                 },
-                pagesize: 5,
-                currentPage: 1, //初始页
-                formLabelWidth: '120px',
-            }
+                pagesize:5,
+                currentPage:1 //初始页
+                }
         },
         // 创建的时候发送请求获取显示数据库所有员工的列表数据
         created() {
             console.log("vue被创建");
             this.$axios.get("/emps").then(res => {
                 if (res.data) {
-                    console.log(res);
+                    console.log(res)
                     this.tableData = res.data;
                 }
             }).catch(failResponse => {
@@ -140,7 +140,10 @@
                 this.currentPage = currentPage;
                 console.log(this.currentPage)
             },
-            // 执行新增员工操作
+            openAddPage() {
+                this.dialogFormVisible = true;
+
+            },
             addEmployee() {
                 if (!this.userInfo.eid) {
                     console.log("员工号为空");
@@ -206,13 +209,12 @@
                                 type: 'success',
                                 message: '删除成功!'
                             });
-                    }).catch(failedResponse => {
-                        //用户同意删除情况下数据库删除失败
-                        this.$message({
-                            type: 'info',
-                            message: '删除失败'
-                        });
-                    })
+                        }).catch(failedResponse => {
+                            this.$message({
+                                type: 'info',
+                                message: '删除失败'
+                            });
+                        })
                 }).catch(() => {
                     //用户取消了删除
                     this.$message({
@@ -220,7 +222,25 @@
                         message: '已删除取消'
                     });
                 });
+                console.log(delItem);
             },
+            // delemp() {
+            //     this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+            //         confirmButtonText: '确定',
+            //         cancelButtonText: '取消',
+            //         type: 'warning'
+            //     }).then(() => {
+            //         this.$message({
+            //             type: 'success',
+            //             message: '删除成功!'
+            //         });
+            //     }).catch(() => {
+            //         this.$message({
+            //             type: 'info',
+            //             message: '已取消删除'
+            //         });
+            //     });
+            // }
         }
     }
 </script>
@@ -228,12 +248,16 @@
   .text {
     font-size: 14px;
   }
+
   .item {
     margin-bottom: 50px;
+
   }
+
   .box-card {
     width: 75%;
   }
+
   .form {
     height: 100%;
   }

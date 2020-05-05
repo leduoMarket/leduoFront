@@ -5,21 +5,21 @@
       <span>欠款单</span>
       <el-button style="float: right; padding: 3px 0" type="text" @click="dialogFormVisible = true">新建</el-button>
       <el-dialog title="欠款单" :visible.sync="dialogFormVisible">
-        <el-form :model="form">
+        <el-form :model="dataInfo">
           <el-form-item label="欠款单号" :label-width="formLabelWidth">
-            <el-input v-model="form.dnumber" autocomplete="off"></el-input>
+            <el-input v-model="dataInfo.dnumber" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item label="商品代码" :label-width="formLabelWidth">
-            <el-input v-model="form.gid" autocomplete="off"></el-input>
+            <el-input v-model="dataInfo.gid" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item label="供应商名称" :label-width="formLabelWidth">
-            <el-input v-model="form.vname" autocomplete="off"></el-input>
+            <el-input v-model="dataInfo.vname" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item label="日期" :label-width="formLabelWidth">
-            <el-input v-model="form.ddate" autocomplete="off"></el-input>
+            <el-input v-model="dataInfo.ddate" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item label="欠款金额" :label-width="formLabelWidth">
-            <el-input v-model="form.ddebt" autocomplete="off"></el-input>
+            <el-input v-model="dataInfo.ddebt" autocomplete="off"></el-input>
           </el-form-item>
 <!--          <el-form-item label="信誉" :label-width="formLabelWidth">-->
 <!--            <el-input v-model="form.vcredit" autocomplete="off"></el-input>-->
@@ -30,7 +30,7 @@
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisible = false">取 消</el-button>
-          <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+          <el-button type="primary" @click="addDebt">确 定</el-button>
         </div>
       </el-dialog>
     </div>
@@ -100,31 +100,42 @@
 
 <script>
     export default {
-        name: "StockIn",
+        name: "Debt",
         data() {
             return {
-                options: [],
+                // 标记删除或者添加是否成功
+                addSuccessful: false,
+                // delSuccessful: false,
+                // 在基础表格中展示的数据
                 tableData: [],
-                gridData: [],
-                dialogTableVisible: false,
+                // 控制新增页面的form表单可见性
                 dialogFormVisible: false,
-                form: {
+                //删除的元素是谁
+                delItem: [],
+                // 用于新增数据绑定
+                dataInfo: {
                     dnumber: '',
                     gid: '',
                     vname: '',
                     ddate: '',
                     ddebt: '',
-                    date1: '',
-                    date2: '',
-                    delivery: false,
-                    type: [],
-                    resource: '',
-                    desc: ''
                 },
                 formLabelWidth: '120px',
                 pagesize:5,  //分页数量
                 currentPage:1 //初始页
             }
+        },
+        // 创建的时候发送请求获取显示数据库所有员工的列表数据
+        created() {
+            console.log("vue被创建");
+            this.$axios.get("/debt").then(res => {
+                if (res.data) {
+                    console.log(res)
+                    this.tableData = res.data;
+                }
+            }).catch(failResponse => {
+
+            })
         },
         methods: {
             // 初始页currentPage、初始每页数据数pagesize和数据data
@@ -136,7 +147,85 @@
                 this.currentPage = currentPage;
                 console.log(this.currentPage)
             },
-        },
+            openAddPage() {
+                this.dialogFormVisible = true;
+
+            },
+            addDebt() {
+                if (!this.dataInfo.gid) {
+                    console.log("商品编号为空");
+                    return;
+                }
+                this.$axios.post('/addDebt', {
+                    dnumber:this.dataInfo.dnumber,
+                    gid: this.dataInfo.gid,
+                    vname: this.dataInfo.vname,
+                    ddate: this.dataInfo.ddate,
+                    ddebt: this.dataInfo.ddebt,
+                }).then(successResponse => {
+                    if (successResponse.data.code === 200) {
+                        this.addSuccessful = true;
+                    }
+                }).catch(failedResponse => {
+                    this.addSuccessful = false;
+                });
+                if (!this.addSuccessful) {
+                    this.$message.error('插入数据失败');
+                } else {
+                    this.tableData.push(this.dataInfo);
+                    this.$message({
+                        message: '成功添加一条记录',
+                        type: 'success'
+                    });
+                }
+                // 将填写框置空，方便下次填写
+                this.dataInfo = {
+                    dnumber: '',
+                    gid: '',
+                    vname: '',
+                    ddate: '',
+                    ddebt: ''
+                };
+                // 让表格消失
+                this.dialogFormVisible = false;
+            },
+
+            // 删除选中下标的一行数据，index由click处的scope.$index传过来的下标，delItem由scope.$row传过来的元素
+            del(delItem, index) {
+                console.log(delItem);
+                this.$confirm('你确定要删这条记录？', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    //如果用户确实要删除，则用delete方式删除，并且传递要删除的记录的eid
+                    this.$axios.delete('/delDebt', {
+                        params: {
+                            debtId: delItem.dnumber
+                        }
+                    }).then(successResponse => {
+                        //数据库删除成功在table表里进行删除,
+                        this.tableData.splice(index, 1);
+                        this.$message({
+                            type: 'success',
+                            message: '删除成功!'
+                        });
+                    }).catch(failedResponse => {
+                        this.$message({
+                            type: 'info',
+                            message: '删除失败'
+                        });
+                    })
+                }).catch(() => {
+                    //用户取消了删除
+                    this.$message({
+                        type: 'info',
+                        message: '已删除取消'
+                    });
+                });
+                console.log(delItem);
+            }
+        }
     }
 </script>
 
