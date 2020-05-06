@@ -5,7 +5,7 @@
 <!--      新建页面-->
       <el-button style="float: right; padding: 3px 0" type="text" @click="dialogFormVisible = true">新建</el-button>
       <el-dialog title="入库单" :visible.sync="dialogFormVisible">
-        <el-form :model="addform" :rules="stockInRules" >
+        <el-form :model="addform" :rules="stockInRules"  ref="addform">
           <el-form-item label="商品代码" :label-width="formLabelWidth" prop="gid">
             <el-input v-model="addform.gid" autocomplete="off"></el-input>
           </el-form-item>
@@ -101,6 +101,15 @@
 </template>
 
 <script>
+    import {
+        reg_gid,
+        reg_vname,
+        reg_inumber,
+        reg_date,
+        reg_money,
+        reg_count
+    } from "../login/validator";
+
     export default {
         name: "StockIn",
         data() {
@@ -136,25 +145,25 @@
                 //表单验证规则
                 stockInRules:{
                     gid:[
-                        { required:true ,message:'商品代码非空', trigger:'blur'}
+                        { required:true ,validator: reg_gid,  trigger: 'blur'}
                     ],
                     vname:[
-                        { required:true ,message:'供应商代码非空', trigger:'blur'}
+                        { required:true ,validator: reg_vname, trigger:'blur'}
                     ],
                     inumber:[
-                        { required:true ,message:'入库单号非空', trigger:'blur'}
+                        { required:true ,validator: reg_inumber, trigger:'blur'}
                     ],
                     idate:[
-                        { required:true ,message:'日期非空', trigger:'blur'}
+                        { required:true ,validator: reg_date,   trigger: 'blur' }
                     ],
                     iprice:[
-                        { required:true ,message:'价格非空', trigger:'blur'}
+                        { required:true ,validator: reg_money , trigger:'blur'}
                     ],
                     ipayment:[
-                        { required:true ,message:'已付款项非空', trigger:'blur'}
+                        { required:true ,validator: reg_money, trigger:'blur'}
                     ],
                     iaccount:[
-                        { required:true ,message:'数量非空', trigger:'blur'}
+                        { required:true ,validator: reg_count, trigger:'blur'}
                     ]
 
                 }
@@ -240,46 +249,41 @@
             addStockIn(){
                 //逻辑前端判断
                 this.submitBtn=true;
-                // this.$refs.addform.validate()  //判断表单验证是否通过，验证通过执行.then()，否则执行.catch()
-                //     .then(res =>{
-                //         console.log("提交成功");
-                //     }).catch(error =>{
-                //         console.log("提交失败");
-                //
-                // });
-                //商品代码 gid
-                if (!this.addform.gid){
-                    this.$message({
-                        message: '商品id为空',
-                        type: 'error',
-                    });
-                    return;
-                }
-                if(this.addform.gid.length!==13 && this.addform.gid){
-                    this.$message({
-                        message: '商品id为空',
-                        type: 'error',
-                    });
-                    return;
-                }
-                this.$axios.post('/stockIn',{
-                    gid:this.addform.gid,
-                    vname:this.addform.vname,
-                    inumber:this.addform.inumber,
-                    idate:this.addform.date,
-                    iprice:this.addform.price,
-                    ipayment:this.addform.payment,
-                    iaccount:this.addform.account,
-                }).then(successResponse =>{
-                    if(successResponse.data.code == 200){
-                        this.addSuccessful = true;
-                        this.$message({
-                            message: '成功添加一条记录',
-                            type: 'success',
-                        });
-                        //将信息刷新到表格中
-                        this.tableData.push(this.addform);
-                        //清空填写单的信息放到请求体中，避免请求延迟已经被清空才刷新在信息到表格中
+                this.$refs.addform.validate()  //判断表单验证是否通过，验证通过执行.then()，否则执行.catch()
+                    .then(res =>{
+                        console.log("提交成功");
+                        this.$axios.post('/stockIn',{
+                            gid:this.addform.gid,
+                            vname:this.addform.vname,
+                            inumber:this.addform.inumber,
+                            idate:this.addform.date,
+                            iprice:this.addform.price,
+                            ipayment:this.addform.payment,
+                            iaccount:this.addform.account,
+                        }).then(successResponse =>{
+                            if(successResponse.data.code == 200){
+                                this.addSuccessful = true;
+                                this.$message({
+                                    message: '成功添加一条记录',
+                                    type: 'success',
+                                });
+                                //将信息刷新到表格中
+                                this.tableData.push(this.addform);
+                                //清空填写单的信息放到请求体中，避免请求延迟已经被清空才刷新在信息到表格中
+                                this.addform = {
+                                    gid : '',
+                                    vname : '',
+                                    inumber : '',
+                                    idate : '',
+                                    iprice: '',
+                                    ipayment: '',
+                                    iaccount: '',
+                                };
+                            }
+                        }).catch(failedResponse =>{
+
+                        } );
+                        // 让表格消失
                         this.addform = {
                             gid : '',
                             vname : '',
@@ -289,21 +293,16 @@
                             ipayment: '',
                             iaccount: '',
                         };
-                    }
-                }).catch(failedResponse =>{
+                        this.dialogFormVisible = false;
+                    }).catch(error =>{
+                        console.log("提交失败");
+                        this.$message({
+                             message: '无法提交，表单中数据有错误',
+                             type: 'error'
+                         });
 
-                } );
-                // 让表格消失
-                this.addform = {
-                    gid : '',
-                    vname : '',
-                    inumber : '',
-                    idate : '',
-                    iprice: '',
-                    ipayment: '',
-                    iaccount: '',
-                };
-                this.dialogFormVisible = false;
+                });
+
             },
         },
 
