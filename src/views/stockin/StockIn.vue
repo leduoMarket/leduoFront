@@ -114,7 +114,7 @@
                 //删除的元素是谁
                 delItem: [
                 ],
-                // 控制员工新增页面的form表单可见性
+                // 控制新增页面的form表单可见性
                 dialogTableVisible: false,
                 dialogFormVisible: false,
                 // 用于新增表单数据时的绑定
