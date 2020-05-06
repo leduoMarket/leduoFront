@@ -122,7 +122,7 @@
             console.log("vue被创建");
             this.$axios.get("/emps").then(res => {
                 if (res.data) {
-                    console.log(res)
+                    console.log(res);
                     this.tableData = res.data;
                 }
             }).catch(failResponse => {

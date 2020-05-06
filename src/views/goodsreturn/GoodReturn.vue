@@ -24,10 +24,10 @@
     <div class="text item">
       <el-input style="width: 300px"
                 placeholder="请输入商品编号"
-                v-model="input"
+                v-model="searchInput"
                 clearable>
       </el-input>
-      <el-button round>查询</el-button>
+      <el-button round @click="beginSearch">查询</el-button>
     </div>
     <div class="form">
       <el-table
@@ -93,7 +93,8 @@
                 },
                 formLabelWidth: '120px',
                 pagesize:5,  //分页数量
-                currentPage:1 //初始页
+                currentPage:1 ,//初始页
+                searchInput:''
             }
         },
         // 创建的时候发送请求获取显示数据库所有退货单的列表数据
@@ -118,6 +119,24 @@
             handleCurrentChange: function (currentPage) {
                 this.currentPage = currentPage;
                 console.log(this.currentPage)
+            },
+            //查询
+            beginSearch(){
+                this.$axios.get('/querygoodsReturn',{
+                    params:{
+                        gid:this.searchInput,
+                    }
+                }).then(successfulResponse=>{
+                    console.log('this.tableData'+successfulResponse.data);
+                    this.tableData=[];
+                    this.tableData.push(successfulResponse.data);
+                    this.$message({
+                        message: '成功找到记录',
+                        type: 'success'
+                    });
+                }).catch(failedResponse=>{
+                    this.$message('没有找到记录哦');
+                })
             },
             openAddPage() {
                 this.dialogFormVisible = true;

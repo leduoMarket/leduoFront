@@ -41,7 +41,7 @@
   }
   .error-code{
     line-height: 1;
-    font-size: 250px;
+    font-size: 150px;
     font-weight: bold;
     color: #2d8cf0;
   }

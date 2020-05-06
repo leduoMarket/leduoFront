@@ -25,10 +25,10 @@
       <div class="text item">
         <el-input style="width: 300px"
                   placeholder="请输入商品编号"
-                  v-model="input"
+                  v-model="searchInput"
                   clearable>
         </el-input>
-        <el-button round>查询</el-button>
+        <el-button round @click="beginSearch">查询</el-button>
       </div>
     </div>
     <div class="form">
@@ -49,6 +49,10 @@
         <el-table-column
           prop="inumber"
           label="库存量">
+        </el-table-column>
+        <el-table-column
+          prop="stock_alert"
+          label="库存提醒">
         </el-table-column>
 <!--        <el-table-column-->
 <!--          prop="esalary"-->
@@ -74,7 +78,7 @@
 
 <script>
     export default {
-        name: "StockIn",
+        name: "Inventory",
         data() {
             return {
                 options: [],
@@ -86,16 +90,18 @@
                     gid: '',
                     gname: '',
                     inumber: '',
-                    date1: '',
+                    stock_alert:''
+                    /*date1: '',
                     date2: '',
                     delivery: false,
                     type: [],
                     resource: '',
-                    desc: ''
+                    desc: ''*/
                 },
                 formLabelWidth: '120px',
                 pagesize:5,  //分页数量
                 currentPage:1, //初始页
+                searchInput:''
                 // form: {
                 //     gid: '',
                 //     gname: '',
@@ -107,8 +113,19 @@
                 //     resource: '',
                 //     desc: ''
                 // },
-                formLabelWidth: '120px'
             }
+        },
+        // 创建的时候发送请求获取显示数据库列表数据
+        created() {
+            console.log("vue被创建");
+            this.$axios.get("/inventory").then(res => {
+                if (res.data) {
+                    console.log(res);
+                    this.tableData = res.data;
+                }
+            }).catch(failResponse => {
+
+            })
         },
         methods: {
             // 初始页currentPage、初始每页数据数pagesize和数据data
@@ -119,6 +136,24 @@
             handleCurrentChange: function (currentPage) {
                 this.currentPage = currentPage;
                 console.log(this.currentPage)
+            },
+            //查询
+            beginSearch(){
+                this.$axios.get('/queryInventory',{
+                    params:{
+                        gid:this.searchInput,
+                    }
+                }).then(successfulResponse=>{
+                    console.log('this.tableData'+successfulResponse.data);
+                    this.tableData=[];
+                    this.tableData.push(successfulResponse.data);
+                    this.$message({
+                        message: '成功找到记录',
+                        type: 'success'
+                    });
+                }).catch(failedResponse=>{
+                    this.$message('没有找到记录哦');
+                })
             },
         },
     }
