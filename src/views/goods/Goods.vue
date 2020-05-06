@@ -31,7 +31,7 @@
     <!--    查询模块-->
     <div class="text item">
       <el-input style="width: 300px"
-                placeholder="请输入入库单单号"
+                placeholder="请输入商品编号"
                 v-model="searchInput"
                 clearable>
       </el-input>
@@ -88,7 +88,7 @@
 
 <script>
     export default {
-        name: "StockIn",
+        name: "Goods",
         data() {
             return {
                 // 标记删除或者添加是否成功
@@ -100,7 +100,7 @@
                 //删除的元素是谁
                 delItem: [
                 ],
-                // 控制员工新增页面的form表单可见性
+                // 控制新增页面的form表单可见性
                 dialogTableVisible: false,
                 dialogFormVisible: false,
                 // 用于新增表单数据时的绑定

@@ -50,6 +50,10 @@
           prop="inumber"
           label="库存量">
         </el-table-column>
+        <el-table-column
+          prop="stock_alert"
+          label="库存提醒">
+        </el-table-column>
 <!--        <el-table-column-->
 <!--          prop="esalary"-->
 <!--          label="操作">-->
@@ -86,12 +90,13 @@
                     gid: '',
                     gname: '',
                     inumber: '',
-                    date1: '',
+                    stock_alert:''
+                    /*date1: '',
                     date2: '',
                     delivery: false,
                     type: [],
                     resource: '',
-                    desc: ''
+                    desc: ''*/
                 },
                 formLabelWidth: '120px',
                 pagesize:5,  //分页数量
@@ -109,6 +114,18 @@
                 //     desc: ''
                 // },
             }
+        },
+        // 创建的时候发送请求获取显示数据库列表数据
+        created() {
+            console.log("vue被创建");
+            this.$axios.get("/inventory").then(res => {
+                if (res.data) {
+                    console.log(res);
+                    this.tableData = res.data;
+                }
+            }).catch(failResponse => {
+
+            })
         },
         methods: {
             // 初始页currentPage、初始每页数据数pagesize和数据data
