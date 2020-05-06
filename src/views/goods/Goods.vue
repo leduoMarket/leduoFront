@@ -2,7 +2,10 @@
   <el-card class="box-card">
     <div slot="header" class="clearfix">
       <span>商品表</span>
-      <!--      新建页面-->
+           <!-- 新建页面-->
+      <a href="http://localhost:8080/home/goodClass">
+        <el-button style="float: right; padding: 3px 0" type="text">分类规则</el-button>
+      </a>
       <el-button style="float: right; padding: 3px 0" type="text" @click="dialogFormVisible = true">新建</el-button>
       <el-dialog title="商品表" :visible.sync="dialogFormVisible">
         <el-form :model="dataInfo">
@@ -12,6 +15,9 @@
           <el-form-item label="商品名称" :label-width="formLabelWidth">
             <el-input v-model="dataInfo.gname" autocomplete="off"></el-input>
           </el-form-item>
+          <el-form-item label="商品类别" :label-width="formLabelWidth">
+          <el-input v-model="dataInfo.categories" autocomplete="off"></el-input>
+        </el-form-item>
           <el-form-item label="生产地址" :label-width="formLabelWidth">
             <el-input v-model="dataInfo.address" autocomplete="off"></el-input>
           </el-form-item>
@@ -21,12 +27,17 @@
           <el-form-item label="生产日期" :label-width="formLabelWidth">
             <el-input v-model="dataInfo.gdate" autocomplete="off"></el-input>
           </el-form-item>
+
         </el-form>
+
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisible = false">取 消</el-button>
           <el-button type="primary" @click="addGoods">确 定</el-button>
         </div>
       </el-dialog>
+     <!-- <a href="http://localhost:8080/home/goodClass">
+      <el-button style="float: right; padding: 3px 0" type="text">分类规则</el-button>
+      </a>-->
     </div>
     <!--    查询模块-->
     <div class="text item">
@@ -52,6 +63,10 @@
           label="商品名称"
           width="180">
         </el-table-column>
+        <el-table-column
+        prop="categories"
+        label="商品类别">
+      </el-table-column>
         <el-table-column
           prop="address"
           label="生产地址">
@@ -106,12 +121,14 @@
                 // 用于新增表单数据时的绑定
                 dataInfo: {
                     gid:'',
-                    vname:'',
+                    gname:'',
+                    categories:'',
                     inumber:'',
                     idate:'',
                     iprice:'',
                     ipayment:'',
-                    iaccount:''
+                    iaccount:'',
+
                 },
                 formLabelWidth: '120px',
                 pagesize:5,
@@ -170,7 +187,7 @@
                     //如果用户确实要删除，则用delete方式删除，并且传递要删除的记录的eid
                     this.$axios.delete('/delGoods',{
                         params:{
-                            stockInId: delItem.inumber
+                            GoodsId: delItem.gid
                         }
                     }).then(successResponse =>{
                         //数据库删除成功在table表里进行删除,
@@ -196,19 +213,21 @@
                 });
             },
             //新增表单操作
-            addStockIn(){
-                if (!this.addform.inumber){
-                    console.log("表单号为空");
+            addGoods(){
+                if (!this.dataInfo.gid){
+                    console.log("商品编号为空");
                     return;
                 }
                 this.$axios.post('/Goods',{
-                    gid:this.addform.gid,
-                    vname:this.addform.vname,
-                    inumber:this.addform.inumber,
-                    idate:this.addform.date,
-                    iprice:this.addform.price,
-                    ipayment:this.addform.payment,
-                    iaccount:this.addform.account,
+                    gid:this.dataInfo.gid,
+                    gname:this.dataInfo.vname,
+                    categories:this.dataInfo.categories,
+                    inumber:this.dataInfo.inumber,
+                    idate:this.dataInfo.date,
+                    iprice:this.dataInfo.price,
+                    ipayment:this.dataInfo.payment,
+                    iaccount:this.dataInfo.account,
+
                 }).then(successResponse =>{
                     if(successResponse.data.code == 200){
                         this.addSuccessful = true;
@@ -222,6 +241,7 @@
                         this.addform = {
                             gid : '',
                             gname : '',
+                            categories: '',
                             address : '',
                             charge_unit : '',
                             gdate: '',
@@ -234,6 +254,7 @@
                 this.addform = {
                     gid : '',
                     gname : '',
+                    categories:'',
                     address : '',
                     charge_unit : '',
                     gdate: '',
