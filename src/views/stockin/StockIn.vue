@@ -5,32 +5,32 @@
 <!--      新建页面-->
       <el-button style="float: right; padding: 3px 0" type="text" @click="dialogFormVisible = true">新建</el-button>
       <el-dialog title="入库单" :visible.sync="dialogFormVisible">
-        <el-form :model="addform">
-          <el-form-item label="商品代码" :label-width="formLabelWidth">
+        <el-form :model="addform" :rules="stockInRules" >
+          <el-form-item label="商品代码" :label-width="formLabelWidth" prop="gid">
             <el-input v-model="addform.gid" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="供应商名称" :label-width="formLabelWidth">
+          <el-form-item label="供应商名称" :label-width="formLabelWidth" prop="vname">
             <el-input v-model="addform.vname" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="入库单号" :label-width="formLabelWidth">
+          <el-form-item label="入库单号" :label-width="formLabelWidth" prop="inumber">
             <el-input v-model="addform.inumber" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="入库日期" :label-width="formLabelWidth">
+          <el-form-item label="入库日期" :label-width="formLabelWidth" prop="idate">
             <el-input v-model="addform.idate" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="价格" :label-width="formLabelWidth">
+          <el-form-item label="价格" :label-width="formLabelWidth" prop="iprice">
             <el-input v-model="addform.iprice" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="已付款项" :label-width="formLabelWidth">
+          <el-form-item label="已付款项" :label-width="formLabelWidth" prop="ipayment">
             <el-input v-model="addform.ipayment" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="数量" :label-width="formLabelWidth">
+          <el-form-item label="数量" :label-width="formLabelWidth" prop="iaccount">
             <el-input v-model="addform.iaccount" autocomplete="off"></el-input>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisible = false">取 消</el-button>
-          <el-button type="primary" @click="addStockIn">确 定</el-button>
+          <el-button type="primary" @click="addStockIn" :loading="submitBtn" >确 定</el-button>
         </div>
       </el-dialog>
     </div>
@@ -130,7 +130,34 @@
                 formLabelWidth: '120px',
                 pagesize:5,
                 currentPage:1, //初始页
-                searchInput:''
+                searchInput:'',
+                //提交按钮是否可用
+                submitBtn:false,
+                //表单验证规则
+                stockInRules:{
+                    gid:[
+                        { required:true ,message:'商品代码非空', trigger:'blur'}
+                    ],
+                    vname:[
+                        { required:true ,message:'供应商代码非空', trigger:'blur'}
+                    ],
+                    inumber:[
+                        { required:true ,message:'入库单号非空', trigger:'blur'}
+                    ],
+                    idate:[
+                        { required:true ,message:'日期非空', trigger:'blur'}
+                    ],
+                    iprice:[
+                        { required:true ,message:'价格非空', trigger:'blur'}
+                    ],
+                    ipayment:[
+                        { required:true ,message:'已付款项非空', trigger:'blur'}
+                    ],
+                    iaccount:[
+                        { required:true ,message:'数量非空', trigger:'blur'}
+                    ]
+
+                }
             }
         },
         // 创建的时候发送请求获取显示数据库所有员工的列表数据
@@ -211,8 +238,28 @@
             },
             //新增表单操作
             addStockIn(){
-                if (!this.addform.inumber){
-                    console.log("表单号为空");
+                //逻辑前端判断
+                this.submitBtn=true;
+                // this.$refs.addform.validate()  //判断表单验证是否通过，验证通过执行.then()，否则执行.catch()
+                //     .then(res =>{
+                //         console.log("提交成功");
+                //     }).catch(error =>{
+                //         console.log("提交失败");
+                //
+                // });
+                //商品代码 gid
+                if (!this.addform.gid){
+                    this.$message({
+                        message: '商品id为空',
+                        type: 'error',
+                    });
+                    return;
+                }
+                if(this.addform.gid.length!==13 && this.addform.gid){
+                    this.$message({
+                        message: '商品id为空',
+                        type: 'error',
+                    });
                     return;
                 }
                 this.$axios.post('/stockIn',{
