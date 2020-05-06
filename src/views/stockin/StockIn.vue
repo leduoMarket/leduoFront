@@ -37,7 +37,7 @@
 <!--    查询模块-->
     <div class="text item">
       <el-input style="width: 300px"
-                placeholder="请输入商品代码"
+                placeholder="请输入入库单单号"
                 v-model="searchInput"
                 clearable>
       </el-input>
@@ -155,10 +155,11 @@
                 this.currentPage = currentPage;
                 console.log(this.currentPage)
             },
+            //查询
             beginSearch(){
-                this.$axios.get('/queiryStockIn',{
+                this.$axios.get('/queryStockIn',{
                     params:{
-                        gid:this.searchInput,
+                        inumber:this.searchInput,
                     }
                 }).then(successfulResponse=>{
                     console.log('this.tableData'+successfulResponse.data);
@@ -172,28 +173,46 @@
                     this.$message('没有找到记录哦');
                 })
             },
-            //新增的一条记录里面最后一个操作是删除，默认每一行代码都有，所以必须要有del函数，不然会报错
-            del(delItem,delIndex){
-                console.log("执行了删除函数")
-            }
-        },
-        created() {
-            this.$axios.get("/stock").then(res=>{
-                if(res.data){
-                    console.log(res)
-                    this.tableData = res.data;
-                    this.itemCount = res.data.length;
-                    console.log(this.itemCount);
-                }
-            }).catch(failResponse=>{
+            // 删除选中下标的一行数据，index由click处的scope.$index传过来的小标，delItem由scope.$row传过来的元素
+            del(delItem, index){
+                console.log(delItem);
+                this.$confirm('你确定要删除这条记录吗？','提示',{
+                    confirmButtonText:'确定',
+                    cancelButtonText:'取消',
+                    type:'warning'
+                }).then(() =>{
+                    //如果用户确实要删除，则用delete方式删除，并且传递要删除的记录的eid
+                    this.$axios.delete('/delstockIn',{
+                        params:{
+                            stockInId: delItem.inumber
+                        }
+                    }).then(successResponse =>{
+                        //数据库删除成功在table表里进行删除,
+                        this.tableData.splice(index, 1);
+                        this.$message({
+                            type: 'success',
+                            message: '删除成功!'
+                        });
+                    }).catch(failResponse =>{
+                        //用户同意删除情况下数据库删除失败
+                        this.$message({
+                            type: 'info',
+                            message: '删除失败'
+                        });
+                    })
+                }).catch(() =>{
+                    //用户取消了删除
+                    this.$message({
+                        type: 'info',
+                        message: '已删除取消'
+                    });
 
-            })
-        },
-
+                });
+            },
             //新增表单操作
             addStockIn(){
-                if (!this.addform.gid){
-                    console.log("商品代码为空");
+                if (!this.addform.inumber){
+                    console.log("表单号为空");
                     return;
                 }
                 this.$axios.post('/stockIn',{
@@ -226,7 +245,6 @@
                     }
                 }).catch(failedResponse =>{
 
-
                 } );
                 // 让表格消失
                 this.addform = {
@@ -240,43 +258,8 @@
                 };
                 this.dialogFormVisible = false;
             },
-            // 删除选中下标的一行数据，index由click处的scope.$index传过来的小标，delItem由scope.$row传过来的元素
-            del(delItem, index){
-                console.log(delItem);
-                this.$confirm('你确定要删除这条记录吗？','提示',{
-                    confirmButtonText:'确定',
-                    cancelButtonText:'取消',
-                    type:'warning'
-                }).then(() =>{
-                    //如果用户确实要删除，则用delete方式删除，并且传递要删除的记录的eid
-                    this.$axios.delete('/delstockIn',{
-                        params:{
-                            stockInId: delItem.inumber
-                        }
-                    }).then(successResponse =>{
-                        //数据库删除成功在table表里进行删除,
-                        this.tableData.splice(index, 1);
-                            this.$message({
-                                type: 'success',
-                                message: '删除成功!'
-                            });
-                    }).catch(failResponse =>{
-                        //用户同意删除情况下数据库删除失败
-                        this.$message({
-                            type: 'info',
-                            message: '删除失败'
-                        });
-                    })
-                }).catch(() =>{
-                    //用户取消了删除
-                    this.$message({
-                        type: 'info',
-                        message: '已删除取消'
-                    });
+        },
 
-                });
-            },
-        }
     }
 </script>
 

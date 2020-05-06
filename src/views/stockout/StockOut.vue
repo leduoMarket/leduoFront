@@ -2,6 +2,7 @@
   <el-card class="box-card">
     <div slot="header" class="clearfix">
       <span>出库单</span>
+      <!--      新建页面-->
       <el-button style="float: right; padding: 3px 0" type="text" @click="dialogFormVisible = true">新建</el-button>
       <el-dialog title="入库单" :visible.sync="dialogFormVisible">
         <el-form :model="dataInfo">
@@ -35,11 +36,11 @@
     </div>
     <div class="text item">
       <el-input style="width: 300px"
-                placeholder="请输入商品代码"
-                v-model="input"
+                placeholder="请输入入库单单号"
+                v-model="searchInput"
                 clearable>
       </el-input>
-      <el-button round>查询</el-button>
+      <el-button round @click="beginSearch">查询</el-button>
     </div>
     <div class="form">
       <el-table
@@ -81,7 +82,7 @@
           label="操作">
 
           <template slot-scope="scope">
-            <el-button style="float: left; padding-right: 3px;" type="text"><span style="color: red" @click="del">删除</span></el-button>
+            <el-button style="float: left; padding-right: 3px;" type="text"><span style="color: red" @click="del(scope.row,scope.$index)">删除</span></el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -95,7 +96,6 @@
         :total="tableData.length">
       </el-pagination>
     </div>
-
   </el-card>
 </template>
 
@@ -125,17 +125,16 @@
                 },
                 formLabelWidth: '120px',
                 pagesize:5,
-                currentPage:1 //初始页
+                currentPage:1, //初始页
+                searchInput:''
             }
         },
         // 创建的时候发送请求获取显示数据库所有退货单的列表数据
         created() {
             this.$axios.get("/stockOut").then(res=>{
                 if(res.data){
-                    console.log(res)
+                    console.log(res);
                     this.tableData = res.data;
-                    this.itemCount = res.data.length;
-                    console.log(this.itemCount);
                 }
             }).catch(failResponse=>{
 
@@ -155,9 +154,28 @@
                 this.dialogFormVisible = true;
 
             },
+            //查询
+            beginSearch(){
+                this.$axios.get('/queryStockOut',{
+                    params:{
+                        onumber:this.searchInput,
+                    }
+                }).then(successfulResponse=>{
+                    console.log('this.tableData'+successfulResponse.data);
+                    this.tableData=[];
+                    this.tableData.push(successfulResponse.data);
+                    this.$message({
+                        message: '成功找到记录',
+                        type: 'success'
+                    });
+                }).catch(failedResponse=>{
+                    this.$message('没有找到记录哦');
+                })
+            },
+            //新增出库单
             addStockOut() {
-                if (!this.dataInfo.gid) {
-                    console.log("商品编号为空");
+                if (!this.dataInfo.onumber) {
+                    console.log("出库单代码为空为空");
                     return;
                 }
                 this.$axios.post('/addstockOut', {
@@ -231,7 +249,6 @@
                         type: 'info',
                         message: '已删除取消'
                     });
-
                 });
             }
         }
