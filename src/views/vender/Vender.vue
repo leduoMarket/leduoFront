@@ -148,7 +148,7 @@
                     console.log("供应商代码为空");
                     return;
                 }
-                this.$axios.post('/vender', {
+                this.$axios.post('/addvender', {
                     vid: this.addform.vid,
                     vname: this.addform.vname,
                     vaddress: this.addform.vaddress,
