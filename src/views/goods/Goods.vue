@@ -88,7 +88,7 @@
 
 <script>
     export default {
-        name: "StockIn",
+        name: "Goods",
         data() {
             return {
                 // 标记删除或者添加是否成功

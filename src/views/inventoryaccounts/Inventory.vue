@@ -115,6 +115,18 @@
                 // },
             }
         },
+        // 创建的时候发送请求获取显示数据库列表数据
+        created() {
+            console.log("vue被创建");
+            this.$axios.get("/inventory").then(res => {
+                if (res.data) {
+                    console.log(res);
+                    this.tableData = res.data;
+                }
+            }).catch(failResponse => {
+
+            })
+        },
         methods: {
             // 初始页currentPage、初始每页数据数pagesize和数据data
             handleSizeChange: function (size) {
