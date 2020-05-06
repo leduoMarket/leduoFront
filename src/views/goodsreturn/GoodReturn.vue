@@ -27,7 +27,7 @@
                 v-model="input"
                 clearable>
       </el-input>
-      <el-button round>查询</el-button>
+      <el-button round @click="beginSearch">查询</el-button>
     </div>
     <div class="form">
       <el-table
@@ -118,6 +118,24 @@
             handleCurrentChange: function (currentPage) {
                 this.currentPage = currentPage;
                 console.log(this.currentPage)
+            },
+            //查询
+            beginSearch(){
+                this.$axios.get('/querygoodsReturn',{
+                    params:{
+                        gid:this.searchInput,
+                    }
+                }).then(successfulResponse=>{
+                    console.log('this.tableData'+successfulResponse.data);
+                    this.tableData=[];
+                    this.tableData.push(successfulResponse.data);
+                    this.$message({
+                        message: '成功找到记录',
+                        type: 'success'
+                    });
+                }).catch(failedResponse=>{
+                    this.$message('没有找到记录哦');
+                })
             },
             openAddPage() {
                 this.dialogFormVisible = true;

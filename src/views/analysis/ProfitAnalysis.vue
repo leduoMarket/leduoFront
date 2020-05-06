@@ -63,7 +63,7 @@
 
 <script>
     export default {
-        name: "StockIn",
+        name: "ProfitAnalysis",
         data() {
             return {
                 options: [],

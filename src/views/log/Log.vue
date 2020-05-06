@@ -11,7 +11,7 @@
                   v-model="input"
                   clearable>
         </el-input>
-        <el-button round>查询</el-button>
+        <el-button round @click="beginSearch">查询</el-button>
       </div>
     </div>
     <div class="form">
@@ -20,21 +20,21 @@
         border
         style="width: 100%">
         <el-table-column
-          prop="ddate"
+          prop="ldate"
           label="操作日期"
           width="180">
         </el-table-column>
         <el-table-column
-          prop="dname"
+          prop="lid"
           label="操作人员编号"
           width="180">
         </el-table-column>
         <el-table-column
-          prop="dposition"
+          prop="lposition"
           label="职位">
         </el-table-column>
         <el-table-column
-          prop="devent"
+          prop="levent"
           label="操作事件">
         </el-table-column>
       </el-table>
@@ -52,7 +52,7 @@
 </template>
 <script>
     export default {
-        name: "StockIn",
+        name: "Log",
         data() {
             return {
                 options: [],
@@ -70,6 +70,24 @@
             handleCurrentChange: function (currentPage) {
                 this.currentPage = currentPage;
                 console.log(this.currentPage)
+            },
+            //查询
+            beginSearch(){
+                this.$axios.get('/queryStockIn',{
+                    params:{
+                        lid:this.searchInput,
+                    }
+                }).then(successfulResponse=>{
+                    console.log('this.tableData'+successfulResponse.data);
+                    this.tableData=[];
+                    this.tableData.push(successfulResponse.data);
+                    this.$message({
+                        message: '成功找到记录',
+                        type: 'success'
+                    });
+                }).catch(failedResponse=>{
+                    this.$message('没有找到记录哦');
+                })
             },
         }
     }
