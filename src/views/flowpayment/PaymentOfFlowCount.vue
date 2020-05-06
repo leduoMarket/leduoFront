@@ -105,26 +105,25 @@
         name: "StockIn",
         data() {
             return {
-                options: [],
                 tableData: [],
                 gridData: [],
                 dialogTableVisible: false,
                 dialogFormVisible: false,
-                form: {
-                    pnumber: '',
-                    pdate: '',
-                    pcatecory: '',
-                    psource_shop: '',
-                    ptrading_amount: '',
-                    premainning_amount: '',
-                    date1: '',
-                    date2: '',
-                    delivery: false,
-                    type: [],
-                    resource: '',
-                    desc: ''
-                },
-                formLabelWidth: '120px',
+                // form: {
+                //     pnumber: '',
+                //     pdate: '',
+                //     pcatecory: '',
+                //     psource_shop: '',
+                //     ptrading_amount: '',
+                //     premainning_amount: '',
+                //     date1: '',
+                //     date2: '',
+                //     delivery: false,
+                //     type: [],
+                //     resource: '',
+                //     desc: ''
+                // },
+                // formLabelWidth: '120px',
                 pagesize:5,  //分页数量
                 currentPage:1 //初始页
             }

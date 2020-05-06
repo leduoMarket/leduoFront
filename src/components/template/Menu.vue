@@ -55,14 +55,14 @@
           <span style="font-size: 18px;font-weight: bold">商品</span>
         </template>
         <el-menu-item-group>
+          <el-menu-item index="4-3">
+            <router-link to="/home/goods">商品表</router-link>
+          </el-menu-item>
           <el-menu-item index="4-1">
             <router-link to="/home/goodClass">商品分类</router-link>
           </el-menu-item>
           <el-menu-item index="4-2">
             <router-link to="/home/inventory">库存账</router-link>
-          </el-menu-item>
-          <el-menu-item index="4-3">
-            <router-link to="/home/inventoryRunningAccount">库存流水账</router-link>
           </el-menu-item>
         </el-menu-item-group>
       </el-submenu>

@@ -11,13 +11,15 @@ const RolePermission = ()=>import("../views/rolepermission/RolePermission")
 const GoodClass = ()=>import("../views/goodsclassification/GoodClass")
 const PaymentOfFlowCount = ()=>import("../views/flowpayment/PaymentOfFlowCount")
 const MarketMsg = ()=>import("../views/marketinfo/MarketMsg")
-const InventoryRunningAccount = ()=>import("../views/inventoryflowaccount/InventoryRunningAccount")
 const Inventory = ()=>import("../views/inventoryaccounts/Inventory")
 const GoodReturn = ()=>import("../views/goodsreturn/GoodReturn")
 const GoodPrice = ()=>import("../views/goodsprice/GoodPrice")
 const Debt = ()=>import("../views/debt/Debt")
 const Employees = ()=>import("../views/employees/Employees")
 const ProfitAnalysis=()=>import("../views/analysis/ProfitAnalysis")
+const Goods=()=>import("../views/goods/Goods")
+
+
 Vue.use(Router)
 export default new Router({
   mode:'history',
@@ -64,13 +66,14 @@ export default new Router({
           name: 'goodReturn',
           component: GoodReturn,
         },{
-          path: 'inventoryRunningAccount',
-          name: 'inventoryRunningAccount',
-          component: InventoryRunningAccount,
-        },{
           path: 'goodClass',
           name: 'goodClass',
           component: GoodClass,
+        },
+        {
+          path: 'goods',
+          name: 'goods',
+          component: Goods,
         },{
           path: 'flowCount',
           name: 'paymengOfFolowCount',
@@ -106,7 +109,7 @@ export default new Router({
         },{
           path: 'error',
           component: resolve => require(['../views/failvue/error'], resolve)
-        },
+        }
       ]
     }
   ]
