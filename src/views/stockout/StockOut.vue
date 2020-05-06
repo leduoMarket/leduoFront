@@ -36,7 +36,7 @@
     </div>
     <div class="text item">
       <el-input style="width: 300px"
-                placeholder="请输入入库单单号"
+                placeholder="请输入出库单单号"
                 v-model="searchInput"
                 clearable>
       </el-input>

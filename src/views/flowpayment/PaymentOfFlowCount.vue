@@ -39,11 +39,11 @@
     <div class="text item">
       <div class="text item">
         <el-input style="width: 300px"
-                  placeholder="请输入供应商代码"
-                  v-model="input"
+                  placeholder="请输入交易单号"
+                  v-model="searchInput"
                   clearable>
         </el-input>
-        <el-button round>查询</el-button>
+        <el-button round @click="beginSearch">查询</el-button>
       </div>
     </div>
     <div class="form">
@@ -102,30 +102,31 @@
 
 <script>
     export default {
-        name: "StockIn",
+        name: "PaymentOfFlowCount",
         data() {
             return {
                 tableData: [],
                 gridData: [],
                 dialogTableVisible: false,
                 dialogFormVisible: false,
-                // form: {
-                //     pnumber: '',
-                //     pdate: '',
-                //     pcatecory: '',
-                //     psource_shop: '',
-                //     ptrading_amount: '',
-                //     premainning_amount: '',
-                //     date1: '',
-                //     date2: '',
-                //     delivery: false,
-                //     type: [],
-                //     resource: '',
-                //     desc: ''
-                // },
-                // formLabelWidth: '120px',
+                 form: {
+                     pnumber: '',
+                     pdate: '',
+                     pcatecory: '',
+                     psource_shop: '',
+                     ptrading_amount: '',
+                     premainning_amount: '',
+                     date1: '',
+                     date2: '',
+                     delivery: false,
+                     type: [],
+                     resource: '',
+                     desc: ''
+                 },
+                formLabelWidth: '120px',
                 pagesize:5,  //分页数量
-                currentPage:1 //初始页
+                currentPage:1, //初始页
+                searchInput:''
             }
         },
         methods: {
@@ -137,6 +138,24 @@
             handleCurrentChange: function (currentPage) {
                 this.currentPage = currentPage;
                 console.log(this.currentPage)
+            },
+            //查询
+            beginSearch(){
+                this.$axios.get('/queryPaymentOfFlowCount',{
+                    params:{
+                        pnumber:this.searchInput,
+                    }
+                }).then(successfulResponse=>{
+                    console.log('this.tableData'+successfulResponse.data);
+                    this.tableData=[];
+                    this.tableData.push(successfulResponse.data);
+                    this.$message({
+                        message: '成功找到记录',
+                        type: 'success'
+                    });
+                }).catch(failedResponse=>{
+                    this.$message('没有找到记录哦');
+                })
             },
         },
 
