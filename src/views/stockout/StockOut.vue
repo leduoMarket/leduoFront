@@ -5,32 +5,32 @@
       <!--      新建页面-->
       <el-button style="float: right; padding: 3px 0" type="text" @click="dialogFormVisible = true">新建</el-button>
       <el-dialog title="入库单" :visible.sync="dialogFormVisible">
-        <el-form :model="dataInfo">
-          <el-form-item label="商品代码" :label-width="formLabelWidth">
+        <el-form :model="dataInfo" :rules="stockOutRules" ref="dataInfo">
+          <el-form-item label="商品代码" :label-width="formLabelWidth" prop="gid">
             <el-input v-model="dataInfo.gid" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="供应商名称" :label-width="formLabelWidth">
+          <el-form-item label="供应商名称" :label-width="formLabelWidth" prop="vname">
             <el-input v-model="dataInfo.vname" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="出库单号" :label-width="formLabelWidth">
+          <el-form-item label="出库单号" :label-width="formLabelWidth" prop="onumber">
             <el-input v-model="dataInfo.onumber" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="出库日期" :label-width="formLabelWidth">
+          <el-form-item label="出库日期" :label-width="formLabelWidth" prop="odate">
             <el-input v-model="dataInfo.odate" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="价格" :label-width="formLabelWidth">
+          <el-form-item label="价格" :label-width="formLabelWidth" prop="oprice">
             <el-input v-model="dataInfo.oprice" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="已付款项" :label-width="formLabelWidth">
+          <el-form-item label="已付款项" :label-width="formLabelWidth" prop="opayment">
             <el-input v-model="dataInfo.opayment" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="数量" :label-width="formLabelWidth">
+          <el-form-item label="数量" :label-width="formLabelWidth" prop="oaccount">
             <el-input v-model="dataInfo.oaccount" autocomplete="off"></el-input>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisible = false">取 消</el-button>
-          <el-button type="primary" @click="addStockOut">确 定</el-button>
+          <el-button type="primary" @click="addStockOut"  >确 定</el-button>
         </div>
       </el-dialog>
     </div>
@@ -100,7 +100,17 @@
 </template>
 
 <script>
-    export default {
+  import {
+      reg_gid,
+      reg_vname,
+      reg_onumber,
+      reg_date,
+      reg_money,
+      reg_count
+
+  } from "../login/validator";
+
+  export default {
         name: "StockOut",
         data() {
             return {
@@ -126,7 +136,34 @@
                 formLabelWidth: '120px',
                 pagesize:5,
                 currentPage:1, //初始页
-                searchInput:''
+                searchInput:'',
+                //提交按钮的加载情况
+                // submitBtn:false,
+                //表单验证规则
+                stockOutRules:{
+                    gid:[
+                        { required:true ,validator: reg_gid,  trigger: 'blur'}
+                    ],
+                    vname:[
+                        { required:true ,validator: reg_vname, trigger:'blur'}
+                    ],
+                    onumber:[
+                        { required:true ,validator: reg_onumber, trigger:'blur'}
+                    ],
+                    odate:[
+                        { required:true ,validator: reg_date,   trigger: 'blur' }
+                    ],
+                    oprice:[
+                        { required:true ,validator: reg_money , trigger:'blur'}
+                    ],
+                    opayment:[
+                        { required:true ,validator: reg_money, trigger:'blur'}
+                    ],
+                    oaccount:[
+                        { required:true ,validator: reg_count, trigger:'blur'}
+                    ]
+
+                }
             }
         },
         // 创建的时候发送请求获取显示数据库所有退货单的列表数据
@@ -174,46 +211,51 @@
             },
             //新增出库单
             addStockOut() {
-                if (!this.dataInfo.onumber) {
-                    console.log("出库单代码为空为空");
-                    return;
-                }
-                this.$axios.post('/addstockOut', {
-                    gid: this.dataInfo.gid,
-                    vname: this.dataInfo.vname,
-                    onumber: this.dataInfo.onumber,
-                    odate: this.dataInfo.odate,
-                    oprice: this.dataInfo.oprice,
-                    opayment: this.dataInfo.opayment,
-                    oaccount: this.dataInfo.oaccount
-                }).then(successResponse => {
-                    if (successResponse.data.code === 200) {
-                        this.addSuccessful = true;
-                    }
-                }).catch(failedResponse => {
-                    this.addSuccessful = false;
-                });
-                if (!this.addSuccessful) {
-                    this.$message.error('插入数据失败');
-                } else {
-                    this.tableData.push(this.dataInfo);
+                this.$refs.dataInfo.validate()
+                    .then(res =>{
+                        this.$axios.post('/addstockOut', {
+                            gid: this.dataInfo.gid,
+                            vname: this.dataInfo.vname,
+                            onumber: this.dataInfo.onumber,
+                            odate: this.dataInfo.odate,
+                            oprice: this.dataInfo.oprice,
+                            opayment: this.dataInfo.opayment,
+                            oaccount: this.dataInfo.oaccount
+                        }).then(successResponse => {
+                            if (successResponse.data.code === 200) {
+                                this.addSuccessful = true;
+                            }
+                        }).catch(failedResponse => {
+                            this.addSuccessful = false;
+                        });
+                        if (!this.addSuccessful) {
+                            this.$message.error('插入数据失败');
+                        } else {
+                            this.tableData.push(this.dataInfo);
+                            this.$message({
+                                message: '成功添加一条记录',
+                                type: 'success'
+                            });
+                        }
+                        // 将填写框置空，方便下次填写
+                        this.dataInfo = {
+                            gid: '',
+                            vname: '',
+                            onumber: '',
+                            odate: '',
+                            oprice: '',
+                            opayment: '',
+                            oaccount: ''
+                        };
+                        // 让表格消失
+                        this.dialogFormVisible = false;
+                    }).catch(error =>{
+                    console.log("提交失败");
                     this.$message({
-                        message: '成功添加一条记录',
-                        type: 'success'
+                        message: '无法提交，表单中数据有错误',
+                        type: 'error'
                     });
-                }
-                // 将填写框置空，方便下次填写
-                this.dataInfo = {
-                    gid: '',
-                    vname: '',
-                    onumber: '',
-                    odate: '',
-                    oprice: '',
-                    opayment: '',
-                    oaccount: ''
-                };
-                // 让表格消失
-                this.dialogFormVisible = false;
+                });
             },
 
             // 删除选中下标的一行数据，index由click处的scope.$index传过来的小标，delItem由scope.$row传过来的元素
