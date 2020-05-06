@@ -38,7 +38,7 @@
       <div class="text item">
         <el-input style="width: 300px"
                   placeholder="请输入欠款单号"
-                  v-model="input"
+                  v-model="searchInput"
                   clearable>
         </el-input>
         <el-button round @click="beginSearch">查询</el-button>
@@ -122,7 +122,8 @@
                 },
                 formLabelWidth: '120px',
                 pagesize:5,  //分页数量
-                currentPage:1 //初始页
+                currentPage:1 ,//初始页
+                searchInput:''
             }
         },
         // 创建的时候发送请求获取显示数据库所有员工的列表数据

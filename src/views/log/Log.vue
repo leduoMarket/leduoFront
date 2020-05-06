@@ -2,7 +2,7 @@
   <el-card class="box-card">
     <div slot="header" class="clearfix">
       <span>日志查询</span>
-      <el-button style="float: right; padding-right: 3px;" type="text">新建</el-button>
+    <!--  <el-button style="float: right; padding-right: 3px;" type="text">新建</el-button>-->
     </div>
     <div class="text item">
       <div class="text item">

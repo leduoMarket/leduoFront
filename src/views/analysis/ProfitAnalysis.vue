@@ -83,6 +83,7 @@
                 //     desc: ''
                 // },
                 // formLabelWidth: '120px'
+                searchInput:''
             }
         }
     }

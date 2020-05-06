@@ -39,8 +39,8 @@
     <div class="text item">
       <div class="text item">
         <el-input style="width: 300px"
-                  placeholder="请输入供应商代码"
-                  v-model="input"
+                  placeholder="请输入交易单号"
+                  v-model="searchInput"
                   clearable>
         </el-input>
         <el-button round @click="beginSearch">查询</el-button>
@@ -125,7 +125,8 @@
                  },
                 formLabelWidth: '120px',
                 pagesize:5,  //分页数量
-                currentPage:1 //初始页
+                currentPage:1, //初始页
+                searchInput:''
             }
         },
         methods: {
