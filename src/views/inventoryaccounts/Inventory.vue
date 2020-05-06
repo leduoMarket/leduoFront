@@ -50,6 +50,10 @@
           prop="inumber"
           label="库存量">
         </el-table-column>
+        <el-table-column
+          prop="stock_alert"
+          label="库存提醒">
+        </el-table-column>
 <!--        <el-table-column-->
 <!--          prop="esalary"-->
 <!--          label="操作">-->
@@ -86,12 +90,13 @@
                     gid: '',
                     gname: '',
                     inumber: '',
-                    date1: '',
+                    stock_alert:''
+                    /*date1: '',
                     date2: '',
                     delivery: false,
                     type: [],
                     resource: '',
-                    desc: ''
+                    desc: ''*/
                 },
                 formLabelWidth: '120px',
                 pagesize:5,  //分页数量
