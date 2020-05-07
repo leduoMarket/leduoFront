@@ -4,26 +4,26 @@
       <span>商品定价</span>
       <el-button style="float: right; padding: 3px 0" type="text" @click="dialogFormVisible = true">新建</el-button>
       <el-dialog title="商品定价" :visible.sync="dialogFormVisible">
-        <el-form :model="dataInfo">
-          <el-form-item label="商品代码" :label-width="formLabelWidth">
+        <el-form :model="dataInfo" :rules="goodPriceRules" ref="dataInfo">
+          <el-form-item label="商品代码" :label-width="formLabelWidth" prop="gid">
             <el-input v-model="dataInfo.gid" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="商品名称" :label-width="formLabelWidth">
+          <el-form-item label="商品名称" :label-width="formLabelWidth" prop="gname">
             <el-input v-model="dataInfo.gname" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="历史价格" :label-width="formLabelWidth">
+          <el-form-item label="历史价格" :label-width="formLabelWidth" prop="pold_price">
             <el-input v-model="dataInfo.pold_price" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="调整价格" :label-width="formLabelWidth">
+          <el-form-item label="调整价格" :label-width="formLabelWidth" prop="pnew_price">
             <el-input v-model="dataInfo.pnew_price" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="调整原因" :label-width="formLabelWidth">
+          <el-form-item label="调整原因" :label-width="formLabelWidth" prop="preason">
             <el-input v-model="dataInfo.preason" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="调整日期" :label-width="formLabelWidth">
+          <el-form-item label="调整日期" :label-width="formLabelWidth" prop="pdate">
             <el-input v-model="dataInfo.pdate" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="操作人员" :label-width="formLabelWidth">
+          <el-form-item label="操作人员" :label-width="formLabelWidth" prop="phandler">
             <el-input v-model="dataInfo.phandler" autocomplete="off"></el-input>
           </el-form-item>
         </el-form>
@@ -100,7 +100,17 @@
 </template>
 
 <script>
-    export default {
+  import {
+      reg_gid,
+      reg_gname,
+      reg_money,
+      reg_reason,
+      reg_date,
+      reg_ename
+
+  } from "../login/validator";
+
+  export default {
         name: "GoodPrice",
         data() {
             return {
@@ -111,6 +121,7 @@
                 tableData: [],
                 // 控制新增页面的form表单可见性
                 dialogFormVisible: false,
+                dialogTableVisible: false,
                 //删除的元素是谁
                 delItem: [],
                 // 用于新增数据绑定
@@ -126,7 +137,31 @@
                 formLabelWidth: '120px',
                 pagesize:5,  //分页数量
                 currentPage:1 ,//初始页
-                searchInput:''
+                searchInput:'',
+
+                goodPriceRules:{
+                    gid:[
+                        {required:true ,validator: reg_gid,  trigger: 'blur'}
+                    ],
+                    gname:[
+                        {required:true ,validator: reg_gname,  trigger: 'blur'}
+                    ],
+                    pold_price:[
+                        {required:true ,validator: reg_money,  trigger: 'blur'}
+                    ],
+                    pnew_price:[
+                        {required:true ,validator: reg_money,  trigger: 'blur'}
+                    ],
+                    preason:[
+                        {required:true ,validator: reg_reason,  trigger: 'blur'}
+                    ],
+                    pdate:[
+                        {required:true ,validator: reg_date,  trigger: 'blur'}
+                    ],
+                    phandler:[
+                        {required:true ,validator: reg_ename,  trigger: 'blur'}
+                    ]
+                },
             }
         },
         // 创建的时候发送请求获取显示数据库所有退货单的列表数据
@@ -175,46 +210,55 @@
                 })
             },
             addcommodityPricing() {
-                if (!this.dataInfo.gid) {
-                    console.log("商品编号为空");
-                    return;
-                }
-                this.$axios.post('/addcommodityPricing', {
-                    gid: this.dataInfo.gid,
-                    gname: this.dataInfo.gname,
-                    pold_price: this.dataInfo.pold_price,
-                    pnew_price: this.dataInfo.pnew_price,
-                    preason: this.dataInfo.preason,
-                    pdate: this.dataInfo.pdate,
-                    phandler: this.dataInfo.phandler,
-                }).then(successResponse => {
-                    if (successResponse.data.code === 200) {
-                        this.addSuccessful = true;
-                    }
-                }).catch(failedResponse => {
-                    this.addSuccessful = false;
-                });
-                if (!this.addSuccessful) {
-                    this.$message.error('插入数据失败');
-                } else {
-                    this.tableData.push(this.dataInfo);
+                this.$refs.dataInfo.validate()
+                    .then(res =>{
+
+                        this.$axios.post('/addcommodityPricing', {
+                            gid: this.dataInfo.gid,
+                            gname: this.dataInfo.gname,
+                            pold_price: this.dataInfo.pold_price,
+                            pnew_price: this.dataInfo.pnew_price,
+                            preason: this.dataInfo.preason,
+                            pdate: this.dataInfo.pdate,
+                            phandler: this.dataInfo.phandler,
+                        }).then(successResponse => {
+                            if (successResponse.data.code === 200) {
+                                this.addSuccessful = true;
+                            }
+                        }).catch(failedResponse => {
+                            this.addSuccessful = false;
+                        });
+                        if (!this.addSuccessful) {
+                            this.$message.error('插入数据失败');
+
+                        } else {
+                            this.tableData.push(this.dataInfo);
+                            this.$message({
+                                message: '成功添加一条记录',
+                                type: 'success'
+                            });
+                            // 将填写框置空，方便下次填写
+                            this.dataInfo = {
+                                gid: '',
+                                gname: '',
+                                pold_price: '',
+                                pnew_price: '',
+                                preason: '',
+                                pdate: '',
+                                phandler: '',
+                            };
+                            // 让表格消失
+                            this.dialogFormVisible = false;
+                        }
+
+                    }).catch(error =>{
                     this.$message({
-                        message: '成功添加一条记录',
-                        type: 'success'
+                        message: '无法提交，表单中数据有错误',
+                        type: 'error'
                     });
-                }
-                // 将填写框置空，方便下次填写
-                this.dataInfo = {
-                    gid: '',
-                    gname: '',
-                    pold_price: '',
-                    pnew_price: '',
-                    preason: '',
-                    pdate: '',
-                    phandler: '',
-                };
-                // 让表格消失
-                this.dialogFormVisible = false;
+
+                })
+
             },
 
             // 删除选中下标的一行数据，index由click处的scope.$index传过来的下标，delItem由scope.$row传过来的元素

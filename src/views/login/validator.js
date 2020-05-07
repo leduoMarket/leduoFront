@@ -43,6 +43,22 @@ export var reg_gid = (rule, value, callback) => {
     }
   }
 }
+
+//商品名称校验
+export var reg_gname = (rule, value, callback) => {
+  const reg = /^.{0,15}$/;
+  if (!value) {
+    callback(new Error('商品名称为空'));
+  } else {
+    let check = reg.test(value);
+    if (!check) {
+      callback(new Error('商品名称过长 (>50位数字)'))
+    }else{
+      return true,
+        callback()
+    }
+  }
+}
 //入库单号
 export var reg_inumber = (rule, value, callback) => {
   const reg = /^I\d{10}$/;
@@ -132,5 +148,122 @@ export var reg_count = (rule, value, callback) => {
   }
 }
 
+//供应商id校验
+export var reg_vid = (rule, value, callback) => {
+  const reg = /^\d{7}$/;
+  if(!value){
+    callback(new Error('供应商id为空'));
+  }else{
+    let check = reg.test(value);
+    if (!check) {
+      callback(new Error('供应商id为7位纯数字'))
+    }else{
+      callback()
+    }
+  }
+}
 
+//地址校验
+export var reg_address = (rule, value, callback) => {
+  const reg = /^.{1,100}$/;
+  if(!value){
+    callback(new Error('地址为空'));
+  }else{
+    let check = reg.test(value);
+    if (!check) {
+      callback(new Error('地址过长<100位'))
+    }else{
+      callback()
+    }
+  }
+}
 
+//电话号码校验
+export var reg_phone = (rule, value, callback) => {
+  const reg = /^1[3456789]\d{9}$/;
+  if(!value){
+    callback(new Error('电话号码为空'));
+  }else{
+    let check = reg.test(value);
+    if (!check) {
+      callback(new Error('电话号码格式不正确'))
+    }else{
+      callback()
+    }
+  }
+}
+
+//邮箱校验
+export var reg_email = (rule, value, callback) => {
+  const reg = /^\w+@[a-z0-9]+\.[a-z]{2,4}$/;
+  if(!value){
+    callback(new Error('邮箱为空'));
+  }else{
+    let check = reg.test(value);
+    if (!check) {
+      callback(new Error('邮箱格式不正确'))
+    }else{
+      callback()
+    }
+  }
+}
+
+//传真格式校验
+export var reg_fax = (rule, value, callback) => {
+  const reg = /^.{1,50}$/;
+  if(!value){
+    callback(new Error('传真为空'));
+  }else{
+    let check = reg.test(value);
+    if (!check) {
+      callback(new Error('传真名字过长(>50个字符)'))
+    }else{
+      callback()
+    }
+  }
+}
+
+//信誉等级测试
+export var reg_credit = (rule, value, callback) => {
+  const reg = /^\d$/;
+  if(!value){
+    callback(new Error('信誉等级'));
+  }else{
+    let check = reg.test(value);
+    if (!check) {
+      callback(new Error('信誉等级格式不正确，为一位纯数字'))
+    }else{
+      callback()
+    }
+  }
+}
+
+//员工名校验
+export var reg_ename = (rule, value, callback) => {
+  const reg = /^.{1,50}$/;
+  if(!value){
+    callback(new Error('人名为空'));
+  }else{
+    let check = reg.test(value);
+    if (!check) {
+      callback(new Error('人名过长（>50)'))
+    }else{
+      callback()
+    }
+  }
+}
+
+//原因信息校验
+export var reg_reason = (rule, value, callback) => {
+  const reg = /^.{1,100}$/;
+  if(!value){
+    callback(new Error('原因为空'));
+  }else{
+    let check = reg.test(value);
+    if (!check) {
+      callback(new Error('原因过长<100位'))
+    }else{
+      callback()
+    }
+  }
+}

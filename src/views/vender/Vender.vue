@@ -4,29 +4,29 @@
       <span>供应商表</span>
       <el-button style="float: right; padding: 3px 0" type="text" @click="dialogFormVisible = true">新建</el-button>
       <el-dialog title="供应商表" :visible.sync="dialogFormVisible">
-        <el-form :model="addform">
-          <el-form-item label="供应商代码" :label-width="formLabelWidth">
+        <el-form :model="addform"  :rules="venderRules" ref="addform">
+          <el-form-item label="供应商代码" :label-width="formLabelWidth" prop="vid">
             <el-input v-model="addform.vid" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="供应商名称" :label-width="formLabelWidth">
+          <el-form-item label="供应商名称" :label-width="formLabelWidth" prop="vname">
             <el-input v-model="addform.vname" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="地址" :label-width="formLabelWidth">
+          <el-form-item label="地址" :label-width="formLabelWidth" prop="vaddress">
             <el-input v-model="addform.vaddress" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="电话" :label-width="formLabelWidth">
+          <el-form-item label="电话" :label-width="formLabelWidth" prop="vphone">
             <el-input v-model="addform.vphone" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="邮箱" :label-width="formLabelWidth">
+          <el-form-item label="邮箱" :label-width="formLabelWidth" prop="vemail">
           <el-input v-model="addform.vemail" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="传真" :label-width="formLabelWidth">
+          <el-form-item label="传真" :label-width="formLabelWidth" prop="vfax">
             <el-input v-model="addform.vfax" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="信誉" :label-width="formLabelWidth">
+          <el-form-item label="信誉" :label-width="formLabelWidth" prop="vcredit">
             <el-input v-model="addform.vcredit" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="贷款结算" :label-width="formLabelWidth">
+          <el-form-item label="贷款结算" :label-width="formLabelWidth" prop="vsettle_account">
             <el-input v-model="addform.vsettle_account" autocomplete="off"></el-input>
           </el-form-item>
         </el-form>
@@ -106,7 +106,18 @@
 </template>
 
 <script>
-    export default {
+  import {
+      reg_vid,
+      reg_vname,
+      reg_address,
+      reg_phone,
+      reg_email,
+      reg_fax,
+      reg_credit,
+      reg_count
+  } from "../login/validator";
+
+  export default {
         name: "Vender",
         data() {
             return {
@@ -114,6 +125,9 @@
                 addSuccessful:false,
                 // 在基础表格中展示的数据
                 tableData: [],
+                //删除的元素是谁
+                delItem: [
+                ],
 
                 // 控制员工新增页面的form表单可见性
                 dialogTableVisible: false,
@@ -130,7 +144,34 @@
                 },
                 formLabelWidth: '120px',
                 pagesize:5,
-                currentPage:1 //初始页
+                currentPage:1, //初始页
+
+                venderRules:{
+                    vid:[
+                        { required:true ,validator: reg_vid,  trigger: 'blur'}
+                    ],
+                    vname:[
+                        { required:true ,validator: reg_vname, trigger:'blur'}
+                    ],
+                    vaddress:[
+                        { required:true ,validator: reg_address, trigger:'blur' }
+                    ],
+                    vphone :[
+                        {required:true ,validator: reg_phone, trigger:'blur'}
+                    ],
+                    vemail: [
+                        {required:true ,validator: reg_email, trigger:'blur'}
+                    ],
+                    vfax:[
+                        {required:true ,validator: reg_fax, trigger:'blur'}
+                    ],
+                    vcredit:[
+                        {required:true ,validator: reg_credit, trigger:'blur'}
+                    ],
+                    vsettle_account:[
+                        {required:true ,validator: reg_count, trigger:'blur'}
+                    ]
+                }
             }
         },
         methods: {
@@ -144,30 +185,45 @@
                 console.log(this.currentPage)
             },
             addVender(){
-                if (!this.addform.vid) {
-                    console.log("供应商代码为空");
-                    return;
-                }
-                this.$axios.post('/addVender', {
-                    vid: this.addform.vid,
-                    vname: this.addform.vname,
-                    vaddress: this.addform.vaddress,
-                    vphone: this.addform.vphone,
-                    vemail: this.addform.vemail,
-                    vfax: this.addform.vfax,
-                    vcredit: this.addform.vcredit,
-                    vsettle_account: this.addform.vsettle_account,
 
-                }).then(successResponse => {
-                    if (successResponse.data.code === 200) {
-                        this.addSuccessful = true;
-                        this.$message({
-                            message: '成功添加一条记录',
-                            type: 'success',
+                this.$refs.addform.validate()
+                    .then(res =>{
+                        this.$axios.post('/addVender', {
+                            vid: this.addform.vid,
+                            vname: this.addform.vname,
+                            vaddress: this.addform.vaddress,
+                            vphone: this.addform.vphone,
+                            vemail: this.addform.vemail,
+                            vfax: this.addform.vfax,
+                            vcredit: this.addform.vcredit,
+                            vsettle_account: this.addform.vsettle_account,
+
+                        }).then(successResponse => {
+                            if (successResponse.data.code === 200) {
+                                this.addSuccessful = true;
+                                this.$message({
+                                    message: '成功添加一条记录',
+                                    type: 'success',
+                                });
+                                //将信息刷新到表格中
+                                this.tableData.push(this.addform);
+                                //清空填写单的信息放到请求体中，避免请求延迟已经被清空才刷新在信息到表格中
+                                this.addform = {
+                                    vid: '',
+                                    vname: '',
+                                    vaddress: '',
+                                    vphone: '',
+                                    vemail:'',
+                                    vfax: '',
+                                    vcredit: '',
+                                    vsettle_account: ''
+                                };
+                            }
+                        }).catch(failedResponse => {
+                            this.addSuccessful = false;
                         });
-                        //将信息刷新到表格中
-                        this.tableData.push(this.addform);
-                        //清空填写单的信息放到请求体中，避免请求延迟已经被清空才刷新在信息到表格中
+
+                        // 将填写框置空，方便下次填写
                         this.addform = {
                             vid: '',
                             vname: '',
@@ -178,24 +234,18 @@
                             vcredit: '',
                             vsettle_account: ''
                         };
-                    }
-                }).catch(failedResponse => {
-                    this.addSuccessful = false;
+                        // 让表格消失
+                        this.dialogFormVisible = false;
+
+                    }).catch(error =>{
+                        console.log("提交失败");
+                        this.$message({
+                        message: '无法提交，表单中数据有错误',
+                        type: 'error'
+                    });
                 });
 
-                // 将填写框置空，方便下次填写
-                this.addform = {
-                    vid: '',
-                    vname: '',
-                    vaddress: '',
-                    vphone: '',
-                    vemail:'',
-                    vfax: '',
-                    vcredit: '',
-                    vsettle_account: ''
-                };
-                // 让表格消失
-                this.dialogFormVisible = false;
+
 
             },
             del(delItem, index) {

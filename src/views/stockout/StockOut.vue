@@ -237,6 +237,8 @@
                                 type: 'success'
                             });
                         }
+                        //将信息刷新到表格中
+                        this.tableData.push(this.addform);
                         // 将填写框置空，方便下次填写
                         this.dataInfo = {
                             gid: '',
