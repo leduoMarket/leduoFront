@@ -134,7 +134,7 @@
                     idate:'',
                     iprice:'',
                     ipayment:'',
-                    iaccount:''
+                    icount:''
                 },
                 formLabelWidth: '120px',
                 pagesize:5,
@@ -172,7 +172,7 @@
         // 创建的时候发送请求获取显示数据库所有员工的列表数据
         created() {
             console.log("vue被创建");
-            this.$axios.get("/stockins").then(res => {
+            this.$axios.get("/stockIn").then(res => {
                 if (res.data) {
                     console.log(res);
                     this.tableData = res.data;
@@ -252,14 +252,14 @@
                 this.$refs.addform.validate()  //判断表单验证是否通过，验证通过执行.then()，否则执行.catch()
                     .then(res =>{
                         console.log("提交成功");
-                        this.$axios.post('/stockIn',{
+                        this.$axios.post('/addstockIn',{
                             gid:this.addform.gid,
                             vname:this.addform.vname,
                             inumber:this.addform.inumber,
-                            idate:this.addform.date,
-                            iprice:this.addform.price,
-                            ipayment:this.addform.payment,
-                            iaccount:this.addform.account,
+                            idate:this.addform.idate,
+                            iprice:this.addform.iprice,
+                            ipayment:this.addform.ipayment,
+                            icount:this.addform.icount,
                         }).then(successResponse =>{
                             if(successResponse.data.code == 200){
                                 this.addSuccessful = true;
@@ -277,7 +277,7 @@
                                     idate : '',
                                     iprice: '',
                                     ipayment: '',
-                                    iaccount: '',
+                                    icount: '',
                                 };
                             }
                         }).catch(failedResponse =>{
@@ -291,7 +291,7 @@
                             idate : '',
                             iprice: '',
                             ipayment: '',
-                            iaccount: '',
+                            icount: '',
                         };
                         this.dialogFormVisible = false;
                     }).catch(error =>{

@@ -148,7 +148,7 @@
                     console.log("供应商代码为空");
                     return;
                 }
-                this.$axios.post('/addvender', {
+                this.$axios.post('/addVender', {
                     vid: this.addform.vid,
                     vname: this.addform.vname,
                     vaddress: this.addform.vaddress,
@@ -206,7 +206,7 @@
                     type:'warning'
                 }).then(() =>{
                     //如果用户确实要删除，则用delete方式删除，并且传递要删除的记录的eid
-                    this.$axios.delete('/delvender',{
+                    this.$axios.delete('/delVender',{
                         params:{
                             venderId: delItem.vid
                         }
@@ -236,7 +236,7 @@
 
         },
         created() {
-            this.$axios.get("/vender").then(res=>{
+            this.$axios.get("/Vender").then(res=>{
                 if(res.data){
                     console.log(res);
                     this.tableData = res.data;

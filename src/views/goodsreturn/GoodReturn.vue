@@ -53,7 +53,9 @@
           label="操作">
 
           <template slot-scope="scope">
-            <el-button style="float: left; padding-right: 3px;" type="text"><span style="color: red" @click="del">删除</span></el-button>
+            <el-button style="float: left; padding-right: 3px;" type="text">
+              <span style="color: red" @click="del(scope.row,scope.$index)">删除</span>
+            </el-button>
           </template>
         </el-table-column>
       </el-table>
