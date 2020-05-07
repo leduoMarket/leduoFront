@@ -5,20 +5,20 @@
       <span>欠款单</span>
       <el-button style="float: right; padding: 3px 0" type="text" @click="dialogFormVisible = true">新建</el-button>
       <el-dialog title="欠款单" :visible.sync="dialogFormVisible">
-        <el-form :model="dataInfo">
-          <el-form-item label="欠款单号" :label-width="formLabelWidth">
+        <el-form :model="dataInfo" :rules="debtRules" ref="dataInfo">
+          <el-form-item label="欠款单号" :label-width="formLabelWidth" prop="dnumber">
             <el-input v-model="dataInfo.dnumber" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="商品代码" :label-width="formLabelWidth">
+          <el-form-item label="商品代码" :label-width="formLabelWidth" prop="gid">
             <el-input v-model="dataInfo.gid" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="供应商名称" :label-width="formLabelWidth">
+          <el-form-item label="供应商名称" :label-width="formLabelWidth" prop="vnanme">
             <el-input v-model="dataInfo.vname" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="日期" :label-width="formLabelWidth">
+          <el-form-item label="日期" :label-width="formLabelWidth" prop="ddate">
             <el-input v-model="dataInfo.ddate" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="欠款金额" :label-width="formLabelWidth">
+          <el-form-item label="欠款金额" :label-width="formLabelWidth" prop="ddebt">
             <el-input v-model="dataInfo.ddebt" autocomplete="off"></el-input>
           </el-form-item>
 <!--          <el-form-item label="信誉" :label-width="formLabelWidth">-->
@@ -99,7 +99,15 @@
 </template>
 
 <script>
-    export default {
+    import {
+        reg_dnumber,
+        reg_gid,
+        reg_vname,
+        reg_date,
+        reg_money, reg_userName,
+    } from "../login/validator";
+
+  export default {
         name: "Debt",
         data() {
             return {
@@ -123,7 +131,25 @@
                 formLabelWidth: '120px',
                 pagesize:5,  //分页数量
                 currentPage:1 ,//初始页
-                searchInput:''
+                searchInput:'',
+                debtRules:{
+                    dnumber:[
+                        {required:true ,validator: reg_dnumber,  trigger: 'blur'}
+                    ],
+                    gid:[
+                        {required:true ,validator: reg_gid,  trigger: 'blur'}
+                    ],
+                    vname:[
+                        {required:true ,validator: reg_vname,  trigger: 'blur'}
+                    ],
+                    ddate:[
+                        {required:true ,validator: reg_date,  trigger: 'blur'}
+                    ],
+                    ddebt:[
+                        {required:true ,validator: reg_money,  trigger: 'blur'}
+                    ],
+
+                },
             }
         },
         // 创建的时候发送请求获取显示数据库所有员工的列表数据
@@ -171,42 +197,48 @@
 
             },
             addDebt() {
-                if (!this.dataInfo.gid) {
-                    console.log("商品编号为空");
-                    return;
-                }
-                this.$axios.post('/addDebt', {
-                    dnumber:this.dataInfo.dnumber,
-                    gid: this.dataInfo.gid,
-                    vname: this.dataInfo.vname,
-                    ddate: this.dataInfo.ddate,
-                    ddebt: this.dataInfo.ddebt,
-                }).then(successResponse => {
-                    if (successResponse.data.code === 200) {
-                        this.addSuccessful = true;
-                    }
-                }).catch(failedResponse => {
-                    this.addSuccessful = false;
-                });
-                if (!this.addSuccessful) {
-                    this.$message.error('插入数据失败');
-                } else {
-                    this.tableData.push(this.dataInfo);
+                this.$refs.dataInfo.validate()
+                    .then(res =>{
+                        this.$axios.post('/addDebt', {
+                            dnumber:this.dataInfo.dnumber,
+                            gid: this.dataInfo.gid,
+                            vname: this.dataInfo.vname,
+                            ddate: this.dataInfo.ddate,
+                            ddebt: this.dataInfo.ddebt,
+                        }).then(successResponse => {
+                            if (successResponse.data.code === 200) {
+                                this.addSuccessful = true;
+                            }
+                        }).catch(failedResponse => {
+                            this.addSuccessful = false;
+                        });
+                        if (!this.addSuccessful) {
+                            this.$message.error('插入数据失败');
+                        } else {
+                            this.tableData.push(this.dataInfo);
+                            this.$message({
+                                message: '成功添加一条记录',
+                                type: 'success'
+                            });
+                        }
+                        // 将填写框置空，方便下次填写
+                        this.dataInfo = {
+                            dnumber: '',
+                            gid: '',
+                            vname: '',
+                            ddate: '',
+                            ddebt: ''
+                        };
+                        // 让表格消失
+                        this.dialogFormVisible = false;
+                    }).catch(error =>{
+                    console.log("提交失败");
                     this.$message({
-                        message: '成功添加一条记录',
-                        type: 'success'
+                        message: '无法提交，表单中数据有错误',
+                        type: 'error'
                     });
-                }
-                // 将填写框置空，方便下次填写
-                this.dataInfo = {
-                    dnumber: '',
-                    gid: '',
-                    vname: '',
-                    ddate: '',
-                    ddebt: ''
-                };
-                // 让表格消失
-                this.dialogFormVisible = false;
+                });
+
             },
 
             // 删除选中下标的一行数据，index由click处的scope.$index传过来的下标，delItem由scope.$row传过来的元素

@@ -7,20 +7,20 @@
         <el-button style="float: right; padding-right: 3px;" type="text" @click="dialogFormVisible = true">新增
         </el-button>
         <el-dialog title="员工基本信息" :visible.sync="dialogFormVisible">
-          <el-form :model="userInfo">
-            <el-form-item label="员工编号" :label-width="formLabelWidth">
+          <el-form :model="userInfo" :rules="employeesRules" ref="userInfo">
+            <el-form-item label="员工编号" :label-width="formLabelWidth" prop="eid">
               <el-input v-model="userInfo.eid" autocomplete="off"></el-input>
             </el-form-item>
-            <el-form-item label="员工姓名" :label-width="formLabelWidth">
+            <el-form-item label="员工姓名" :label-width="formLabelWidth" prop="ename">
               <el-input v-model="userInfo.ename" autocomplete="off"></el-input>
             </el-form-item>
-            <el-form-item label="电话" :label-width="formLabelWidth">
+            <el-form-item label="电话" :label-width="formLabelWidth" prop="ephone">
               <el-input v-model="userInfo.ephone" autocomplete="off"></el-input>
             </el-form-item>
-            <el-form-item label="角色" :label-width="formLabelWidth">
+            <el-form-item label="角色" :label-width="formLabelWidth" prop="erole">
               <el-input v-model="userInfo.erole" autocomplete="off"></el-input>
             </el-form-item>
-            <el-form-item label="工资" :label-width="formLabelWidth">
+            <el-form-item label="工资" :label-width="formLabelWidth" prop="esalary">
               <el-input v-model="userInfo.esalary" autocomplete="off"></el-input>
             </el-form-item>
           </el-form>
@@ -92,7 +92,15 @@
 </template>
 <!--javaScript代码-->
 <script>
-    export default {
+  import {
+      reg_eid,
+      reg_ename,
+      reg_erole,
+      reg_money,
+      reg_phone
+  } from "../login/validator";
+
+  export default {
         name: "Employees",
         data() {
             return {
@@ -113,8 +121,26 @@
                     esalary: ''
 
                 },
+                formLabelWidth: '120px',
                 pagesize:5,
-                currentPage:1 //初始页
+                currentPage:1, //初始页
+                employeesRules:{
+                    eid:[
+                        {required:true ,validator: reg_eid,  trigger: 'blur'}
+                    ],
+                    ename:[
+                        {required:true ,validator: reg_ename,  trigger: 'blur'}
+                    ],
+                    ephone:[
+                        {required:true ,validator: reg_phone,  trigger: 'blur'}
+                    ],
+                    erole:[
+                        {required:true ,validator: reg_erole,  trigger: 'blur'}
+                    ],
+                    esalary:[
+                        {required:true ,validator: reg_money,  trigger: 'blur'}
+                    ]
+                }
                 }
         },
         // 创建的时候发送请求获取显示数据库所有员工的列表数据
@@ -141,26 +167,40 @@
             },
             // 执行新增员工操作
             addEmployee() {
-                if (!this.userInfo.eid) {
-                    console.log("员工号为空");
-                    return;
-                }
-                this.$axios.post('/addemp', {
-                    eid: this.userInfo.eid,
-                    ename: this.userInfo.ename,
-                    ephone: this.userInfo.ephone,
-                    erole: this.userInfo.erole,
-                    esalary: this.userInfo.esalary,
-                }).then(successResponse => {
-                    if (successResponse.data.code == 200) {
-                        this.addSuccessful=true;
-                        this.$message({
-                            message: '成功添加一条记录',
-                            type: 'success',
+                this.$refs.userInfo.validate()
+                    .then(res =>{
+                        this.$axios.post('/addemp', {
+                            eid: this.userInfo.eid,
+                            ename: this.userInfo.ename,
+                            ephone: this.userInfo.ephone,
+                            erole: this.userInfo.erole,
+                            esalary: this.userInfo.esalary,
+                        }).then(successResponse => {
+                            if (successResponse.data.code == 200) {
+                                this.addSuccessful=true;
+                                this.$message({
+                                    message: '成功添加一条记录',
+                                    type: 'success',
+                                });
+                                //将信息刷新到表格中
+                                this.tableData.push(this.userInfo);
+                                //清空填写单的信息放到请求体中，避免请求延迟已经被清空才刷新在信息到表格中
+                                this.userInfo = {
+                                    eid: '',
+                                    ename: '',
+                                    ephone: '',
+                                    erole: '',
+                                    esalary: ''
+                                };
+                                // console.log("userInfo"+this.userInfo.eid);
+                            }
+                        }).catch(failedResponse => {
+                            this.$message({
+                                message: '添加失败',
+                            });
                         });
-                        //将信息刷新到表格中
-                        this.tableData.push(this.userInfo);
-                        //清空填写单的信息放到请求体中，避免请求延迟已经被清空才刷新在信息到表格中
+                        // 将填写框置空，方便下次填写
+                        // 让表格消失
                         this.userInfo = {
                             eid: '',
                             ename: '',
@@ -168,24 +208,17 @@
                             erole: '',
                             esalary: ''
                         };
-                        // console.log("userInfo"+this.userInfo.eid);
-                    }
-                }).catch(failedResponse => {
+                        // 让表格消失
+                        this.dialogFormVisible = false;
+                    }).catch(error =>{
+                    console.log("提交失败");
                     this.$message({
-                        message: '添加失败',
+                        message: '无法提交，表单中数据有错误',
+                        type: 'error'
                     });
                 });
-                // 将填写框置空，方便下次填写
-                // 让表格消失
-                this.userInfo = {
-                    eid: '',
-                    ename: '',
-                    ephone: '',
-                    erole: '',
-                    esalary: ''
-                };
-                // 让表格消失
-                this.dialogFormVisible = false;
+
+
             },
 
             // 删除选中下标的一行数据，index由click处的scope.$index传过来的下标，delItem由scope.$row传过来的元素
