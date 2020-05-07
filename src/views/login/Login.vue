@@ -1,7 +1,7 @@
 <template >
   <body id="poster">
   <div id="logo">
-    <img src="../../assets/pic/logo.png" style="width: 100px; height: 100px"/>
+    <img src="../../assets/pic/logo.png" style="width: 100px; height: 100px" alt=""/>
   </div>
 
   <el-form class="login-container" label-position="left"

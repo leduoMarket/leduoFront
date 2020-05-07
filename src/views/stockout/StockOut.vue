@@ -4,7 +4,7 @@
       <span>出库单</span>
       <!--      新建页面-->
       <el-button style="float: right; padding: 3px 0" type="text" @click="dialogFormVisible = true">新建</el-button>
-      <el-dialog title="入库单" :visible.sync="dialogFormVisible">
+      <el-dialog title="出库单" :visible.sync="dialogFormVisible">
         <el-form :model="dataInfo" :rules="stockOutRules" ref="dataInfo">
           <el-form-item label="商品代码" :label-width="formLabelWidth" prop="gid">
             <el-input v-model="dataInfo.gid" autocomplete="off"></el-input>

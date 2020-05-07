@@ -4,23 +4,23 @@
       <span>支付流水帐</span>
       <el-button style="float: right; padding: 3px 0" type="text" @click="dialogFormVisible = true">新建</el-button>
       <el-dialog title="支付流水帐" :visible.sync="dialogFormVisible">
-        <el-form :model="form">
-          <el-form-item label="交易号" :label-width="formLabelWidth">
+        <el-form :model="form"  :rules="paymentOfFlowCountRules" ref="form">
+          <el-form-item label="交易号" :label-width="formLabelWidth" prop="pnumber">
             <el-input v-model="form.pnumber" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="交易时间" :label-width="formLabelWidth">
+          <el-form-item label="交易时间" :label-width="formLabelWidth" prop="pdate">
             <el-input v-model="form.pdate" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="交易类别" :label-width="formLabelWidth">
+          <el-form-item label="交易类别" :label-width="formLabelWidth" prop="pcategory">
             <el-input v-model="form.pcategory" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="来源店铺" :label-width="formLabelWidth">
+          <el-form-item label="来源店铺" :label-width="formLabelWidth" prop="psource_shop">
             <el-input v-model="form.psource_shop" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="交易金额" :label-width="formLabelWidth">
+          <el-form-item label="交易金额" :label-width="formLabelWidth" prop="ptrading_amount">
             <el-input v-model="form.ptrading_amount" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="现余额" :label-width="formLabelWidth">
+          <el-form-item label="现余额" :label-width="formLabelWidth" prop="premainning_amount">
             <el-input v-model="form.premainning_amount" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item label="类型" :label-width="formLabelWidth">
@@ -101,7 +101,15 @@
 </template>
 
 <script>
-    export default {
+  import {
+      reg_pnumber,
+      reg_date,
+      reg_pcategory,
+      reg_source_shop,
+      reg_money
+  } from "../login/validator";
+
+  export default {
         name: "PaymentOfFlowCount",
         data() {
             return {
@@ -116,6 +124,8 @@
                      psource_shop: '',
                      ptrading_amount: '',
                      premainning_amount: '',
+                     ppayment:'',
+                     ptype:'',
                      date1: '',
                      date2: '',
                      delivery: false,
@@ -126,7 +136,27 @@
                 formLabelWidth: '120px',
                 pagesize:5,  //分页数量
                 currentPage:1, //初始页
-                searchInput:''
+                searchInput:'',
+                paymentOfFlowCountRules:{
+                    pnumber:[
+                        {required:true ,validator: reg_pnumber,  trigger: 'blur'}
+                    ],
+                    pdate: [
+                        {required:true ,validator: reg_date,  trigger: 'blur'}
+                    ],
+                    pcategory:[
+                        {required:true ,validator: reg_pcategory,  trigger: 'blur'}
+                    ],
+                    psource_shop: [
+                        {required:true ,validator: reg_source_shop,  trigger: 'blur'}
+                    ],
+                    ptrading_amount: [
+                        {required:true ,validator: reg_money,  trigger: 'blur'}
+                    ],
+                    premainning_amount: [
+                        {required:true ,validator: reg_money,  trigger: 'blur'}
+                    ]
+                }
             }
         },
         methods: {
@@ -157,6 +187,8 @@
                     this.$message('没有找到记录哦');
                 })
             },
+            //新增
+
         },
 
     }
