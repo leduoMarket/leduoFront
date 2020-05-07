@@ -1,15 +1,19 @@
 <template>
-  <div class="home">
+  <div id="home">
     <Menu></Menu>
     <TopBar></TopBar>
     <router-view></router-view>
-<!--    <image src="../assets/pic/welcome.jpg" style="height: 100%;width: 100%;">-->
-<!--    <div>-->
-<!--      <p >welcome to leduomarket!</p>-->
-<!--      <p>Have a good time!</p>-->
-<!--    </div>-->
+    <!--<el-card class="box-card">-->
+     <div id="welcome">
+    <img src="../assets/pic/welcome1.jpg" style="height: 75%;width: 65%;border-radius: 30px;"  alt=""/>
+     </div>
+    <!--</el-card>-->
+    <!--<div>
+      <p >welcome to leduomarket!</p>
+      <p>Have a good time!</p>
+    </div>-->
   </div>
-</template>
+  </template>
 <script>
     import TopBar from "./template/TopBar";
     import Menu from "./template/Menu";
@@ -21,8 +25,9 @@
 <style scoped>
   #welcome{
     text-align: center;
-    line-height: inherit;
+    /*line-height: inherit;*/
   }
-  .home{
-  }
+  /*.box-card {
+    width: 75%;
+  }*/
 </style>
