@@ -6,7 +6,7 @@
       <a href="http://localhost:8080/home/goodClass">
         <el-button style="float: right; padding: 3px 0" type="text">分类规则</el-button>
       </a>
-      <el-button style="float: right; padding: 3px 0" type="text" @click="dialogFormVisible = true">新建</el-button>
+      <el-button style="float: right; padding: 3px 10px" type="text" @click="dialogFormVisible = true">新建</el-button>
       <el-dialog title="商品表" :visible.sync="dialogFormVisible">
         <el-form :model="dataInfo">
           <el-form-item label="商品代码" :label-width="formLabelWidth">
