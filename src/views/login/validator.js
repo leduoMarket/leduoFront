@@ -52,7 +52,7 @@ export var reg_gname = (rule, value, callback) => {
   } else {
     let check = reg.test(value);
     if (!check) {
-      callback(new Error('商品名称过长 (>50位数字)'))
+      callback(new Error('商品名称过长 (>50位字符)'))
     }else{
       return true,
         callback()
@@ -77,7 +77,7 @@ export var reg_gcategories = (rule, value, callback) => {
 
 //计价单位
 export var reg_gchange_unit = (rule, value, callback) => {
-  const reg = /.{1,10}/;
+  const reg = /^.{0,10}$/;
   if (!value) {
     callback(new Error('计价单位为空'));
   } else {
@@ -210,13 +210,13 @@ export var reg_vid = (rule, value, callback) => {
 
 //地址校验
 export var reg_address = (rule, value, callback) => {
-  const reg = /^.{1,100}$/;
+  const reg = /^.{1,50}$/;
   if(!value){
     callback(new Error('地址为空'));
   }else{
     let check = reg.test(value);
     if (!check) {
-      callback(new Error('地址过长<100位'))
+      callback(new Error('地址过长<50位'))
     }else{
       callback()
     }

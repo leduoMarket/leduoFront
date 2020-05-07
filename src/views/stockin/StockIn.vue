@@ -24,8 +24,8 @@
           <el-form-item label="已付款项" :label-width="formLabelWidth" prop="ipayment">
             <el-input v-model="addform.ipayment" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="数量" :label-width="formLabelWidth" prop="iaccount">
-            <el-input v-model="addform.iaccount" autocomplete="off"></el-input>
+          <el-form-item label="数量" :label-width="formLabelWidth" prop="icount">
+            <el-input v-model="addform.icount" autocomplete="off"></el-input>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -162,7 +162,7 @@
                     ipayment:[
                         { required:true ,validator: reg_money, trigger:'blur'}
                     ],
-                    iaccount:[
+                    icount:[
                         { required:true ,validator: reg_count, trigger:'blur'}
                     ]
 
