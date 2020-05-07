@@ -72,7 +72,7 @@
                             })
                             .then(successResponse => {
                                 if (successResponse.data.code === 200) {
-                                    this.$router.replace({path: '/home'})
+                                    this.$router.replace({path: '/home/stockIn'})
                                 }
                             })
                             .catch(failResponse => {

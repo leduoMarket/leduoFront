@@ -4,16 +4,20 @@
       <span>退货单</span>
       <el-button style="float: right; padding: 3px 0" type="text" @click="dialogFormVisible = true">新建</el-button>
       <el-dialog title="退货单" :visible.sync="dialogFormVisible">
-        <el-form :model="dataInfo">
-          <el-form-item label="商品代码" :label-width="formLabelWidth">
+        <el-form :model="dataInfo" :rules="goodReturnRules" ref="dataInfo">
+          <el-form-item label="商品代码" :label-width="formLabelWidth" prop="gid">
             <el-input v-model="dataInfo.gid" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="退货日期" :label-width="formLabelWidth">
+          <el-form-item label="退货日期" :label-width="formLabelWidth" prop="rdate">
             <el-input v-model="dataInfo.rdate" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="退货原因" :label-width="formLabelWidth">
+          <el-form-item label="退货数量" :label-width="formLabelWidth" prop="rcount">
+            <el-input v-model="dataInfo.rcount" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="退货原因" :label-width="formLabelWidth" prop="rreason">
             <el-input v-model="dataInfo.rreason" autocomplete="off"></el-input>
           </el-form-item>
+
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisible = false">取 消</el-button>
@@ -45,6 +49,11 @@
           width="180">
         </el-table-column>
         <el-table-column
+          prop="rcount"
+          label="退货数量">
+        </el-table-column>
+
+        <el-table-column
           prop="rreason"
           label="退货原因">
         </el-table-column>
@@ -74,7 +83,15 @@
 </template>
 
 <script>
-    export default {
+  import {
+      reg_gid,
+      reg_date,
+      reg_count,
+      reg_reason,
+
+  } from "../login/validator";
+
+  export default {
         name: "GoodReturn",
         data() {
             return {
@@ -85,6 +102,7 @@
                 tableData: [],
                 // 控制新增页面的form表单可见性
                 dialogFormVisible: false,
+                dialogTableVisible: false,
                 //删除的元素是谁
                 delItem: [],
                 // 用于新增数据绑定
@@ -92,18 +110,34 @@
                     gid: '',
                     rdate: '',
                     rreason: '',
+                    rcount:'',
                 },
                 formLabelWidth: '120px',
                 pagesize:5,  //分页数量
                 currentPage:1 ,//初始页
-                searchInput:''
+                searchInput:'',
+
+                goodReturnRules:{
+                    gid:[
+                        {required:true ,validator: reg_gid,  trigger: 'blur'}
+                    ],
+                    rdate:[
+                        {required:true ,validator: reg_date,  trigger: 'blur'}
+                    ],
+                    rcount: [
+                        {required:true ,validator: reg_count,  trigger: 'blur'}
+                    ],
+                    rreason:[
+                        {required:true ,validator: reg_reason,  trigger: 'blur'}
+                    ]
+                }
             }
         },
         // 创建的时候发送请求获取显示数据库所有退货单的列表数据
         created() {
             this.$axios.get("/goodsReturn").then(res=>{
                 if(res.data){
-                    console.log(res)
+                    console.log(res);
                     this.tableData = res.data;
                     this.itemCount = res.data.length;
                     console.log(this.itemCount);
@@ -145,38 +179,47 @@
 
             },
             addGoodsReturn() {
-                if (!this.dataInfo.gid) {
-                    console.log("商品编号为空");
-                    return;
-                }
-                this.$axios.post('/addgoodsReturn', {
-                    gid: this.dataInfo.gid,
-                    rdate: this.dataInfo.rdate,
-                    rreason: this.dataInfo.rreason,
-                }).then(successResponse => {
-                    if (successResponse.data.code === 200) {
-                        this.addSuccessful = true;
-                    }
-                }).catch(failedResponse => {
-                    this.addSuccessful = false;
+                this.$refs.dataInfo.validate()
+                    .then(res =>{
+                        this.$axios.post('/addgoodsReturn', {
+                            gid: this.dataInfo.gid,
+                            rdate: this.dataInfo.rdate,
+                            rreason: this.dataInfo.rreason,
+                            rcount: this.dataInfo.rcount,
+                        }).then(successResponse => {
+                            if (successResponse.data.code === 200) {
+                                this.addSuccessful = true;
+                            }
+                        }).catch(failedResponse => {
+                            this.addSuccessful = false;
+                        });
+                        if (!this.addSuccessful) {
+                            this.$message.error('插入数据失败');
+                        } else {
+                            this.tableData.push(this.dataInfo);
+                            this.$message({
+                                message: '成功添加一条记录',
+                                type: 'success'
+                            });
+                        }
+                        // 将填写框置空，方便下次填写
+                        this.dataInfo = {
+                            gid: '',
+                            rdate: '',
+                            rreason: '',
+                            rcount: '',
+                        };
+                        // 让表格消失
+                        this.dialogFormVisible = false;
+                    }).catch(error =>{
+                    console.log("提交失败");
+                        this.$message({
+                           message: '无法提交，表单中数据有错误',
+                           type: 'error'
+                        });
+
                 });
-                if (!this.addSuccessful) {
-                    this.$message.error('插入数据失败');
-                } else {
-                    this.tableData.push(this.dataInfo);
-                    this.$message({
-                        message: '成功添加一条记录',
-                        type: 'success'
-                    });
-                }
-                // 将填写框置空，方便下次填写
-                this.dataInfo = {
-                    gid: '',
-                    rdate: '',
-                    rreason: ''
-                };
-                // 让表格消失
-                this.dialogFormVisible = false;
+
             },
 
             // 删除选中下标的一行数据，index由click处的scope.$index传过来的下标，delItem由scope.$row传过来的元素

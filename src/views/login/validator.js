@@ -43,6 +43,22 @@ export var reg_gid = (rule, value, callback) => {
     }
   }
 }
+
+//商品名称校验
+export var reg_gname = (rule, value, callback) => {
+  const reg = /^.{0,15}$/;
+  if (!value) {
+    callback(new Error('商品名称为空'));
+  } else {
+    let check = reg.test(value);
+    if (!check) {
+      callback(new Error('商品名称过长 (>50位数字)'))
+    }else{
+      return true,
+        callback()
+    }
+  }
+}
 //入库单号
 export var reg_inumber = (rule, value, callback) => {
   const reg = /^I\d{10}$/;
@@ -222,4 +238,32 @@ export var reg_credit = (rule, value, callback) => {
   }
 }
 
+//员工名校验
+export var reg_ename = (rule, value, callback) => {
+  const reg = /^.{1,50}$/;
+  if(!value){
+    callback(new Error('人名为空'));
+  }else{
+    let check = reg.test(value);
+    if (!check) {
+      callback(new Error('人名过长（>50)'))
+    }else{
+      callback()
+    }
+  }
+}
 
+//原因信息校验
+export var reg_reason = (rule, value, callback) => {
+  const reg = /^.{1,100}$/;
+  if(!value){
+    callback(new Error('原因为空'));
+  }else{
+    let check = reg.test(value);
+    if (!check) {
+      callback(new Error('原因过长<100位'))
+    }else{
+      callback()
+    }
+  }
+}

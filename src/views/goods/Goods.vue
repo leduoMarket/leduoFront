@@ -35,9 +35,7 @@
           <el-button type="primary" @click="addGoods">确 定</el-button>
         </div>
       </el-dialog>
-     <!-- <a href="http://localhost:8080/home/goodClass">
-      <el-button style="float: right; padding: 3px 0" type="text">分类规则</el-button>
-      </a>-->
+
     </div>
     <!--    查询模块-->
     <div class="text item">
