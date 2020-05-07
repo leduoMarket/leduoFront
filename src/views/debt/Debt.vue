@@ -64,10 +64,6 @@
           label="供应商名称">
         </el-table-column>
         <el-table-column
-          prop="ddate"
-          label="日期">
-        </el-table-column>
-        <el-table-column
           prop="ddebt"
           label="欠款金额">
         </el-table-column>
