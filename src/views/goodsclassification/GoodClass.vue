@@ -4,9 +4,9 @@
     <el-card class="box-card">
       <div slot="header" class="clearfix">
         <span>商品分类表</span>
-        <el-button style="float: right; padding-right: 3px;" type="text">
-          <router-link to="addemployee">新建</router-link>
-        </el-button>
+        <a href="http://localhost:8080/home/goods">
+        <el-button style="float: right; padding: 3px 0" type="text">返回</el-button>
+        </a>
       </div>
       <div class="form">
         <el-table

@@ -193,7 +193,7 @@
             },
             //查询
             beginSearch(){
-                this.$axios.get('/queryStockOut',{
+                this.$axios.get('/querystockOut',{
                     params:{
                         onumber:this.searchInput,
                     }
