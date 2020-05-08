@@ -1,4 +1,5 @@
 <template>
+  <div class="vender">
   <el-card class="box-card">
     <div slot="header" class="clearfix">
       <span>供应商表</span>
@@ -103,6 +104,7 @@
       </el-pagination>
     </div>
   </el-card>
+  </div>
 </template>
 
 <script>
@@ -116,7 +118,6 @@
       reg_credit,
       reg_count
   } from "../login/validator";
-
   export default {
         name: "Vender",
         data() {
@@ -174,6 +175,17 @@
                 }
             }
         },
+      created() {
+          this.$axios.get("/Vender").then(res=>{
+              if(res.data){
+                  console.log(res);
+                  this.tableData = res.data;
+                  console.log(this.tableData.length);
+              }
+          }).catch(failResponse=>{
+
+          })
+      },
         methods: {
             // 初始页currentPage、初始每页数据数pagesize和数据data
             handleSizeChange: function (size) {
@@ -185,7 +197,6 @@
                 console.log(this.currentPage)
             },
             addVender(){
-
                 this.$refs.addform.validate()
                     .then(res =>{
                         this.$axios.post('/addVender', {
@@ -244,9 +255,6 @@
                         type: 'error'
                     });
                 });
-
-
-
             },
             del(delItem, index) {
                 console.log(delItem);
@@ -285,17 +293,7 @@
             }
 
         },
-        created() {
-            this.$axios.get("/Vender").then(res=>{
-                if(res.data){
-                    console.log(res);
-                    this.tableData = res.data;
-                    console.log(this.tableData.length);
-                }
-            }).catch(failResponse=>{
 
-            })
-        }
     }
 </script>
 

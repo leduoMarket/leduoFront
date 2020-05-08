@@ -1,4 +1,5 @@
 <template>
+  <div class="marketmsg">
   <el-card class="box-card">
     <div slot="header" class="clearfix">
       <span>我家超市</span>
@@ -14,11 +15,14 @@
       <p>详细地址：龙泉驿大面街道1819号</p>
     </div>
   </el-card>
+  </div>
 </template>
 
 <script>
+
     export default {
-        name: "MarketMsg"
+        name: "MarketMsg",
+
     }
 </script>
 

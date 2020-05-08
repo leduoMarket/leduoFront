@@ -1,4 +1,5 @@
 <template>
+  <div class="stockIn">
   <el-card class="box-card">
     <div slot="header" class="clearfix">
       <span>入库单</span>
@@ -6,14 +7,14 @@
       <el-button style="float: right; padding: 3px 0" type="text" @click="dialogFormVisible = true">新建</el-button>
       <el-dialog title="入库单" :visible.sync="dialogFormVisible">
         <el-form :model="addform" :rules="stockInRules"  ref="addform">
+          <el-form-item label="入库单号" :label-width="formLabelWidth" prop="inumber">
+            <el-input v-model="addform.inumber" autocomplete="off"></el-input>
+          </el-form-item>
           <el-form-item label="商品代码" :label-width="formLabelWidth" prop="gid">
             <el-input v-model="addform.gid" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item label="供应商名称" :label-width="formLabelWidth" prop="vname">
             <el-input v-model="addform.vname" autocomplete="off"></el-input>
-          </el-form-item>
-          <el-form-item label="入库单号" :label-width="formLabelWidth" prop="inumber">
-            <el-input v-model="addform.inumber" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item label="入库日期" :label-width="formLabelWidth" prop="idate">
             <el-input v-model="addform.idate" autocomplete="off"></el-input>
@@ -24,7 +25,7 @@
           <el-form-item label="已付款项" :label-width="formLabelWidth" prop="ipayment">
             <el-input v-model="addform.ipayment" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="数量" :label-width="formLabelWidth" prop="iaccount">
+          <el-form-item label="数量" :label-width="formLabelWidth" prop="icount">
             <el-input v-model="addform.icount" autocomplete="off"></el-input>
           </el-form-item>
         </el-form>
@@ -49,6 +50,10 @@
         border
         style="width: 100%">
         <el-table-column
+          prop="inumber"
+          label="入库单号">
+        </el-table-column>
+        <el-table-column
           prop="gid"
           label="商品代码"
           width="180">
@@ -57,10 +62,6 @@
           prop="vname"
           label="供应商名称"
           width="180">
-        </el-table-column>
-        <el-table-column
-          prop="inumber"
-          label="入库单号">
         </el-table-column>
         <el-table-column
           prop="idate"
@@ -98,18 +99,18 @@
       </el-pagination>
     </div>
   </el-card>
+  </div>
 </template>
 
 <script>
     import {
+        reg_inumber,
         reg_gid,
         reg_vname,
-        reg_inumber,
         reg_date,
         reg_money,
         reg_count
     } from "../login/validator";
-
     export default {
         name: "StockIn",
         data() {
@@ -128,9 +129,9 @@
                 dialogFormVisible: false,
                 // 用于新增表单数据时的绑定
                 addform: {
+                    inumber:'',
                     gid:'',
                     vname:'',
-                    inumber:'',
                     idate:'',
                     iprice:'',
                     ipayment:'',
@@ -144,14 +145,14 @@
                 submitBtn:false,
                 //表单验证规则
                 stockInRules:{
+                    inumber:[
+                        { required:true ,validator: reg_inumber, trigger:'blur'}
+                    ],
                     gid:[
                         { required:true ,validator: reg_gid,  trigger: 'blur'}
                     ],
                     vname:[
                         { required:true ,validator: reg_vname, trigger:'blur'}
-                    ],
-                    inumber:[
-                        { required:true ,validator: reg_inumber, trigger:'blur'}
                     ],
                     idate:[
                         { required:true ,validator: reg_date,   trigger: 'blur' }
@@ -162,7 +163,7 @@
                     ipayment:[
                         { required:true ,validator: reg_money, trigger:'blur'}
                     ],
-                    iaccount:[
+                    icount:[
                         { required:true ,validator: reg_count, trigger:'blur'}
                     ]
 
@@ -195,8 +196,8 @@
             //查询
             beginSearch(){
                 this.$axios.get('/queryStockIn',{
-                    params: {
-                        inumber: this.searchInput,
+                    params:{
+                        inumber:this.searchInput,
                     }
                 }).then(successfulResponse => {
                     //服务器执行了查找但是没找到,返回的数据为空，
@@ -261,9 +262,9 @@
                     .then(res =>{
                         console.log("提交成功");
                         this.$axios.post('/addstockIn',{
+                            inumber:this.addform.inumber,
                             gid:this.addform.gid,
                             vname:this.addform.vname,
-                            inumber:this.addform.inumber,
                             idate:this.addform.idate,
                             iprice:this.addform.iprice,
                             ipayment:this.addform.ipayment,
@@ -279,9 +280,9 @@
                                 this.tableData.push(this.addform);
                                 //清空填写单的信息放到请求体中，避免请求延迟已经被清空才刷新在信息到表格中
                                 this.addform = {
+                                    inumber : '',
                                     gid : '',
                                     vname : '',
-                                    inumber : '',
                                     idate : '',
                                     iprice: '',
                                     ipayment: '',
@@ -289,13 +290,14 @@
                                 };
                             }
                         }).catch(failedResponse =>{
+                            this.addSuccessful = false;
 
                         } );
                         // 让表格消失
                         this.addform = {
+                            inumber : '',
                             gid : '',
                             vname : '',
-                            inumber : '',
                             idate : '',
                             iprice: '',
                             ipayment: '',
@@ -326,11 +328,9 @@
     margin-bottom: 50px;
 
   }
-
   .box-card {
     width: 75%;
   }
-
   .form {
     height: 100%;
   }

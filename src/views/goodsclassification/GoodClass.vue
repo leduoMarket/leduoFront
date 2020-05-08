@@ -1,6 +1,5 @@
 <template>
   <div class="GoodClass">
-    <router-view></router-view>
     <el-card class="box-card">
       <div slot="header" class="clearfix">
         <span>商品分类表</span>
@@ -89,6 +88,7 @@
 
 <script>
     export default {
+        name:'GoodClass',
         data() {
             return {
                 pagesize:5,  //分页数量

@@ -18,7 +18,7 @@ const Debt = ()=>import("../views/debt/Debt")
 const Employees = ()=>import("../views/employees/Employees")
 const ProfitAnalysis=()=>import("../views/analysis/ProfitAnalysis")
 const Goods=()=>import("../views/goods/Goods")
-
+/*const Help=()=>import("../views/helps/Help")*/
 
 Vue.use(Router)
 export default new Router({
@@ -27,16 +27,16 @@ export default new Router({
     {
       path: '/',
       name: 'Login',
-      component: Login
+      component: Login,
     },{
       path: '/404',
       component: resolve => require(['../views/failvue/404'], resolve)
-    },
-    {
+    },{
       path: '/home',
       name: 'Home',
       component: Home,
-      children:[{
+      children:[
+    {
         path: 'stockOut',
         name: 'StockOut',
         component: StockOut
@@ -76,7 +76,7 @@ export default new Router({
           component: Goods,
         },{
           path: 'flowCount',
-          name: 'paymengOfFolowCount',
+          name: 'paymentOfFlowCount',
           component: PaymentOfFlowCount,
         },{
           path: 'inventory',
@@ -106,7 +106,11 @@ export default new Router({
           path: 'rolePermissinon',
           name: 'RolePermission',
           component: RolePermission,
-        },{
+        },/*{
+          Path:'helps',
+          name:'Help',
+          component:Help,
+        },*/{
           path: 'error',
           component: resolve => require(['../views/failvue/error'], resolve)
         }

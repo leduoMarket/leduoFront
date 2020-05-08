@@ -1,30 +1,31 @@
 <template>
+  <div class="goods">
   <el-card class="box-card">
     <div slot="header" class="clearfix">
       <span>商品表</span>
            <!-- 新建页面-->
-      <a href="http://localhost:8080/home/goodClass">
+      <a href="http://localhost:8080/goodClass">
         <el-button style="float: right; padding: 3px 0" type="text">分类规则</el-button>
       </a>
       <el-button style="float: right; padding: 3px 10px" type="text" @click="dialogFormVisible = true">新建</el-button>
       <el-dialog title="商品表" :visible.sync="dialogFormVisible">
-        <el-form :model="dataInfo">
-          <el-form-item label="商品代码" :label-width="formLabelWidth">
+        <el-form :model="dataInfo" :rules="goodsRules" ref="dataInfo">
+          <el-form-item label="商品代码" :label-width="formLabelWidth" prop="gid">
             <el-input v-model="dataInfo.gid" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="商品名称" :label-width="formLabelWidth">
+          <el-form-item label="商品名称" :label-width="formLabelWidth" prop="gname">
             <el-input v-model="dataInfo.gname" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="商品类别" :label-width="formLabelWidth">
+          <el-form-item label="商品类别" :label-width="formLabelWidth" prop="categories">
           <el-input v-model="dataInfo.categories" autocomplete="off"></el-input>
         </el-form-item>
-          <el-form-item label="生产地址" :label-width="formLabelWidth">
+          <el-form-item label="生产地址" :label-width="formLabelWidth" prop="address">
             <el-input v-model="dataInfo.address" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="计价单位" :label-width="formLabelWidth">
+          <el-form-item label="计价单位" :label-width="formLabelWidth" prop="charge_unit">
             <el-input v-model="dataInfo.charge_unit" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="生产日期" :label-width="formLabelWidth">
+          <el-form-item label="生产日期" :label-width="formLabelWidth" prop="gdate">
             <el-input v-model="dataInfo.gdate" autocomplete="off"></el-input>
           </el-form-item>
 
@@ -97,9 +98,19 @@
       </el-pagination>
     </div>
   </el-card>
+  </div>
 </template>
 
 <script>
+    import {
+        reg_gid,
+        reg_gname,
+        reg_gcategories,
+        reg_address,
+        reg_gchange_unit,
+        reg_date,
+    } from "../login/validator";
+
     export default {
         name: "Goods",
         data() {
@@ -131,7 +142,27 @@
                 formLabelWidth: '120px',
                 pagesize:5,
                 currentPage:1, //初始页
-                searchInput:''
+                searchInput:'',
+                goodsRules:{
+                    gid:[
+                        {required:true ,validator: reg_gid,  trigger: 'blur'}
+                    ],
+                    gname:[
+                        {required:true ,validator: reg_gname,  trigger: 'blur'}
+                    ],
+                    categories:[
+                        {required:true ,validator: reg_gcategories,  trigger: 'blur'}
+                    ],
+                    address:[
+                        {required:true ,validator: reg_address,  trigger: 'blur'}
+                    ],
+                    charge_unit:[
+                        {required:true ,validator: reg_gchange_unit,  trigger: 'blur'}
+                    ],
+                    gdate:[
+                        {required:true ,validator: reg_date,  trigger: 'blur'}
+                    ]
+                }
             }
         },
         // 创建的时候发送请求获取显示数据库所有员工的列表数据
@@ -212,52 +243,58 @@
             },
             //新增表单操作
             addGoods(){
-                if (!this.dataInfo.gid){
-                    console.log("商品编号为空");
-                    return;
-                }
-                this.$axios.post('/Goods',{
-                    gid:this.dataInfo.gid,
-                    gname:this.dataInfo.vname,
-                    categories:this.dataInfo.categories,
-                    inumber:this.dataInfo.inumber,
-                    idate:this.dataInfo.date,
-                    iprice:this.dataInfo.price,
-                    ipayment:this.dataInfo.payment,
-                    iaccount:this.dataInfo.account,
+                this.$refs.dataInfo.validate()
+                    .then(res =>{
+                        this.$axios.post('/Goods',{
+                            gid:this.dataInfo.gid,
+                            gname:this.dataInfo.vname,
+                            categories:this.dataInfo.categories,
+                            inumber:this.dataInfo.inumber,
+                            idate:this.dataInfo.date,
+                            iprice:this.dataInfo.price,
+                            ipayment:this.dataInfo.payment,
+                            iaccount:this.dataInfo.account,
 
-                }).then(successResponse =>{
-                    if(successResponse.data.code == 200){
-                        this.addSuccessful = true;
-                        this.$message({
-                            message: '成功添加一条记录',
-                            type: 'success',
-                        });
-                        //将信息刷新到表格中
-                        this.tableData.push(this.addform);
-                        //清空填写单的信息放到请求体中，避免请求延迟已经被清空才刷新在信息到表格中
+                        }).then(successResponse =>{
+                            if(successResponse.data.code == 200){
+                                this.addSuccessful = true;
+                                this.$message({
+                                    message: '成功添加一条记录',
+                                    type: 'success',
+                                });
+                                //将信息刷新到表格中
+                                this.tableData.push(this.addform);
+                                //清空填写单的信息放到请求体中，避免请求延迟已经被清空才刷新在信息到表格中
+                                this.addform = {
+                                    gid : '',
+                                    gname : '',
+                                    categories: '',
+                                    address : '',
+                                    charge_unit : '',
+                                    gdate: '',
+                                };
+                            }
+                        }).catch(failedResponse =>{
+
+                        } );
+                        // 让表格消失
                         this.addform = {
                             gid : '',
                             gname : '',
-                            categories: '',
+                            categories:'',
                             address : '',
                             charge_unit : '',
                             gdate: '',
                         };
-                    }
-                }).catch(failedResponse =>{
+                        this.dialogFormVisible = false;
+                    }).catch(error =>{
+                    this.$message({
+                        message: '无法提交，表单中数据有错误',
+                        type: 'error'
+                    });
+                });
 
-                } );
-                // 让表格消失
-                this.addform = {
-                    gid : '',
-                    gname : '',
-                    categories:'',
-                    address : '',
-                    charge_unit : '',
-                    gdate: '',
-                };
-                this.dialogFormVisible = false;
+
             },
         },
 

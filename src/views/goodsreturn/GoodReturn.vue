@@ -1,4 +1,5 @@
 <template>
+  <div class="goodreturn">
   <el-card class="box-card">
     <div slot="header" class="clearfix">
       <span>退货单</span>
@@ -80,6 +81,7 @@
     </div>
 
   </el-card>
+  </div>
 </template>
 
 <script>
@@ -90,7 +92,6 @@
       reg_reason,
 
   } from "../login/validator";
-
   export default {
         name: "GoodReturn",
         data() {
@@ -172,7 +173,8 @@
                     });
                 }).catch(failedResponse=>{
                     this.$message('没有找到记录哦');
-                })
+                });
+                this.searchInput='';
             },
             openAddPage() {
                 this.dialogFormVisible = true;
@@ -189,19 +191,17 @@
                         }).then(successResponse => {
                             if (successResponse.data.code === 200) {
                                 this.addSuccessful = true;
+                                this.tableData.push(this.dataInfo);
+                                this.$message({
+                                    message: '成功添加一条记录',
+                                    type: 'success'
+                                });
                             }
                         }).catch(failedResponse => {
                             this.addSuccessful = false;
-                        });
-                        if (!this.addSuccessful) {
                             this.$message.error('插入数据失败');
-                        } else {
-                            this.tableData.push(this.dataInfo);
-                            this.$message({
-                                message: '成功添加一条记录',
-                                type: 'success'
-                            });
-                        }
+                        });
+
                         // 将填写框置空，方便下次填写
                         this.dataInfo = {
                             gid: '',

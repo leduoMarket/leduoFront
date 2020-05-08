@@ -1,4 +1,5 @@
 <template>
+  <div class="log">
   <el-card class="box-card">
     <div slot="header" class="clearfix">
       <span>日志查询</span>
@@ -49,8 +50,10 @@
       </el-pagination>
     </div>
   </el-card>
+  </div>
 </template>
 <script>
+
     export default {
         name: "Log",
         data() {

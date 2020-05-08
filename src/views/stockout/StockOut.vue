@@ -1,20 +1,22 @@
 <template>
+  <div class="stockOut">
   <el-card class="box-card">
     <div slot="header" class="clearfix">
       <span>出库单</span>
       <!--      新建页面-->
       <el-button style="float: right; padding: 3px 0" type="text" @click="dialogFormVisible = true">新建</el-button>
-      <el-dialog title="入库单" :visible.sync="dialogFormVisible">
+      <el-dialog title="出库单" :visible.sync="dialogFormVisible">
         <el-form :model="dataInfo" :rules="stockOutRules" ref="dataInfo">
+          <el-form-item label="出库单号" :label-width="formLabelWidth" prop="onumber">
+            <el-input v-model="dataInfo.onumber" autocomplete="off"></el-input>
+          </el-form-item>
           <el-form-item label="商品代码" :label-width="formLabelWidth" prop="gid">
             <el-input v-model="dataInfo.gid" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item label="供应商名称" :label-width="formLabelWidth" prop="vname">
             <el-input v-model="dataInfo.vname" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="出库单号" :label-width="formLabelWidth" prop="onumber">
-            <el-input v-model="dataInfo.onumber" autocomplete="off"></el-input>
-          </el-form-item>
+
           <el-form-item label="出库日期" :label-width="formLabelWidth" prop="odate">
             <el-input v-model="dataInfo.odate" autocomplete="off"></el-input>
           </el-form-item>
@@ -24,8 +26,8 @@
           <el-form-item label="已付款项" :label-width="formLabelWidth" prop="opayment">
             <el-input v-model="dataInfo.opayment" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="数量" :label-width="formLabelWidth" prop="oaccount">
-            <el-input v-model="dataInfo.oaccount" autocomplete="off"></el-input>
+          <el-form-item label="数量" :label-width="formLabelWidth" prop="ocount">
+            <el-input v-model="dataInfo.ocount" autocomplete="off"></el-input>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -48,6 +50,10 @@
         border
         style="width: 100%">
         <el-table-column
+          prop="onumber"
+          label="出库单号">
+        </el-table-column>
+        <el-table-column
           prop="gid"
           label="商品代码"
           width="180">
@@ -57,10 +63,7 @@
           label="供应商名称"
           width="180">
         </el-table-column>
-        <el-table-column
-          prop="onumber"
-          label="出库单号">
-        </el-table-column>
+
         <el-table-column
           prop="odate"
           label="出库日期">
@@ -82,7 +85,7 @@
           label="操作">
 
           <template slot-scope="scope">
-            <el-button style="float: left; padding-right: 3px;" type="text"><span style="color: red" @click="del(scope.row,scope.$index)">删除</span></el-button>
+            <el-button style="float: left; padding-right: 3px;" type="text"><span style="color: #ff0000" @click="del(scope.row,scope.$index)">删除</span></el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -97,6 +100,7 @@
       </el-pagination>
     </div>
   </el-card>
+  </div>
 </template>
 
 <script>
@@ -109,7 +113,6 @@
       reg_count
 
   } from "../login/validator";
-
   export default {
         name: "StockOut",
         data() {
@@ -131,7 +134,7 @@
                     odate: '',
                     oprice: '',
                     opayment: '',
-                    oaccount: ''
+                    ocount: ''
                 },
                 formLabelWidth: '120px',
                 pagesize:5,
@@ -159,7 +162,7 @@
                     opayment:[
                         { required:true ,validator: reg_money, trigger:'blur'}
                     ],
-                    oaccount:[
+                    ocount:[
                         { required:true ,validator: reg_count, trigger:'blur'}
                     ]
 
@@ -207,7 +210,8 @@
                     });
                 }).catch(failedResponse=>{
                     this.$message('没有找到记录哦');
-                })
+                });
+                this.searchInput='';
             },
             //新增出库单
             addStockOut() {
@@ -220,7 +224,7 @@
                             odate: this.dataInfo.odate,
                             oprice: this.dataInfo.oprice,
                             opayment: this.dataInfo.opayment,
-                            oaccount: this.dataInfo.oaccount
+                            ocount: this.dataInfo.ocount
                         }).then(successResponse => {
                             if (successResponse.data.code === 200) {
                                 this.addSuccessful = true;
@@ -247,7 +251,7 @@
                             odate: '',
                             oprice: '',
                             opayment: '',
-                            oaccount: ''
+                            ocount: ''
                         };
                         // 让表格消失
                         this.dialogFormVisible = false;
@@ -271,7 +275,7 @@
                     //如果用户确实要删除，则用delete方式删除，并且传递要删除的记录的eid
                     this.$axios.delete('/delstockOut',{
                         params:{
-                            stockOutId: delItem.gid
+                            stockOutId: delItem.onumber
                         }
                     }).then(successResponse =>{
                         //数据库删除成功在table表里进行删除,

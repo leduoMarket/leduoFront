@@ -1,4 +1,5 @@
 <template>
+  <div class="inventory">
   <el-card class="box-card">
     <div slot="header" class="clearfix">
       <span>库存账</span>
@@ -48,6 +49,7 @@
       </el-pagination>
     </div>
   </el-card>
+  </div>
 </template>
 
 <script>
