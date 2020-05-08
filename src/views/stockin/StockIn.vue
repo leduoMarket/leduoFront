@@ -63,7 +63,10 @@
           label="供应商名称"
           width="180">
         </el-table-column>
-        <el-table-column
+<!--        <el-table-column label="创建时间" prop="idate" :formatter="timestampToTime" label="入库日期" >-->
+
+<!--        </el-table-column>-->
+        <el-table-column   :formatter="dateFormat"
           prop="idate"
           label="入库日期">
         </el-table-column>
@@ -111,6 +114,7 @@
         reg_money,
         reg_count
     } from "../login/validator";
+    import moment from 'moment'
     export default {
         name: "StockIn",
         data() {
@@ -119,6 +123,23 @@
                 addSuccessful: false,
                 //显示页面的表单数据
                 tableData: [
+                    {
+                        inumber:'I2020040101',
+                        gid:'1234567890123',
+                        vname:'雪碧',
+                        idate:'2020-04-01T00:00:00.0000000',
+                        iprice:'10',
+                        ipayment:'300',
+                        icount:'40'
+                    },{
+                        inumber:'I2020040201',
+                        gid:'1234567890123',
+                        vname:'可乐',
+                        idate:'2020-04-02T00:00:00.0000000',
+                        iprice:'12.22',
+                        ipayment:'9090',
+                        icount:'10'
+                    }
 
                 ],
                 //删除的元素是谁
@@ -166,10 +187,11 @@
                     icount:[
                         { required:true ,validator: reg_count, trigger:'blur'}
                     ]
-
                 }
             }
         },
+        //过滤器
+
         // 创建的时候发送请求获取显示数据库所有员工的列表数据
         created() {
             console.log("vue被创建");
@@ -184,6 +206,15 @@
             })
         },
         methods: {
+            dateFormat:function(row,column){
+
+                var date = row[column.property];
+
+                if(date == undefined){return ''};
+
+                return moment(date).format("YYYY-MM-DD")
+
+            },
             // 初始页currentPage、初始每页数据数pagesize和数据data
             handleSizeChange: function (size) {
                 this.pagesize = size;
@@ -218,6 +249,7 @@
                     this.$message('查找错误');
                 })
             },
+
             // 删除选中下标的一行数据，index由click处的scope.$index传过来的小标，delItem由scope.$row传过来的元素
             del(delItem, index){
                 console.log(delItem);
