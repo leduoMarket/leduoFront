@@ -60,6 +60,7 @@
         methods: {
             login () {
                 this.loadingBtn = true;
+                // this.$router.replace({path: '/home/firstPage'});
 
                 this.$refs.loginForm.validate()
                     .then(res => {
