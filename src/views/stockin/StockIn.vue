@@ -199,18 +199,24 @@
                     params:{
                         inumber:this.searchInput,
                     }
-                }).then(successfulResponse=>{
-                    console.log('this.tableData'+successfulResponse.data);
-                    this.tableData=[];
-                    this.tableData.push(successfulResponse.data);
-                    this.$message({
-                        message: '成功找到记录',
-                        type: 'success'
-                    });
-                }).catch(failedResponse=>{
-                    this.$message('没有找到记录哦');
-                });
-                this.searchInput='';
+                }).then(successfulResponse => {
+                    //服务器执行了查找但是没找到,返回的数据为空，
+                    if (!successfulResponse.data) {
+                        this.$message('没有找到记录哦');
+                    } else {
+                        //服务器返回了结果并且结果不为空
+                        //先将tableData数据清空
+                        this.tableData = [];
+                        //查找出来的结果显示到tableData里面
+                        this.tableData.push(successfulResponse.data);
+                        this.$message({
+                            message: '成功找到记录',
+                            type: 'success'
+                        });
+                    }
+                }).catch(failedResponse => {
+                    this.$message('查找错误');
+                })
             },
             // 删除选中下标的一行数据，index由click处的scope.$index传过来的小标，delItem由scope.$row传过来的元素
             del(delItem, index){
@@ -254,6 +260,7 @@
                 this.submitBtn=true;
                 this.$refs.addform.validate()  //判断表单验证是否通过，验证通过执行.then()，否则执行.catch()
                     .then(res =>{
+                        this.submitBtn=false;
                         console.log("提交成功");
                         this.$axios.post('/addstockIn',{
                             inumber:this.addform.inumber,
@@ -309,7 +316,6 @@
 
             },
         },
-
     }
 </script>
 

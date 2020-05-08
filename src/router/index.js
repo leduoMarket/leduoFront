@@ -20,6 +20,7 @@ const ProfitAnalysis=()=>import("../views/analysis/ProfitAnalysis")
 const Goods=()=>import("../views/goods/Goods")
 /*const Welcome=()=>import("../views/welcome/Welcome")*/
 
+
 Vue.use(Router)
 
 export default new Router({
@@ -32,7 +33,7 @@ export default new Router({
     },{
       path: '/404',
       component: resolve => require(['../views/failvue/404'], resolve)
-    },{
+    }, {
       path: '/home',
       name: 'Home',
       component: Home,
@@ -115,8 +116,12 @@ export default new Router({
           name:'Help',
           component:Help,
         },*/{
+          path: 'firstPage',
+          component: resolve => require(['../views/firstPage/FirstPage'], resolve)
+        },
+        {
           path: 'error',
-          component: resolve => require(['../views/failvue/error'], resolve)
+          component: resolve => require(['../views/failvue/Error'], resolve)
         }
       ]
     }

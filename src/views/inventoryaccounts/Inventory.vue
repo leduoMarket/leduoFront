@@ -3,24 +3,6 @@
   <el-card class="box-card">
     <div slot="header" class="clearfix">
       <span>库存账</span>
-<!--      <el-button style="float: right; padding: 3px 0" type="text" @click="dialogFormVisible = true">新建</el-button>-->
-<!--      <el-dialog title="库存账" :visible.sync="dialogFormVisible">-->
-<!--        <el-form :model="form">-->
-<!--          <el-form-item label="商品代码" :label-width="formLabelWidth">-->
-<!--            <el-input v-model="form.gid" autocomplete="off"></el-input>-->
-<!--          </el-form-item>-->
-<!--          <el-form-item label="商品名称" :label-width="formLabelWidth">-->
-<!--            <el-input v-model="form.gname" autocomplete="off"></el-input>-->
-<!--          </el-form-item>-->
-<!--          <el-form-item label="库存量" :label-width="formLabelWidth">-->
-<!--            <el-input v-model="form.inumber" autocomplete="off"></el-input>-->
-<!--          </el-form-item>-->
-<!--        </el-form>-->
-<!--        <div slot="footer" class="dialog-footer">-->
-<!--          <el-button @click="dialogFormVisible = false">取 消</el-button>-->
-<!--          <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>-->
-<!--        </div>-->
-<!--      </el-dialog>-->
     </div>
     <div class="text item">
       <div class="text item">
@@ -48,21 +30,13 @@
           width="180">
         </el-table-column>
         <el-table-column
-          prop="inumber"
+          prop="counts"
           label="库存量">
         </el-table-column>
         <el-table-column
-          prop="stock_alert"
+          prop="stockAlert"
           label="库存提醒">
         </el-table-column>
-<!--        <el-table-column-->
-<!--          prop="esalary"-->
-<!--          label="操作">-->
-
-<!--          <template slot-scope="scope">-->
-<!--            <el-button style="float: left; padding-right: 3px;" type="text"><span style="color: red" @click="del">删除</span></el-button>-->
-<!--          </template>-->
-<!--        </el-table-column>-->
       </el-table>
       <el-pagination
         @size-change="handleSizeChange"
@@ -85,36 +59,9 @@
             return {
                 options: [],
                 tableData: [],
-                gridData: [],
-                dialogTableVisible: false,
-                dialogFormVisible: false,
-                form: {
-                    gid: '',
-                    gname: '',
-                    inumber: '',
-                    stock_alert:''
-                    /*date1: '',
-                    date2: '',
-                    delivery: false,
-                    type: [],
-                    resource: '',
-                    desc: ''*/
-                },
-                formLabelWidth: '120px',
                 pagesize:5,  //分页数量
                 currentPage:1, //初始页
                 searchInput:''
-                // form: {
-                //     gid: '',
-                //     gname: '',
-                //     inumber: '',
-                //     date1: '',
-                //     date2: '',
-                //     delivery: false,
-                //     type: [],
-                //     resource: '',
-                //     desc: ''
-                // },
             }
         },
         // 创建的时候发送请求获取显示数据库列表数据

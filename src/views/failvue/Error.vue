@@ -3,7 +3,7 @@
     <h1 class="error-code">ERROR</h1>
     <h4 class="error-desc">你访问的页面不在或者您的权限不够</h4>
     <div class="error-handle">
-      <router-link to="/home">
+      <router-link to="/home/firstPage">
         <el-button type="primary" size="large">返回首页</el-button>
       </router-link>
       <el-button class="error-btn" type="primary" size="large" @click="goBack">返回上一级</el-button>
