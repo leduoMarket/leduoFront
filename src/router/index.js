@@ -118,6 +118,10 @@ export default new Router({
         {
           path: 'error',
           component: resolve => require(['../views/failvue/Error'], resolve)
+        },
+        {
+          path: 'help',
+          component: resolve => require(['../views/helps/Help'], resolve)
         }
       ]
     }
