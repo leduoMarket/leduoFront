@@ -1,4 +1,8 @@
 <template>
+  <div class="log">
+    <Menu></Menu>
+    <TopBar></TopBar>
+    <router-view></router-view>
   <el-card class="box-card">
     <div slot="header" class="clearfix">
       <span>日志查询</span>
@@ -49,10 +53,14 @@
       </el-pagination>
     </div>
   </el-card>
+  </div>
 </template>
 <script>
+    import TopBar from "D:/web/leduoFront/src/components/template/TopBar";
+    import Menu from "D:/web/leduoFront/src/components/template/Menu";
     export default {
         name: "Log",
+        components:{TopBar,Menu},
         data() {
             return {
                 options: [],

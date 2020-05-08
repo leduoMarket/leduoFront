@@ -1,5 +1,7 @@
 <template>
   <div class="GoodClass">
+    <Menu></Menu>
+    <TopBar></TopBar>
     <router-view></router-view>
     <el-card class="box-card">
       <div slot="header" class="clearfix">
@@ -88,7 +90,11 @@
 </template>
 
 <script>
+    import TopBar from "../../components/template/TopBar";
+    import Menu from "D:/web/leduoFront/src/components/template/Menu";
     export default {
+        name:'GoodClass',
+        components: {TopBar,Menu},
         data() {
             return {
                 pagesize:5,  //分页数量

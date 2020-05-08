@@ -1,4 +1,8 @@
 <template>
+  <div class="paymentofflowcount">
+    <Menu></Menu>
+    <TopBar></TopBar>
+    <router-view></router-view>
   <el-card class="box-card">
     <div slot="header" class="clearfix">
       <span>支付流水帐</span>
@@ -98,6 +102,7 @@
       </el-pagination>
     </div>
   </el-card>
+  </div>
 </template>
 
 <script>
@@ -108,9 +113,11 @@
       reg_source_shop,
       reg_money
   } from "../login/validator";
-
+  import TopBar from "D:/web/leduoFront/src/components/template/TopBar";
+  import Menu from "D:/web/leduoFront/src/components/template/Menu";
   export default {
         name: "PaymentOfFlowCount",
+        components: {TopBar,Menu},
         data() {
             return {
                 tableData: [],

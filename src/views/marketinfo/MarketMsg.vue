@@ -1,4 +1,8 @@
 <template>
+  <div class="marketmsg">
+    <Menu></Menu>
+    <TopBar></TopBar>
+    <router-view></router-view>
   <el-card class="box-card">
     <div slot="header" class="clearfix">
       <span>我家超市</span>
@@ -14,11 +18,16 @@
       <p>详细地址：龙泉驿大面街道1819号</p>
     </div>
   </el-card>
+  </div>
 </template>
 
 <script>
+    import TopBar from "D:/web/leduoFront/src/components/template/TopBar";
+    import Menu from "D:/web/leduoFront/src/components/template/Menu";
+
     export default {
-        name: "MarketMsg"
+        name: "MarketMsg",
+        components: {TopBar,Menu}
     }
 </script>
 

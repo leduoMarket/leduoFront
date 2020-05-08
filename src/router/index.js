@@ -18,6 +18,7 @@ const Debt = ()=>import("../views/debt/Debt")
 const Employees = ()=>import("../views/employees/Employees")
 const ProfitAnalysis=()=>import("../views/analysis/ProfitAnalysis")
 const Goods=()=>import("../views/goods/Goods")
+const Help=()=>import("../views/help/Help")
 
 
 Vue.use(Router)
@@ -27,90 +28,98 @@ export default new Router({
     {
       path: '/',
       name: 'Login',
-      component: Login
+      component: Login,
     },{
       path: '/404',
       component: resolve => require(['../views/failvue/404'], resolve)
-    },
-    {
+    },/*{
       path: '/home',
       name: 'Home',
       component: Home,
-      children:[{
-        path: 'stockOut',
+      children:[*/
+    {
+      path:'/home',
+      name:'Home',
+      component: Home,
+    },{
+        path: '/stockOut',
         name: 'StockOut',
         component: StockOut
       },{
-        path: 'profitAnalysis',
+        path: '/profitAnalysis',
         name: 'profit',
         component: ProfitAnalysis
       },
         {
-          path: 'log',
+          path: '/log',
           name: 'log',
           component: Log,
         },{
-          path: 'stockIn',
+          path: '/stockIn',
           name: 'StockIn',
           component: StockIn
         },{
-          path: 'vender',
+          path: '/vender',
           name: 'Vender',
           component: Vender,
         },{
-          path: 'marketMsg',
+          path: '/marketMsg',
           name: 'marketMsg',
           component: MarketMsg,
         },{
-          path: 'goodReturn',
+          path: '/goodReturn',
           name: 'goodReturn',
           component: GoodReturn,
         },{
-          path: 'goodClass',
+          path: '/goodClass',
           name: 'goodClass',
           component: GoodClass,
         },
         {
-          path: 'goods',
+          path: '/goods',
           name: 'goods',
           component: Goods,
         },{
-          path: 'flowCount',
+          path: '/flowCount',
           name: 'paymengOfFolowCount',
           component: PaymentOfFlowCount,
         },{
-          path: 'inventory',
+          path: '/inventory',
           name: 'Inventory',
           component: Inventory,
         },{
-          path: 'goodReturn',
+          path: '/goodReturn',
           name: 'goodReturn',
           component: GoodReturn,
         },{
-          path: 'goodPrice',
+          path: '/goodPrice',
           name: 'goodPrice',
           component: GoodPrice,
         },{
-          path: 'employee',
+          path: '/employee',
           name: 'employee',
           component: Employees,
         },{
-          path: 'debt',
+          path: '/debt',
           name: 'Debt',
           component: Debt,
         },{
-          path: 'user',
+          path: '/user',
           name: 'LoginUser',
           component: LoginUser,
         },{
-          path: 'rolePermissinon',
+          path: '/rolePermissinon',
           name: 'RolePermission',
           component: RolePermission,
-        },{
-          path: 'error',
+        },/*{
+          Path:'/help',
+          name:'Help',
+          component:Help,
+        },*/{
+          path: '/error',
           component: resolve => require(['../views/failvue/error'], resolve)
         }
-      ]
-    }
+     /* ]
+    }*/
   ]
 })

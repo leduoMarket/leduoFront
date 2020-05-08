@@ -1,4 +1,8 @@
 <template>
+  <div class="inventory">
+    <Menu></Menu>
+    <TopBar></TopBar>
+    <router-view></router-view>
   <el-card class="box-card">
     <div slot="header" class="clearfix">
       <span>库存账</span>
@@ -74,11 +78,15 @@
       </el-pagination>
     </div>
   </el-card>
+  </div>
 </template>
 
 <script>
+    import TopBar from "D:/web/leduoFront/src/components/template/TopBar";
+    import Menu from "D:/web/leduoFront/src/components/template/Menu";
     export default {
         name: "Inventory",
+        components: {TopBar,Menu},
         data() {
             return {
                 options: [],
