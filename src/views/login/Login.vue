@@ -1,9 +1,8 @@
 <template >
   <body id="poster">
   <div id="logo">
-    <img src="../../assets/pic/logo.png" style="width: 100px; height: 100px" alt=""/>
+<!--    <img src="../../assets/pic/logo.png" style="width: 100px; height: 100px" alt=""/>-->
   </div>
-
   <el-form class="login-container" label-position="left"
            label-width="0px"   :rules="rules" ref="loginForm" :model="loginForm">
     <h3 class="login_title">系统登录</h3>
@@ -103,7 +102,7 @@
   }
 
   #poster {
-    background:url("../../assets/pic/background.jpg") no-repeat;
+    /*background:url("../../assets/pic/background.jpg") no-repeat;*/
     height: 100%;
     width: 100%;
     background-size: cover;

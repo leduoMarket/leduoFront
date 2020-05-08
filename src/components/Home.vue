@@ -7,11 +7,6 @@
      <div id="welcome">
     <!--<img src="../assets/pic/welcome1.jpg" style="height: 75%;width: 65%;border-radius: 30px;"  alt=""/>-->
      </div>
-    <!--</el-card>-->
-    <!--<div>
-      <p >welcome to leduomarket!</p>
-      <p>Have a good time!</p>
-    </div>-->
   </div>
   </template>
 <script>
