@@ -5,7 +5,7 @@
     <router-view></router-view>
     <!--<el-card class="box-card">-->
      <div id="welcome">
-    <img src="../assets/pic/welcome1.jpg" style="height: 75%;width: 65%;border-radius: 30px;"  alt=""/>
+<!--    <img src="../assets/pic/welcome1.jpg" style="height: 75%;width: 65%;border-radius: 30px;"  alt=""/>-->
      </div>
     <!--</el-card>-->
     <!--<div>

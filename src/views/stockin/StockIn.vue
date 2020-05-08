@@ -25,7 +25,7 @@
             <el-input v-model="addform.ipayment" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item label="数量" :label-width="formLabelWidth" prop="iaccount">
-            <el-input v-model="addform.iaccount" autocomplete="off"></el-input>
+            <el-input v-model="addform.icount" autocomplete="off"></el-input>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
