@@ -28,7 +28,7 @@
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisible = false">取 消</el-button>
-          <el-button type="primary" @click="addpayment">确 定</el-button>
+          <el-button type="primary" @click="addpayment" :loading="submitBtn" >确 定</el-button>
         </div>
       </el-dialog>
     </div>
@@ -125,6 +125,8 @@
                 pagesize:5,  //分页数量
                 currentPage:1, //初始页
                 searchInput:'',
+                //提交按钮是否可用
+                submitBtn:false,
                 paymentOfFlowCountRules:{
                     pnumber:[
                         {required:true ,validator: reg_pnumber,  trigger: 'blur'}
