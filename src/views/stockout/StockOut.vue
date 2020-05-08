@@ -19,6 +19,7 @@
           <el-form-item label="供应商名称" :label-width="formLabelWidth" prop="vname">
             <el-input v-model="dataInfo.vname" autocomplete="off"></el-input>
           </el-form-item>
+
           <el-form-item label="出库日期" :label-width="formLabelWidth" prop="odate">
             <el-input v-model="dataInfo.odate" autocomplete="off"></el-input>
           </el-form-item>
@@ -28,7 +29,7 @@
           <el-form-item label="已付款项" :label-width="formLabelWidth" prop="opayment">
             <el-input v-model="dataInfo.opayment" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="数量" :label-width="formLabelWidth" prop="oaccount">
+          <el-form-item label="数量" :label-width="formLabelWidth" prop="ocount">
             <el-input v-model="dataInfo.ocount" autocomplete="off"></el-input>
           </el-form-item>
         </el-form>
@@ -65,6 +66,7 @@
           label="供应商名称"
           width="180">
         </el-table-column>
+
         <el-table-column
           prop="odate"
           label="出库日期">
@@ -86,7 +88,7 @@
           label="操作">
 
           <template slot-scope="scope">
-            <el-button style="float: left; padding-right: 3px;" type="text"><span style="color: red" @click="del(scope.row,scope.$index)">删除</span></el-button>
+            <el-button style="float: left; padding-right: 3px;" type="text"><span style="color: #ff0000" @click="del(scope.row,scope.$index)">删除</span></el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -132,9 +134,9 @@
                 delItem: [],
                 // 用于新增数据绑定
                 dataInfo: {
-                    onumber: '',
                     gid: '',
                     vname: '',
+                    onumber: '',
                     odate: '',
                     oprice: '',
                     opayment: '',
@@ -148,14 +150,14 @@
                 // submitBtn:false,
                 //表单验证规则
                 stockOutRules:{
-                    onumber:[
-                        { required:true ,validator: reg_onumber, trigger:'blur'}
-                    ],
                     gid:[
                         { required:true ,validator: reg_gid,  trigger: 'blur'}
                     ],
                     vname:[
                         { required:true ,validator: reg_vname, trigger:'blur'}
+                    ],
+                    onumber:[
+                        { required:true ,validator: reg_onumber, trigger:'blur'}
                     ],
                     odate:[
                         { required:true ,validator: reg_date,   trigger: 'blur' }
@@ -214,16 +216,17 @@
                     });
                 }).catch(failedResponse=>{
                     this.$message('没有找到记录哦');
-                })
+                });
+                this.searchInput='';
             },
             //新增出库单
             addStockOut() {
                 this.$refs.dataInfo.validate()
                     .then(res =>{
                         this.$axios.post('/addstockOut', {
-                            onumber: this.dataInfo.onumber,
                             gid: this.dataInfo.gid,
                             vname: this.dataInfo.vname,
+                            onumber: this.dataInfo.onumber,
                             odate: this.dataInfo.odate,
                             oprice: this.dataInfo.oprice,
                             opayment: this.dataInfo.opayment,
@@ -245,12 +248,12 @@
                             });
                         }
                         //将信息刷新到表格中
-                        this.tableData.push(this.dataInfo);
+                        this.tableData.push(this.addform);
                         // 将填写框置空，方便下次填写
                         this.dataInfo = {
-                            onumber: '',
                             gid: '',
                             vname: '',
+                            onumber: '',
                             odate: '',
                             oprice: '',
                             opayment: '',

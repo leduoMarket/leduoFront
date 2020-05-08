@@ -315,13 +315,13 @@ export var reg_reason = (rule, value, callback) => {
 
 //支付流水单单号校验
 export var reg_pnumber = (rule, value, callback) => {
-  const reg = /^P\d{8}$/;
+  const reg = /^.{5,15}$/;
   if(!value){
     callback(new Error('支付流水单号为空'));
   }else{
     let check = reg.test(value);
     if (!check) {
-      callback(new Error('支付流水单号格式错误(例：P2020040101)'))
+      callback(new Error('支付流水单号格式错误(5-15位字符)'))
     }else{
       callback()
     }

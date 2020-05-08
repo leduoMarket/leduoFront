@@ -16,10 +16,10 @@
             <el-input v-model="dataInfo.gname" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item label="历史价格" :label-width="formLabelWidth" prop="pold_price">
-            <el-input v-model="dataInfo.poldPrice" autocomplete="off"></el-input>
+            <el-input v-model="dataInfo.pold_price" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item label="调整价格" :label-width="formLabelWidth" prop="pnew_price">
-            <el-input v-model="dataInfo.pnewPrice" autocomplete="off"></el-input>
+            <el-input v-model="dataInfo.pnew_price" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item label="调整原因" :label-width="formLabelWidth" prop="preason">
             <el-input v-model="dataInfo.preason" autocomplete="off"></el-input>
@@ -61,11 +61,11 @@
           width="180">
         </el-table-column>
         <el-table-column
-          prop="poldPrice"
+          prop="pold_price"
           label="历史价格">
         </el-table-column>
         <el-table-column
-          prop="pnewPrice"
+          prop="pnew_price"
           label="调整价格">
         </el-table-column>
         <el-table-column
@@ -135,8 +135,8 @@
                 dataInfo: {
                     gid: '',
                     gname: '',
-                    poldPrice: '',
-                    pnewPrice: '',
+                    pold_price: '',
+                    pnew_price: '',
                     preason: '',
                     pdate: '',
                     phandler: '',
@@ -153,10 +153,10 @@
                     gname:[
                         {required:true ,validator: reg_gname,  trigger: 'blur'}
                     ],
-                    poldPrice:[
+                    pold_price:[
                         {required:true ,validator: reg_money,  trigger: 'blur'}
                     ],
-                    pnewPrice:[
+                    pnew_price:[
                         {required:true ,validator: reg_money,  trigger: 'blur'}
                     ],
                     preason:[
@@ -214,7 +214,8 @@
                     });
                 }).catch(failedResponse=>{
                     this.$message('没有找到记录哦');
-                })
+                });
+                this.searchInput='';
             },
             addcommodityPricing() {
                 this.$refs.dataInfo.validate()
@@ -223,8 +224,8 @@
                         this.$axios.post('/addcommodityPricing', {
                             gid: this.dataInfo.gid,
                             gname: this.dataInfo.gname,
-                            poldPrice: this.dataInfo.poldPrice,
-                            pnewPrice: this.dataInfo.pnewPrice,
+                            poldPrice: this.dataInfo.pold_price,
+                            pnewPrice: this.dataInfo.pnew_price,
                             preason: this.dataInfo.preason,
                             pdate: this.dataInfo.pdate,
                             phandler: this.dataInfo.phandler,
@@ -248,8 +249,8 @@
                             this.dataInfo = {
                                 gid: '',
                                 gname: '',
-                                poldPrice: '',
-                                pnewPrice: '',
+                                pold_price: '',
+                                pnew_price: '',
                                 preason: '',
                                 pdate: '',
                                 phandler: '',

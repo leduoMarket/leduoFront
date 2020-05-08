@@ -57,9 +57,6 @@
                 }
             }
         },
-        mounted(){
-            var that = this;
-        },
         methods: {
             login () {
                 this.loadingBtn = true;
@@ -100,13 +97,13 @@
     box-shadow: 0 0 25px #cac6c6;
   }
   .login_title {
-    margin: 0px auto 40px auto;
+    margin: 0 auto 40px auto;
     text-align: center;
     color: #505458;
   }
 
   #poster {
-    /*background:url("../../assets/pic/background.jpg") no-repeat;*/
+    background:url("../../assets/pic/background.jpg") no-repeat;
     height: 100%;
     width: 100%;
     background-size: cover;

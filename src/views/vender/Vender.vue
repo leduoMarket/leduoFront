@@ -181,6 +181,17 @@
                 }
             }
         },
+      created() {
+          this.$axios.get("/Vender").then(res=>{
+              if(res.data){
+                  console.log(res);
+                  this.tableData = res.data;
+                  console.log(this.tableData.length);
+              }
+          }).catch(failResponse=>{
+
+          })
+      },
         methods: {
             // 初始页currentPage、初始每页数据数pagesize和数据data
             handleSizeChange: function (size) {
@@ -192,7 +203,6 @@
                 console.log(this.currentPage)
             },
             addVender(){
-
                 this.$refs.addform.validate()
                     .then(res =>{
                         this.$axios.post('/addVender', {
@@ -289,17 +299,7 @@
             }
 
         },
-        created() {
-            this.$axios.get("/Vender").then(res=>{
-                if(res.data){
-                    console.log(res);
-                    this.tableData = res.data;
-                    console.log(this.tableData.length);
-                }
-            }).catch(failResponse=>{
 
-            })
-        }
     }
 </script>
 
