@@ -132,12 +132,9 @@
                     gid:'',
                     gname:'',
                     categories:'',
-                    inumber:'',
-                    idate:'',
-                    iprice:'',
-                    ipayment:'',
-                    iaccount:'',
-
+                    address:'',
+                    charge_unit:'',
+                    gdate:''
                 },
                 formLabelWidth: '120px',
                 pagesize:5,
@@ -247,14 +244,11 @@
                     .then(res =>{
                         this.$axios.post('/Goods',{
                             gid:this.dataInfo.gid,
-                            gname:this.dataInfo.vname,
+                            gname:this.dataInfo.gname,
                             categories:this.dataInfo.categories,
-                            inumber:this.dataInfo.inumber,
-                            idate:this.dataInfo.date,
-                            iprice:this.dataInfo.price,
-                            ipayment:this.dataInfo.payment,
-                            iaccount:this.dataInfo.account,
-
+                            address:this.dataInfo.address,
+                            charge_unit:this.dataInfo.charge_unit,
+                            gdate:this.dataInfo.gdate
                         }).then(successResponse =>{
                             if(successResponse.data.code == 200){
                                 this.addSuccessful = true;

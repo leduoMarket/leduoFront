@@ -116,7 +116,7 @@
                  form: {
                      pnumber: '',
                      pdate: '',
-                     pcatecory: '',
+                     pcategory: '',
                      psource_shop: '',
                      ptrading_amount: '',
                      premainning_amount: ''
@@ -195,7 +195,7 @@
                         this.$axios.post('/addpayment',{
                             pnumber:this.form.pnumber,
                             pdate:this.form.pdate,
-                            pcategroy:this.form.pcatecory,
+                            pcategory:this.form.pcategory,
                             psource_shop:this.form.psource_shop,
                             ptrading_amount:this.ptrading_amount,
                             premainning_amount:this.premainning_amount,
@@ -212,7 +212,7 @@
                                 this.form={
                                     pnumber: '',
                                     pdate: '',
-                                    pcatecory: '',
+                                    pcategory: '',
                                     psource_shop: '',
                                     ptrading_amount: '',
                                     premainning_amount: ''
@@ -226,7 +226,7 @@
                         this.form={
                             pnumber: '',
                             pdate: '',
-                            pcatecory: '',
+                            pcategory: '',
                             psource_shop: '',
                             ptrading_amount: '',
                             premainning_amount: ''
