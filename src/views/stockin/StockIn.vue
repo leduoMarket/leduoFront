@@ -260,6 +260,7 @@
                 this.submitBtn=true;
                 this.$refs.addform.validate()  //判断表单验证是否通过，验证通过执行.then()，否则执行.catch()
                     .then(res =>{
+                        this.submitBtn=false;
                         console.log("提交成功");
                         this.$axios.post('/addstockIn',{
                             inumber:this.addform.inumber,
