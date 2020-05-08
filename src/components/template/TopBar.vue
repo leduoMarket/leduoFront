@@ -3,7 +3,7 @@
     <el-col :span="12" style="width: 100%">
       <div class="header-info">
         <el-button style="float: right; padding: 3px 8px" type="text">账户</el-button>
-        <a href="http://localhost:8080/help">
+        <a href="http://localhost:8080/home/help">
           <el-button style="float: right; padding: 3px 8px" type="text">帮助</el-button>
         </a>
         <el-button style="float: right; padding: 3px 8px" type="text">消息</el-button>

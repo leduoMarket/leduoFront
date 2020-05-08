@@ -18,9 +18,11 @@ const Debt = ()=>import("../views/debt/Debt")
 const Employees = ()=>import("../views/employees/Employees")
 const ProfitAnalysis=()=>import("../views/analysis/ProfitAnalysis")
 const Goods=()=>import("../views/goods/Goods")
-/*const Help=()=>import("../views/helps/Help")*/
+/*const Welcome=()=>import("../views/welcome/Welcome")*/
+
 
 Vue.use(Router)
+
 export default new Router({
   mode:'history',
   routes: [
@@ -31,21 +33,25 @@ export default new Router({
     },{
       path: '/404',
       component: resolve => require(['../views/failvue/404'], resolve)
-    },{
+    }, {
       path: '/home',
       name: 'Home',
       component: Home,
       children:[
-    {
+        /*{
+          path:'welcome',
+          name:'Welcome',
+          component:Welcome
+        },*/
+        {
         path: 'stockOut',
         name: 'StockOut',
         component: StockOut
-      },{
+        },{
         path: 'profitAnalysis',
         name: 'profit',
         component: ProfitAnalysis
-      },
-        {
+        },{
           path: 'log',
           name: 'log',
           component: Log,
@@ -69,8 +75,7 @@ export default new Router({
           path: 'goodClass',
           name: 'goodClass',
           component: GoodClass,
-        },
-        {
+        },{
           path: 'goods',
           name: 'goods',
           component: Goods,
@@ -111,8 +116,16 @@ export default new Router({
           name:'Help',
           component:Help,
         },*/{
+          path: 'firstPage',
+          component: resolve => require(['../views/firstPage/FirstPage'], resolve)
+        },
+        {
           path: 'error',
-          component: resolve => require(['../views/failvue/error'], resolve)
+          component: resolve => require(['../views/failvue/Error'], resolve)
+        },
+        {
+          path: 'help',
+          component: resolve => require(['../views/helps/Help'], resolve)
         }
       ]
     }

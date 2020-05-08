@@ -28,7 +28,7 @@
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisible = false">取 消</el-button>
-          <el-button type="primary" @click="addpayment">确 定</el-button>
+          <el-button type="primary" @click="addpayment" :loading="submitBtn" >确 定</el-button>
         </div>
       </el-dialog>
     </div>
@@ -116,7 +116,7 @@
                  form: {
                      pnumber: '',
                      pdate: '',
-                     pcatecory: '',
+                     pcategory: '',
                      psource_shop: '',
                      ptrading_amount: '',
                      premainning_amount: ''
@@ -125,6 +125,8 @@
                 pagesize:5,  //分页数量
                 currentPage:1, //初始页
                 searchInput:'',
+                //提交按钮是否可用
+                submitBtn:false,
                 paymentOfFlowCountRules:{
                     pnumber:[
                         {required:true ,validator: reg_pnumber,  trigger: 'blur'}
@@ -189,16 +191,18 @@
             },
             //新增
             addpayment(){
+                this.submitBtn=true;
                 this.$refs.form.validate()
                     .then(res =>{
+                        this.submitBtn=false;
                         console.log("提交成功");
                         this.$axios.post('/addpayment',{
                             pnumber:this.form.pnumber,
                             pdate:this.form.pdate,
-                            pcategroy:this.form.pcatecory,
-                            psource_shop:this.form.psource_shop,
-                            ptrading_amount:this.ptrading_amount,
-                            premainning_amount:this.premainning_amount,
+                            pcategory:this.form.pcategory,
+                            psourceShop:this.form.psource_shop,
+                            ptradingAmount:this.ptrading_amount,
+                            premainningAmount:this.premainning_amount,
                         }).then(successResponse =>{
                             if(successResponse.data.code == 200){
                                 this.addSuccessful = true;
@@ -212,7 +216,7 @@
                                 this.form={
                                     pnumber: '',
                                     pdate: '',
-                                    pcatecory: '',
+                                    pcategory: '',
                                     psource_shop: '',
                                     ptrading_amount: '',
                                     premainning_amount: ''
@@ -226,7 +230,7 @@
                         this.form={
                             pnumber: '',
                             pdate: '',
-                            pcatecory: '',
+                            pcategory: '',
                             psource_shop: '',
                             ptrading_amount: '',
                             premainning_amount: ''

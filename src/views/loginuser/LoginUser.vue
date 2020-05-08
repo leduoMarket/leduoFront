@@ -45,6 +45,7 @@
 </template>
 
 <script>
+
     export default {
         name: 'LoginUser',
         data () {
@@ -83,7 +84,7 @@
     margin-bottom: 200px;
   }
   .box-card{
-    margin-left: 350px;
+    margin-left: 150px;
     width: 65%;
     height: 520px;
   }
