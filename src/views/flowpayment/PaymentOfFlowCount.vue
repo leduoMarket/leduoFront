@@ -189,8 +189,10 @@
             },
             //新增
             addpayment(){
+                this.submitBtn=true;
                 this.$refs.form.validate()
                     .then(res =>{
+                        this.submitBtn=false;
                         console.log("提交成功");
                         this.$axios.post('/addpayment',{
                             pnumber:this.form.pnumber,
