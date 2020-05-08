@@ -6,15 +6,16 @@
       <el-button style="float: right; padding: 3px 0" type="text" @click="dialogFormVisible = true">新建</el-button>
       <el-dialog title="入库单" :visible.sync="dialogFormVisible">
         <el-form :model="addform" :rules="stockInRules"  ref="addform">
+          <el-form-item label="入库单号" :label-width="formLabelWidth" prop="inumber">
+            <el-input v-model="addform.inumber" autocomplete="off"></el-input>
+          </el-form-item>
           <el-form-item label="商品代码" :label-width="formLabelWidth" prop="gid">
             <el-input v-model="addform.gid" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item label="供应商名称" :label-width="formLabelWidth" prop="vname">
             <el-input v-model="addform.vname" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="入库单号" :label-width="formLabelWidth" prop="inumber">
-            <el-input v-model="addform.inumber" autocomplete="off"></el-input>
-          </el-form-item>
+
           <el-form-item label="入库日期" :label-width="formLabelWidth" prop="idate">
             <el-input v-model="addform.idate" autocomplete="off"></el-input>
           </el-form-item>
@@ -49,6 +50,10 @@
         border
         style="width: 100%">
         <el-table-column
+          prop="inumber"
+          label="入库单号">
+        </el-table-column>
+        <el-table-column
           prop="gid"
           label="商品代码"
           width="180">
@@ -58,10 +63,7 @@
           label="供应商名称"
           width="180">
         </el-table-column>
-        <el-table-column
-          prop="inumber"
-          label="入库单号">
-        </el-table-column>
+
         <el-table-column
           prop="idate"
           label="入库日期">
@@ -208,7 +210,8 @@
                     });
                 }).catch(failedResponse=>{
                     this.$message('没有找到记录哦');
-                })
+                });
+                this.searchInput='';
             },
             // 删除选中下标的一行数据，index由click处的scope.$index传过来的小标，delItem由scope.$row传过来的元素
             del(delItem, index){
@@ -282,6 +285,7 @@
                                 };
                             }
                         }).catch(failedResponse =>{
+                            this.addSuccessful = false;
 
                         } );
                         // 让表格消失

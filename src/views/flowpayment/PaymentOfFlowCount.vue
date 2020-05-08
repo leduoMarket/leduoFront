@@ -23,16 +23,11 @@
           <el-form-item label="现余额" :label-width="formLabelWidth" prop="premainning_amount">
             <el-input v-model="form.premainning_amount" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="类型" :label-width="formLabelWidth">
-            <el-input v-model="form.ptype" autocomplete="off"></el-input>
-          </el-form-item>
-          <el-form-item label="已付款项" :label-width="formLabelWidth">
-            <el-input v-model="form.ppayment" autocomplete="off"></el-input>
-          </el-form-item>
+
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisible = false">取 消</el-button>
-          <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+          <el-button type="primary" @click="addpayment">确 定</el-button>
         </div>
       </el-dialog>
     </div>
@@ -83,7 +78,7 @@
           label="操作">
 
           <template slot-scope="scope">
-            <el-button style="float: left; padding-right: 3px;" type="text"><span style="color: red" @click="del">删除</span></el-button>
+            <el-button style="float: left; padding-right: 3px;" type="text"><span style="color: red" @click="del(scope.row,scope.$index)">删除</span></el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -123,15 +118,7 @@
                      pcatecory: '',
                      psource_shop: '',
                      ptrading_amount: '',
-                     premainning_amount: '',
-                     ppayment:'',
-                     ptype:'',
-                     date1: '',
-                     date2: '',
-                     delivery: false,
-                     type: [],
-                     resource: '',
-                     desc: ''
+                     premainning_amount: ''
                  },
                 formLabelWidth: '120px',
                 pagesize:5,  //分页数量
@@ -159,6 +146,18 @@
                 }
             }
         },
+      created(){
+        console.log("vue被创建");
+        this.$axios.get("/payments").then(res =>{
+            if(res.data){
+                console.log(res);
+                this.tableData=res.data;
+            }
+        }).catch(failReasponse =>{
+
+        });
+
+      },
         methods: {
             // 初始页currentPage、初始每页数据数pagesize和数据data
             handleSizeChange: function (size) {
@@ -188,6 +187,95 @@
                 })
             },
             //新增
+            addpayment(){
+                this.$refs.form.validate()
+                    .then(res =>{
+                        console.log("提交成功");
+                        this.$axios.post('/addpayment',{
+                            pnumber:this.form.pnumber,
+                            pdate:this.form.pdate,
+                            pcategroy:this.form.pcatecory,
+                            psource_shop:this.form.psource_shop,
+                            ptrading_amount:this.ptrading_amount,
+                            premainning_amount:this.premainning_amount,
+                        }).then(successResponse =>{
+                            if(successResponse.data.code == 200){
+                                this.addSuccessful = true;
+                                this.$message({
+                                    message: '成功添加一条记录',
+                                    type: 'success',
+                                });
+                                //将信息刷新到表格中
+                                this.tableData.push(this.form);
+                                //清空填写单的信息放到请求体中，避免请求延迟已经被清空才刷新在信息到表格中
+                                this.form={
+                                    pnumber: '',
+                                    pdate: '',
+                                    pcatecory: '',
+                                    psource_shop: '',
+                                    ptrading_amount: '',
+                                    premainning_amount: ''
+                                };
+                            }
+                        }).catch(failedResponse =>{
+                            this.addSuccessful = false;
+
+                        } );
+                        // 让表格消失
+                        this.form={
+                            pnumber: '',
+                            pdate: '',
+                            pcatecory: '',
+                            psource_shop: '',
+                            ptrading_amount: '',
+                            premainning_amount: ''
+                        };
+                        this.dialogFormVisible = false;
+                    }).catch(error =>{
+                    console.log("提交失败");
+                    this.$message({
+                        message: '无法提交，表单中数据有错误',
+                        type: 'error'
+                    });
+
+                });
+
+            },
+            del(delItem, index){
+                console.log(delItem);
+                this.$confirm('你确定要删除这条记录吗？','提示',{
+                    confirmButtonText:'确定',
+                    cancelButtonText:'取消',
+                    type:'warning'
+                }).then(() =>{
+                    //如果用户确实要删除，则用delete方式删除，并且传递要删除的记录的eid
+                    this.$axios.delete('/delpayment',{
+                        params:{
+                            stockInId: delItem.pnumber
+                        }
+                    }).then(successResponse =>{
+                        //数据库删除成功在table表里进行删除,
+                        this.tableData.splice(index, 1);
+                        this.$message({
+                            type: 'success',
+                            message: '删除成功!'
+                        });
+                    }).catch(failResponse =>{
+                        //用户同意删除情况下数据库删除失败
+                        this.$message({
+                            type: 'info',
+                            message: '删除失败'
+                        });
+                    })
+                }).catch(() =>{
+                    //用户取消了删除
+                    this.$message({
+                        type: 'info',
+                        message: '已删除取消'
+                    });
+
+                });
+            },
 
         },
 

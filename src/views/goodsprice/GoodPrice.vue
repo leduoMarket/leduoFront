@@ -207,7 +207,8 @@
                     });
                 }).catch(failedResponse=>{
                     this.$message('没有找到记录哦');
-                })
+                });
+                this.searchInput='';
             },
             addcommodityPricing() {
                 this.$refs.dataInfo.validate()
@@ -216,8 +217,8 @@
                         this.$axios.post('/addcommodityPricing', {
                             gid: this.dataInfo.gid,
                             gname: this.dataInfo.gname,
-                            pold_price: this.dataInfo.pold_price,
-                            pnew_price: this.dataInfo.pnew_price,
+                            poldPrice: this.dataInfo.pold_price,
+                            pnewPrice: this.dataInfo.pnew_price,
                             preason: this.dataInfo.preason,
                             pdate: this.dataInfo.pdate,
                             phandler: this.dataInfo.phandler,
