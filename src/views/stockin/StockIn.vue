@@ -48,39 +48,53 @@
       <el-table
         :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)"
         border
-        style="width: 100%">
+        style="width: 100%"  ref="filterTable">
         <el-table-column
           prop="inumber"
-          label="入库单号">
+          label="入库单号"
+          sortable
+        >
         </el-table-column>
         <el-table-column
           prop="gid"
           label="商品代码"
-          width="180">
+          width="180"
+          sortable
+        >
         </el-table-column>
         <el-table-column
           prop="vname"
           label="供应商名称"
           width="180">
         </el-table-column>
-<!--        <el-table-column label="创建时间" prop="idate" :formatter="timestampToTime" label="入库日期" >-->
-
-<!--        </el-table-column>-->
-        <el-table-column   :formatter="dateFormat"
+        <el-table-column
+          :formatter="dateFormat"
           prop="idate"
-          label="入库日期">
+          label="入库日期"
+          sortable
+          width="180"
+          column-key="date"
+          :filters="[{text: '今年', value: '2020-'}, {text: '去年', value: '2019-'}, {text: '本月', value: '2020-05'}, {text: '上月', value: '2020-04'}]"
+          :filter-method="filterHandler"
+        >
         </el-table-column>
         <el-table-column
           prop="iprice"
-          label="价格">
+          label="价格"
+          sortable
+        >
         </el-table-column>
         <el-table-column
           prop="ipayment"
-          label="已付款项">
+          label="已付款项"
+          sortable
+        >
         </el-table-column>
         <el-table-column
           prop="icount"
-          label="数量">
+          label="数量"
+          sortable
+        >
         </el-table-column>
         <el-table-column
           prop="esalary"
@@ -131,7 +145,26 @@
                         iprice:'10',
                         ipayment:'300',
                         icount:'40'
-                    },{
+                    },
+                    {
+                        inumber:'I2020040302',
+                        gid:'1234567890123',
+                        vname:'橙汁',
+                        idate:'2020-04-03T00:00:00.0000000',
+                        iprice:'12.22',
+                        ipayment:'9090',
+                        icount:'10'
+                    },
+                    {
+                        inumber:'I2020040502',
+                        gid:'1234567890123',
+                        vname:'橙汁',
+                        idate:'2020-04-05T00:00:00.0000000',
+                        iprice:'12.22',
+                        ipayment:'9090',
+                        icount:'10'
+                    },
+                    {
                         inumber:'I2020040201',
                         gid:'1234567890123',
                         vname:'可乐',
@@ -139,9 +172,19 @@
                         iprice:'12.22',
                         ipayment:'9090',
                         icount:'10'
-                    }
+                    },{
+                        inumber:'I2020040301',
+                        gid:'1234567890123',
+                        vname:'橙汁',
+                        idate:'2020-04-03T00:00:00.0000000',
+                        iprice:'12.22',
+                        ipayment:'9090',
+                        icount:'10'
+                    },
 
                 ],
+                nowDate:"",   //当前日期
+
                 //删除的元素是谁
                 delItem: [
                 ],
@@ -206,6 +249,8 @@
             })
         },
         methods: {
+
+            //日期格式化显示
             dateFormat:function(row,column){
 
                 var date = row[column.property];
@@ -214,6 +259,15 @@
 
                 return moment(date).format("YYYY-MM-DD")
 
+            },
+            //日期筛选器
+            filterHandler(value, row, column) {
+                const property = column['property'];
+
+                return row[property].search(value) !== -1;
+
+
+                // return row[property] == value;
             },
             // 初始页currentPage、初始每页数据数pagesize和数据data
             handleSizeChange: function (size) {
