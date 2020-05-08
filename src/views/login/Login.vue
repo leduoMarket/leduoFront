@@ -108,7 +108,7 @@
     background:url("../../assets/pic/background.jpg") no-repeat;
     height: 100%;
     width: 100%;
-    background-size: cover;
+    background-size: 100% 120%;
     position: fixed;
   }
   body{

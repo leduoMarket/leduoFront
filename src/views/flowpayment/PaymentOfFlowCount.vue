@@ -200,9 +200,9 @@
                             pnumber:this.form.pnumber,
                             pdate:this.form.pdate,
                             pcategory:this.form.pcategory,
-                            psource_shop:this.form.psource_shop,
-                            ptrading_amount:this.ptrading_amount,
-                            premainning_amount:this.premainning_amount,
+                            psourceShop:this.form.psource_shop,
+                            ptradingAmount:this.ptrading_amount,
+                            premainningAmount:this.premainning_amount,
                         }).then(successResponse =>{
                             if(successResponse.data.code == 200){
                                 this.addSuccessful = true;
