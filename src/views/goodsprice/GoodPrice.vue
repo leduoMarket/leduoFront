@@ -12,10 +12,10 @@
             <el-input v-model="dataInfo.gname" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item label="历史价格" :label-width="formLabelWidth" prop="pold_price">
-            <el-input v-model="dataInfo.pold_price" autocomplete="off"></el-input>
+            <el-input v-model="dataInfo.poldPrice" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item label="调整价格" :label-width="formLabelWidth" prop="pnew_price">
-            <el-input v-model="dataInfo.pnew_price" autocomplete="off"></el-input>
+            <el-input v-model="dataInfo.pnewPrice" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item label="调整原因" :label-width="formLabelWidth" prop="preason">
             <el-input v-model="dataInfo.preason" autocomplete="off"></el-input>
@@ -57,11 +57,11 @@
           width="180">
         </el-table-column>
         <el-table-column
-          prop="pold_price"
+          prop="poldPrice"
           label="历史价格">
         </el-table-column>
         <el-table-column
-          prop="pnew_price"
+          prop="pnewPrice"
           label="调整价格">
         </el-table-column>
         <el-table-column
@@ -128,8 +128,8 @@
                 dataInfo: {
                     gid: '',
                     gname: '',
-                    pold_price: '',
-                    pnew_price: '',
+                    poldPrice: '',
+                    pnewPrice: '',
                     preason: '',
                     pdate: '',
                     phandler: '',
@@ -146,10 +146,10 @@
                     gname:[
                         {required:true ,validator: reg_gname,  trigger: 'blur'}
                     ],
-                    pold_price:[
+                    poldPrice:[
                         {required:true ,validator: reg_money,  trigger: 'blur'}
                     ],
-                    pnew_price:[
+                    pnewPrice:[
                         {required:true ,validator: reg_money,  trigger: 'blur'}
                     ],
                     preason:[
@@ -216,8 +216,8 @@
                         this.$axios.post('/addcommodityPricing', {
                             gid: this.dataInfo.gid,
                             gname: this.dataInfo.gname,
-                            pold_price: this.dataInfo.pold_price,
-                            pnew_price: this.dataInfo.pnew_price,
+                            poldPrice: this.dataInfo.poldPrice,
+                            pnewPrice: this.dataInfo.pnewPrice,
                             preason: this.dataInfo.preason,
                             pdate: this.dataInfo.pdate,
                             phandler: this.dataInfo.phandler,
@@ -241,8 +241,8 @@
                             this.dataInfo = {
                                 gid: '',
                                 gname: '',
-                                pold_price: '',
-                                pnew_price: '',
+                                poldPrice: '',
+                                pnewPrice: '',
                                 preason: '',
                                 pdate: '',
                                 phandler: '',

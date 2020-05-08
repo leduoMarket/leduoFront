@@ -244,9 +244,6 @@
                         type: 'error'
                     });
                 });
-
-
-
             },
             del(delItem, index) {
                 console.log(delItem);

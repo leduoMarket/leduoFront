@@ -178,45 +178,53 @@
                 this.dialogFormVisible = true;
 
             },
-            addGoodsReturn() {
-                this.$refs.dataInfo.validate()
+            //新增表单操作
+            addStockOut(){
+                //逻辑前端判断
+                this.submitBtn=true;
+                this.$refs.dataInfo.validate()  //判断表单验证是否通过，验证通过执行.then()，否则执行.catch()
                     .then(res =>{
-                        this.$axios.post('/addgoodsReturn', {
-                            gid: this.dataInfo.gid,
-                            rdate: this.dataInfo.rdate,
-                            rreason: this.dataInfo.rreason,
-                            rcount: this.dataInfo.rcount,
-                        }).then(successResponse => {
-                            if (successResponse.data.code === 200) {
+                        console.log("提交成功");
+                        this.$axios.post('/addstockIn',{
+                            gid:this.dataInfo.gid,
+                            rdate:this.dataInfo.rdate,
+                            rcount:this.dataInfo.rcount,
+                            rreason:this.dataInfo.rreason,
+
+                        }).then(successResponse =>{
+                            if(successResponse.data.code == 200){
                                 this.addSuccessful = true;
+                                this.$message({
+                                    message: '成功添加一条记录',
+                                    type: 'success',
+                                });
+                                //将信息刷新到表格中
+                                this.tableData.push(this.dataInfo);
+                                //清空填写单的信息放到请求体中，避免请求延迟已经被清空才刷新在信息到表格中
+                                this.dataInfo = {
+                                    gid : '',
+                                    rdate : '',
+                                    rcount: '',
+                                    rreason: '',
+                                };
                             }
-                        }).catch(failedResponse => {
-                            this.addSuccessful = false;
-                        });
-                        if (!this.addSuccessful) {
-                            this.$message.error('插入数据失败');
-                        } else {
-                            this.tableData.push(this.dataInfo);
-                            this.$message({
-                                message: '成功添加一条记录',
-                                type: 'success'
-                            });
-                        }
-                        // 将填写框置空，方便下次填写
-                        this.dataInfo = {
-                            gid: '',
-                            rdate: '',
-                            rreason: '',
-                            rcount: '',
-                        };
+                        }).catch(failedResponse =>{
+
+                        } );
                         // 让表格消失
+                        this.dataInfo = {
+                            gid : '',
+                            rdate : '',
+                            rcount: '',
+                            rreason: '',
+                        };
                         this.dialogFormVisible = false;
                     }).catch(error =>{
                     console.log("提交失败");
-                        this.$message({
-                           message: '无法提交，表单中数据有错误',
-                           type: 'error'
-                        });
+                    this.$message({
+                        message: '无法提交，表单中数据有错误',
+                        type: 'error'
+                    });
 
                 });
 
