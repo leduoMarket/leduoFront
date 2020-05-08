@@ -1,8 +1,5 @@
 <template>
   <div class="Analysis">
-    <Menu></Menu>
-    <TopBar></TopBar>
-    <router-view></router-view>
     <el-card class="box-card">
       <div slot="header" class="clearfix">
         <span>盈亏分析</span>
@@ -65,11 +62,8 @@
 </template>
 
 <script>
-    import TopBar from "D:/web/leduoFront/src/components/template/TopBar";
-    import Menu from "D:/web/leduoFront/src/components/template/Menu";
     export default {
         name: "ProfitAnalysis",
-        components: {TopBar,Menu},
         data() {
             return {
                 options: [],

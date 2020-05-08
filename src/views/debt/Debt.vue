@@ -1,8 +1,5 @@
 <template>
   <div class="debt">
-  <Menu></Menu>
-  <TopBar></TopBar>
-  <router-view></router-view>
   <el-card class="box-card">
     <div slot="header" class="clearfix">
       <span>欠款单</span>
@@ -110,11 +107,8 @@
         reg_date,
         reg_money, reg_userName,
     } from "../login/validator";
-    import TopBar from "D:/web/leduoFront/src/components/template/TopBar";
-    import Menu from "D:/web/leduoFront/src/components/template/Menu";
   export default {
         name: "Debt",
-        components: {TopBar,Menu},
         data() {
             return {
                 // 标记删除或者添加是否成功

@@ -1,8 +1,5 @@
 <template>
   <div class="stockIn">
-    <Menu></Menu>
-    <TopBar></TopBar>
-    <router-view></router-view>
   <el-card class="box-card">
     <div slot="header" class="clearfix">
       <span>入库单</span>
@@ -19,10 +16,6 @@
           <el-form-item label="供应商名称" :label-width="formLabelWidth" prop="vname">
             <el-input v-model="addform.vname" autocomplete="off"></el-input>
           </el-form-item>
-<<<<<<< HEAD
-
-=======
->>>>>>> 4a6a0d589d0caef666ee274f1af218532a0ec564
           <el-form-item label="入库日期" :label-width="formLabelWidth" prop="idate">
             <el-input v-model="addform.idate" autocomplete="off"></el-input>
           </el-form-item>
@@ -70,10 +63,6 @@
           label="供应商名称"
           width="180">
         </el-table-column>
-<<<<<<< HEAD
-
-=======
->>>>>>> 4a6a0d589d0caef666ee274f1af218532a0ec564
         <el-table-column
           prop="idate"
           label="入库日期">
@@ -122,11 +111,8 @@
         reg_money,
         reg_count
     } from "../login/validator";
-    import TopBar from "D:/web/leduoFront/src/components/template/TopBar";
-    import Menu from "D:/web/leduoFront/src/components/template/Menu";
     export default {
         name: "StockIn",
-        components:{TopBar,Menu},
         data() {
             return {
                 // 标记删除或者添加是否成功

@@ -5,7 +5,7 @@
     <router-view></router-view>
     <!--<el-card class="box-card">-->
      <div id="welcome">
-    <img src="../assets/pic/welcome1.jpg" style="height: 75%;width: 65%;border-radius: 30px;"  alt=""/>
+    <!--<img src="../assets/pic/welcome1.jpg" style="height: 75%;width: 65%;border-radius: 30px;"  alt=""/>-->
      </div>
     <!--</el-card>-->
     <!--<div>
@@ -15,11 +15,11 @@
   </div>
   </template>
 <script>
-    import TopBar from "./template/TopBar";
     import Menu from "./template/Menu";
+    import TopBar from "./template/TopBar";
     export default {
         name: "Home",
-        components: {TopBar,Menu},
+        components:{Menu,TopBar}
     }
 </script>
 <style scoped>

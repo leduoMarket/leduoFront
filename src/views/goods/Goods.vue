@@ -1,9 +1,5 @@
 <template>
   <div class="goods">
-    <Menu></Menu>
-    <TopBar></TopBar>
-    <router-view></router-view>
-
   <el-card class="box-card">
     <div slot="header" class="clearfix">
       <span>商品表</span>
@@ -114,11 +110,9 @@
         reg_gchange_unit,
         reg_date,
     } from "../login/validator";
-    import TopBar from "D:/web/leduoFront/src/components/template/TopBar";
-    import Menu from "D:/web/leduoFront/src/components/template/Menu";
+
     export default {
         name: "Goods",
-        components: {TopBar,Menu},
         data() {
             return {
                 // 标记删除或者添加是否成功

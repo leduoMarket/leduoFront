@@ -1,8 +1,5 @@
 <template>
   <div class="help">
-    <Menu></Menu>
-    <!--<TopBar></TopBar>-->
-    <router-view></router-view>
   <el-card class="box-card">
     <div slot="header" class="clearfix">
       <span>帮助文档</span>
@@ -12,7 +9,7 @@
     <el-collapse v-model="activeNames" @change="handleChange">
       <el-collapse-item title="为什么部分页面无法访问？" name="1">
         <div>关于部分页面无法访问问题：由于该超市系统设置了员工级别权限，按照员工级别授权部分页面访问权限。</div>
-           <div>员工只可访问所属部门权限的页面。如有其他权限请求，请上报经理。</div>
+        <div>员工只可访问所属部门权限的页面。如有其他权限请求，请上报经理。</div>
       </el-collapse-item>
       <el-collapse-item title="如何修改密码？" name="2">
         <div>账户信息页面，可直接对密码进行修改。</div>
@@ -32,11 +29,8 @@
 </template>
 
 <script>
-    /*import TopBar from "D:/web/leduoFront/src/components/template/TopBar";*/
-    import Menu from "D:/web/leduoFront/src/components/template/Menu";
     export default {
         name: "Help",
-        components: {Menu},
         data() {
             return {
                 activeNames: ['1']
