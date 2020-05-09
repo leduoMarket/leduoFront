@@ -2,7 +2,7 @@
   <el-container style="height: auto;">
     <el-col :span="12" style="width: 100%">
       <div class="header-info">
-        <el-button style="float: right; padding: 3px 8px" type="text">账户</el-button>
+        <el-button style="float: right; padding: 3px 8px" type="text" @click="logOut">退出</el-button>
         <a href="http://localhost:8080/home/help">
           <el-button style="float: right; padding: 3px 8px" type="text">帮助</el-button>
         </a>
@@ -13,7 +13,22 @@
 </template>
 <script>
 export default {
-  name: 'TopBar'
+  name: 'TopBar',
+    methods:{
+        logOut(){
+            this.$axios.get("/logout").then(successfulResponse=>{
+                if(successfulResponse.data.code==405){
+                    this.$router.replace({path: '/'})
+                }
+            }).catch(failedResponse=>{
+                this.$notify({
+                    title: '对不起',
+                    message: '服务器开小差了',
+                    offset: 100
+                });
+            })
+        }
+    }
 }
 </script>
 <style scoped>

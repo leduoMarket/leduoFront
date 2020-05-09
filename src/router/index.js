@@ -18,7 +18,6 @@ const Debt = ()=>import("../views/debt/Debt")
 const Employees = ()=>import("../views/employees/Employees")
 const ProfitAnalysis=()=>import("../views/analysis/ProfitAnalysis")
 const Goods=()=>import("../views/goods/Goods")
-/*const Welcome=()=>import("../views/welcome/Welcome")*/
 
 
 Vue.use(Router)
