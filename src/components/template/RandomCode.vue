@@ -158,5 +158,8 @@
 </script>
 
 <style scoped>
-
+.s-canvas{
+  width:60%;
+  height: 70%;
+}
 </style>

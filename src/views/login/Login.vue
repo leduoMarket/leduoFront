@@ -1,6 +1,6 @@
 <template >
   <div class="login">
-  <RandomCode></RandomCode>
+  <!--<RandomCode></RandomCode>-->
   <body id="poster">
   <div id="logo">
 <!--    <img src="../../assets/pic/logo.png" style="width: 100px; height: 100px" alt=""/>-->
@@ -20,18 +20,32 @@
     </el-form-item>
     <!-- 随机验证码 输入框 -->
     <el-form-item prop="verifycode">
+      <el-col :span="2"><i class="el-icon-setting"></i></el-col>
       <el-col :span="22"><el-input type= "verifycode" v-model="loginForm.verifycode"
                                    auto-complete="off" placeholder="请输入验证码" class="identifyinput"></el-input></el-col>
     </el-form-item>
+    <el-form-item prop="ran">
+      <el-col :span="14">
+        <div class="identifybox">
+          <RandomCode>
+          <div @click="refreshCode">
+            <s-identify :identifyCode="identifyCode"></s-identify>
+          </div>
+          </RandomCode>
+        </div>
+      </el-col>
+          <!-- 刷新验证码 -->
+          <el-col :span="8"><el-button @click="refreshCode" type='text' class="textbtn">看不清，换一张</el-button></el-col>
+    </el-form-item>
     <!-- 随机验证码 -->
-    <el-form-item>
-      <div class="identifybox">
+    <el-form-item prop="">
+     <!-- <div class="identifybox">
         <div @click="refreshCode">
           <s-identify :identifyCode="identifyCode"></s-identify>
         </div>
-        <!-- 刷新验证码 -->
+        &lt;!&ndash; 刷新验证码 &ndash;&gt;
         <el-button @click="refreshCode" type='text' class="textbtn">看不清，换一张</el-button>
-      </div>
+      </div>-->
     </el-form-item>
     <el-form-item style="width: 100%">
       <el-button type="primary" style="width: 100%;background: #000066;border: none" v-on:click="login" :loading="loadingBtn">登录</el-button>
@@ -46,6 +60,7 @@
         reg_userName,
         reg_password,
     } from "./validator";
+    import RandomCode from "../../components/template/RandomCode";
 
     export default {
         name: 'Login',
@@ -186,15 +201,8 @@
   #logo{
     text-align: center;
   }
-  /*.randomcodeuse{
-    width: 60%;
-    margin: auto;
-    display: flex;
-    align-items: center;
-  }*/
   .identifybox {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 7px;
+   margin-left: 20%;
+    margin-right: 10%;
   }
 </style>
