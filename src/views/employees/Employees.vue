@@ -38,7 +38,9 @@
           <el-table-column
             prop="eid"
             label="员工编号"
-            width="180">
+            width="180"
+            sortable
+          >
           </el-table-column>
           <el-table-column
             prop="ename"

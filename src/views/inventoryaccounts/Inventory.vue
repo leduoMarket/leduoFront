@@ -22,7 +22,9 @@
         <el-table-column
           prop="gid"
           label="商品代码"
-          width="180">
+          width="180"
+          sortable
+        >
         </el-table-column>
         <el-table-column
           prop="gname"
