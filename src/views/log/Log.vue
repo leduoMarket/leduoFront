@@ -23,12 +23,16 @@
         <el-table-column
           prop="ldate"
           label="操作日期"
-          width="180">
+          width="180"
+          sortable
+        >
         </el-table-column>
         <el-table-column
           prop="lid"
           label="操作人员编号"
-          width="180">
+          width="180"
+          sortable
+        >
         </el-table-column>
         <el-table-column
           prop="lposition"

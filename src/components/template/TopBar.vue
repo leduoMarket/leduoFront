@@ -15,12 +15,6 @@
 export default {
   name: 'TopBar',
     methods:{
-      goBack() {
-          this.$router.go(-1)
-      }
-    }
-  name: 'TopBar',
-    methods:{
         logOut(){
             this.$axios.get("/logout").then(successfulResponse=>{
                 if(successfulResponse.data.code==405){
@@ -33,6 +27,9 @@ export default {
                     offset: 100
                 });
             })
+        },
+        goBack() {
+            this.$router.go(-1)
         }
     }
 }

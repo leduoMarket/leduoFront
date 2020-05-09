@@ -50,12 +50,19 @@
         <el-table-column
           prop="pnumber"
           label="交易号"
-          width="180">
+          width="180"
+          sortable
+        >
         </el-table-column>
         <el-table-column
+          :formatter="dateFormat"
           prop="pdate"
           label="交易时间"
-          width="180">
+          sortable
+          width="180"
+          column-key="date"
+          :filters="[{text: '今年', value: '2020-'}, {text: '去年', value: '2019-'}, {text: '本月', value: '2020-05'}, {text: '上月', value: '2020-04'}]"
+          :filter-method="filterHandler">
         </el-table-column>
         <el-table-column
           prop="pcategory"
@@ -170,6 +177,22 @@
             handleCurrentChange: function (currentPage) {
                 this.currentPage = currentPage;
                 console.log(this.currentPage)
+            },
+            //日期格式化显示
+            dateFormat:function(row,column){
+
+                var date = row[column.property];
+
+                if(date == undefined){return ''};
+
+                return moment(date).format("YYYY-MM-DD")
+
+            },
+            //日期筛选器
+            filterHandler(value, row, column) {
+                const property = column['property'];
+
+                return row[property].search(value) !== -1;
             },
             //查询
             beginSearch(){

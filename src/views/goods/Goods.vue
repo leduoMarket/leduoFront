@@ -55,7 +55,9 @@
         <el-table-column
           prop="gid"
           label="商品代码"
-          width="180">
+          width="180"
+          sortable
+        >
         </el-table-column>
         <el-table-column
           prop="gname"
@@ -75,8 +77,15 @@
           label="计价单位">
         </el-table-column>
         <el-table-column
+          :formatter="dateFormat"
           prop="gdate"
-          label="生产日期">
+          label="生产日期"
+          sortable
+          width="180"
+          column-key="date"
+          :filters="[{text: '今年', value: '2020-'}, {text: '去年', value: '2019-'}, {text: '本月', value: '2020-05'}, {text: '上月', value: '2020-04'}]"
+          :filter-method="filterHandler"
+        >
         </el-table-column>
         <el-table-column
           prop="esalary"
@@ -175,6 +184,25 @@
             })
         },
         methods: {
+            //日期格式化显示
+            dateFormat:function(row,column){
+
+                var date = row[column.property];
+
+                if(date == undefined){return ''};
+
+                return moment(date).format("YYYY-MM-DD")
+
+            },
+            //日期筛选器
+            filterHandler(value, row, column) {
+                const property = column['property'];
+
+                return row[property].search(value) !== -1;
+
+
+                // return row[property] == value;
+            },
             // 初始页currentPage、初始每页数据数pagesize和数据data
             handleSizeChange: function (size) {
                 this.pagesize = size;

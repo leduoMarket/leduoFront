@@ -3,7 +3,7 @@
   <el-card class="box-card">
     <div slot="header" class="clearfix">
       <span>欠款单</span>
-      <el-button style="float: right; padding: 3px 0" type="text" @click="dialogFormVisible = true">新建</el-button>
+      <!--<el-button style="float: right; padding: 3px 0" type="text" @click="dialogFormVisible = true">新建</el-button>-->
       <el-dialog title="欠款单" :visible.sync="dialogFormVisible">
         <el-form :model="dataInfo" :rules="debtRules" ref="dataInfo">
           <el-form-item label="欠款单号" :label-width="formLabelWidth" prop="dnumber">
@@ -52,7 +52,9 @@
         <el-table-column
           prop="dnumber"
           label="欠款单号"
-          width="180">
+          width="180"
+          sortable
+        >
         </el-table-column>
         <el-table-column
           prop="gid"
@@ -68,8 +70,15 @@
           label="欠款金额">
         </el-table-column>
         <el-table-column
+          :formatter="dateFormat"
           prop="ddate"
-          label="日期">
+          label="日期"
+          sortable
+          width="180"
+          column-key="date"
+          :filters="[{text: '今年', value: '2020-'}, {text: '去年', value: '2019-'}, {text: '本月', value: '2020-05'}, {text: '上月', value: '2020-04'}]"
+          :filter-method="filterHandler"
+        >
         </el-table-column>
 
         <el-table-column
@@ -77,7 +86,7 @@
           label="操作">
 
           <template slot-scope="scope">
-            <el-button style="float: left; padding-right: 3px;" type="text"><span style="color: red" @click="del">删除</span></el-button>
+            <el-button style="float: left; padding-right: 3px;" type="text"><span style="color: red" @click="del(scope.row,scope.$index)">删除</span></el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -161,6 +170,25 @@
             })
         },
         methods: {
+            //日期格式化显示
+            dateFormat:function(row,column){
+
+                var date = row[column.property];
+
+                if(date == undefined){return ''};
+
+                return moment(date).format("YYYY-MM-DD")
+
+            },
+            //日期筛选器
+            filterHandler(value, row, column) {
+                const property = column['property'];
+
+                return row[property].search(value) !== -1;
+
+
+                // return row[property] == value;
+            },
             // 初始页currentPage、初始每页数据数pagesize和数据data
             handleSizeChange: function (size) {
                 this.pagesize = size;
@@ -192,7 +220,7 @@
                 this.dialogFormVisible = true;
 
             },
-            addDebt() {
+            /*addDebt() {
                 this.$refs.dataInfo.validate()
                     .then(res =>{
                         this.$axios.post('/addDebt', {
@@ -235,7 +263,7 @@
                     });
                 });
 
-            },
+            },*/
 
             // 删除选中下标的一行数据，index由click处的scope.$index传过来的下标，delItem由scope.$row传过来的元素
             del(delItem, index) {
