@@ -183,7 +183,7 @@
         },
         // 创建的时候发送请求获取显示数据库所有退货单的列表数据
         created() {
-            this.$axios.get("/stockOut").then(res=>{
+            this.$axios.get("/home/stockOut").then(res=>{
                 if(res.data){
                     console.log(res);
                     this.tableData = res.data;
@@ -208,7 +208,7 @@
             },
             //查询
             beginSearch(){
-                this.$axios.get('/querystockOut',{
+                this.$axios.get('/home/querystockOut',{
                     params:{
                         onumber:this.searchInput,
                     }
@@ -246,7 +246,7 @@
             addStockOut() {
                 this.$refs.dataInfo.validate()
                     .then(res =>{
-                        this.$axios.post('/addstockOut', {
+                        this.$axios.post('/home/addstockOut', {
                             gid: this.dataInfo.gid,
                             vname: this.dataInfo.vname,
                             onumber: this.dataInfo.onumber,
@@ -302,7 +302,7 @@
                     type:'warning'
                 }).then(() =>{
                     //如果用户确实要删除，则用delete方式删除，并且传递要删除的记录的eid
-                    this.$axios.delete('/delstockOut',{
+                    this.$axios.delete('/home/delstockOut',{
                         params:{
                             stockOutId: delItem.onumber
                         }

@@ -69,7 +69,7 @@
         // 创建的时候发送请求获取显示数据库列表数据
         created() {
             console.log("vue被创建");
-            this.$axios.get("/inventory").then(res => {
+            this.$axios.get("/home/inventory").then(res => {
                 if (res.data) {
                     console.log(res);
                     this.tableData = res.data;
@@ -90,7 +90,7 @@
             },
             //查询
             beginSearch(){
-                this.$axios.get('/queryInventory',{
+                this.$axios.get('/home/queryInventory',{
                     params:{
                         gid:this.searchInput,
                     }

@@ -21,12 +21,6 @@
           <el-form-item label="欠款金额" :label-width="formLabelWidth" prop="ddebt">
             <el-input v-model="dataInfo.ddebt" autocomplete="off"></el-input>
           </el-form-item>
-<!--          <el-form-item label="信誉" :label-width="formLabelWidth">-->
-<!--            <el-input v-model="form.vcredit" autocomplete="off"></el-input>-->
-<!--          </el-form-item>-->
-<!--          <el-form-item label="贷款结算" :label-width="formLabelWidth">-->
-<!--            <el-input v-model="form.payment" autocomplete="off"></el-input>-->
-<!--          </el-form-item>-->
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisible = false">取 消</el-button>
@@ -80,7 +74,6 @@
           :filter-method="filterHandler"
         >
         </el-table-column>
-
         <el-table-column
           prop="esalary"
           label="操作">
@@ -160,7 +153,7 @@
         // 创建的时候发送请求获取显示数据库所有员工的列表数据
         created() {
             console.log("vue被创建");
-            this.$axios.get("/debt").then(res => {
+            this.$axios.get("/home/debt").then(res => {
                 if (res.data) {
                     console.log(res)
                     this.tableData = res.data;
@@ -200,7 +193,7 @@
             },
             //查询
             beginSearch(){
-                this.$axios.get('/queryDebt',{
+                this.$axios.get('/home/queryDebt',{
                     params:{
                         dnumber:this.searchInput,
                     }
@@ -223,7 +216,7 @@
             /*addDebt() {
                 this.$refs.dataInfo.validate()
                     .then(res =>{
-                        this.$axios.post('/addDebt', {
+                        this.$axios.post('/home/addDebt', {
                             dnumber:this.dataInfo.dnumber,
                             gid: this.dataInfo.gid,
                             vname: this.dataInfo.vname,

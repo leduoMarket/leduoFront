@@ -144,7 +144,7 @@
         },
         // 创建的时候发送请求获取显示数据库所有退货单的列表数据
         created() {
-            this.$axios.get("/goodsReturn").then(res=>{
+            this.$axios.get("/home/goodsReturn").then(res=>{
                 if(res.data){
                     console.log(res);
                     this.tableData = res.data;
@@ -186,7 +186,7 @@
             },
             //查询
             beginSearch(){
-                this.$axios.get('/querygoodsReturn',{
+                this.$axios.get('/home/querygoodsReturn',{
                     params:{
                         gid:this.searchInput,
                     }
@@ -210,7 +210,7 @@
             addGoodsReturn() {
                 this.$refs.dataInfo.validate()
                     .then(res =>{
-                        this.$axios.post('/addgoodsReturn', {
+                        this.$axios.post('/home/addgoodsReturn', {
                             gid: this.dataInfo.gid,
                             rdate: this.dataInfo.rdate,
                             rreason: this.dataInfo.rreason,
@@ -258,7 +258,7 @@
                     type: 'warning'
                 }).then(() => {
                     //如果用户确实要删除，则用delete方式删除，并且传递要删除的记录的eid
-                    this.$axios.delete('/delgoodsReturn', {
+                    this.$axios.delete('/home/delgoodsReturn', {
                         params: {
                             goodsId: delItem.gid
                         }

@@ -30,16 +30,6 @@
           </div>
         </el-dialog>
       </div>
-      <!--      搜索框-->
-<!--      <div class="text item">-->
-<!--        <el-input style="width: 300px"-->
-<!--                  placeholder="请输入员工编号"-->
-<!--                  v-model="input"-->
-<!--                  clearable>-->
-<!--        </el-input>-->
-<!--        <el-button round>查询</el-button>-->
-<!--      </div>-->
-      <!--      展示的table表格-->
       <div class="form">
         <el-table
           :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)"
@@ -147,7 +137,7 @@
         // 创建的时候发送请求获取显示数据库所有员工的列表数据
         created() {
             console.log("vue被创建");
-            this.$axios.get("/emps").then(res => {
+            this.$axios.get("/home/emps").then(res => {
                 if (res.data) {
                     console.log(res);
                     this.tableData = res.data;
@@ -170,7 +160,7 @@
             addEmployee() {
                 this.$refs.userInfo.validate()
                     .then(res =>{
-                        this.$axios.post('/addemp', {
+                        this.$axios.post('/home/addemp', {
                             eid: this.userInfo.eid,
                             ename: this.userInfo.ename,
                             ephone: this.userInfo.ephone,
@@ -224,14 +214,13 @@
 
             // 删除选中下标的一行数据，index由click处的scope.$index传过来的下标，delItem由scope.$row传过来的元素
             del(delItem, index) {
-                console.log(delItem);
                 this.$confirm('你确定要删这条记录？', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
                     //如果用户确实要删除，则用delete方式删除，并且传递要删除的记录的eid
-                    this.$axios.delete('/delemp', {
+                    this.$axios.delete('/home/delemp', {
                         params: {
                             empId: delItem.eid
                         }

@@ -158,7 +158,7 @@
         },
       created(){
         console.log("vue被创建");
-        this.$axios.get("/payments").then(res =>{
+        this.$axios.get("/home/payments").then(res =>{
             if(res.data){
                 console.log(res);
                 this.tableData=res.data;
@@ -196,7 +196,7 @@
             },
             //查询
             beginSearch(){
-                this.$axios.get('/queryPaymentOfFlowCount',{
+                this.$axios.get('/home/queryPaymentOfFlowCount',{
                     params:{
                         pnumber:this.searchInput,
                     }
@@ -219,7 +219,7 @@
                     .then(res =>{
                         this.submitBtn=false;
                         console.log("提交成功");
-                        this.$axios.post('/addpayment',{
+                        this.$axios.post('/home/addpayment',{
                             pnumber:this.form.pnumber,
                             pdate:this.form.pdate,
                             pcategory:this.form.pcategory,
@@ -270,14 +270,13 @@
 
             },
             del(delItem, index){
-                console.log(delItem);
                 this.$confirm('你确定要删除这条记录吗？','提示',{
                     confirmButtonText:'确定',
                     cancelButtonText:'取消',
                     type:'warning'
                 }).then(() =>{
                     //如果用户确实要删除，则用delete方式删除，并且传递要删除的记录的eid
-                    this.$axios.delete('/delpayment',{
+                    this.$axios.delete('/home/delpayment',{
                         params:{
                             stockInId: delItem.pnumber
                         }

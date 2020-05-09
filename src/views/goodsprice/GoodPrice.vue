@@ -180,7 +180,7 @@
         },
         // 创建的时候发送请求获取显示数据库所有退货单的列表数据
         created() {
-            this.$axios.get("/commodityPricing").then(res=>{
+            this.$axios.get("/home/commodityPricing").then(res=>{
                 if(res.data){
                     console.log(res)
                     this.tableData = res.data;
@@ -226,7 +226,7 @@
             },
             //查询
             beginSearch(){
-                this.$axios.get('/querycommodityPricing',{
+                this.$axios.get('/home/querycommodityPricing',{
                     params:{
                         gid:this.searchInput,
                     }
@@ -247,7 +247,7 @@
                 this.$refs.dataInfo.validate()
                     .then(res =>{
 
-                        this.$axios.post('/addcommodityPricing', {
+                        this.$axios.post('/home/addcommodityPricing', {
                             gid: this.dataInfo.gid,
                             gname: this.dataInfo.gname,
                             poldPrice: this.dataInfo.pold_price,
@@ -304,7 +304,7 @@
                     type: 'warning'
                 }).then(() => {
                     //如果用户确实要删除，则用delete方式删除，并且传递要删除的记录的eid
-                    this.$axios.delete('/delcommodityPricing', {
+                    this.$axios.delete('/home/delcommodityPricing', {
                         params: {
                             priceId: delItem.gid
                         }

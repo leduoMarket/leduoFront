@@ -6,7 +6,7 @@
 <!--    <img src="../../assets/pic/logo.png" style="width: 100px; height: 100px" alt=""/>-->
   </div>
   <el-form class="login-container" label-position="left"
-           label-width="0px"  status-icon :rules="rules" ref="loginForm" :model="loginForm">
+           label-width="0px"   :rules="rules" ref="loginForm" :model="loginForm">
     <h3 class="login_title">系统登录</h3>
     <el-form-item prop="userName">
       <el-col :span="2"><i class="el-icon-s-custom"></i></el-col>
@@ -46,7 +46,7 @@
         reg_userName,
         reg_password,
     } from "./validator";
-    import RandomCode from './template/RandomCode.vue';
+
     export default {
         name: 'Login',
         components:{RandomCode},
@@ -82,14 +82,7 @@
                             validator: reg_password,
                             trigger: 'blur'
                         }
-                    ],
-                    identifyCodes: '1234567890',
-                    identifyCode: '',
-                    loginRules: {
-                        verifycode: [
-                            { required: true, trigger: 'blur', validator: verifycode },
-                        ]
-                    }
+                    ]
                 }
             }
         },
@@ -115,6 +108,20 @@
                     this.identifyCode += this.identifyCodes[this.randomNum(0, this.identifyCodes.length)]
                 }
                 console.log(this.identifyCode)
+            },
+            accessDenied(){
+                this.$axios.get("/identifyFailed").then(successulResponse=>{
+                    console.log(successulResponse.data.code)
+                    console.log(successulResponse.data.msg)
+                        this.$router.replace({path:"/"})
+                    console.log("重定向发生！")
+                }).catch(failedResponse=>{
+                    this.$notify({
+                        title: '对不起',
+                        message: '权限控制失败',
+                        offset: 100
+                    });
+                })
             },
             login () {
                 this.loadingBtn = true;
