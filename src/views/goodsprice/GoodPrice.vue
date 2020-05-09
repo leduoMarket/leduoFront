@@ -46,24 +46,28 @@
       <el-table
         :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)"
         border
-        style="width: 100%">
+        style="width: 100%"   ref="filterTable">
         <el-table-column
           prop="gid"
           label="商品编号"
-          width="180">
+          width="120"
+          sortable
+        >
         </el-table-column>
         <el-table-column
           prop="gname"
           label="商品名称"
-          width="180">
+          width="120">
         </el-table-column>
         <el-table-column
           prop="pold_price"
-          label="历史价格">
+          label="历史价格"
+          width="80">
         </el-table-column>
         <el-table-column
           prop="pnew_price"
-          label="调整价格">
+          label="调整价格"
+          width="80">
         </el-table-column>
         <el-table-column
           prop="preason"
@@ -71,7 +75,14 @@
         </el-table-column>
         <el-table-column
           prop="pdate"
-          label="日期">
+          label="日期"
+          :formatter="dateFormat"
+          sortable
+          column-key="date"
+          :filters="[{text: '今年', value: '2020-'}, {text: '去年', value: '2019-'}, {text: '本月', value: '2020-05'}, {text: '上月', value: '2020-04'}]"
+          :filter-method="filterHandler"
+          width="100"
+        >
         </el-table-column>
         <el-table-column
           prop="phandler"
@@ -111,6 +122,7 @@
       reg_ename
 
   } from "../login/validator";
+  import moment from 'moment'
 
   export default {
         name: "GoodPrice",
@@ -192,6 +204,25 @@
             openAddPage() {
                 this.dialogFormVisible = true;
 
+            },
+            //日期格式化显示
+            dateFormat:function(row,column){
+
+                var date = row[column.property];
+
+                if(date == undefined){return ''};
+
+                return moment(date).format("YYYY-MM-DD")
+
+            },
+            //日期筛选器
+            filterHandler(value, row, column) {
+                const property = column['property'];
+
+                return row[property].search(value) !== -1;
+
+
+                // return row[property] == value;
             },
             //查询
             beginSearch(){

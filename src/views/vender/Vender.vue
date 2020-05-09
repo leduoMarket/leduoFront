@@ -49,16 +49,20 @@
       <el-table
         :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)"
         border
-        style="width: 100%">
+        style="width: 100%"  ref="filterTable">
         <el-table-column
           prop="vid"
           label="供应商代码"
-          width="180">
+          width="120"
+          sortable
+        >
         </el-table-column>
         <el-table-column
           prop="vname"
           label="供应商名称"
-          width="180">
+          width="100"
+
+        >
         </el-table-column>
         <el-table-column
           prop="vaddress"

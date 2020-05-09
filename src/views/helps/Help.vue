@@ -3,9 +3,9 @@
   <el-card class="box-card">
     <div slot="header" class="clearfix">
       <span>帮助文档</span>
-      <a href="http://localhost:8080/home">
-        <el-button style="float: right; padding: 3px 0" type="text">返回</el-button>
-      </a>
+     <!-- <a href="http://localhost:8080/home">-->
+        <el-button style="float: right; padding: 3px 0" type="text" @click="goBack">返回</el-button>
+      <!--</a>-->
     <el-collapse v-model="activeNames" @change="handleChange">
       <el-collapse-item title="为什么部分页面无法访问？" name="1">
         <div>关于部分页面无法访问问题：由于该超市系统设置了员工级别权限，按照员工级别授权部分页面访问权限。</div>
@@ -39,6 +39,9 @@
         methods: {
             handleChange(val) {
                 console.log(val);
+            },
+            goBack() {
+                    this.$router.go(-1)
             }
         }
     }
