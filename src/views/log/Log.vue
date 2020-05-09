@@ -76,7 +76,7 @@
             },
             //查询
             beginSearch(){
-                this.$axios.get('/queryStockIn',{
+                this.$axios.get('/home/queryStockIn',{
                     params:{
                         lid:this.searchInput,
                     }

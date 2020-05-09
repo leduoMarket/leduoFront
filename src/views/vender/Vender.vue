@@ -180,7 +180,7 @@
             }
         },
       created() {
-          this.$axios.get("/Vender").then(res=>{
+          this.$axios.get("/home/Vender").then(res=>{
               if(res.data){
                   console.log(res);
                   this.tableData = res.data;
@@ -203,7 +203,7 @@
             addVender(){
                 this.$refs.addform.validate()
                     .then(res =>{
-                        this.$axios.post('/addVender', {
+                        this.$axios.post('/home/addVender', {
                             vid: this.addform.vid,
                             vname: this.addform.vname,
                             vaddress: this.addform.vaddress,
@@ -268,7 +268,7 @@
                     type:'warning'
                 }).then(() =>{
                     //如果用户确实要删除，则用delete方式删除，并且传递要删除的记录的eid
-                    this.$axios.delete('/delVender',{
+                    this.$axios.delete('/home/delVender',{
                         params:{
                             venderId: delItem.vid
                         }

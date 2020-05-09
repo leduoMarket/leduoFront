@@ -165,7 +165,7 @@
         // 创建的时候发送请求获取显示数据库所有员工的列表数据
         created() {
             console.log("vue被创建");
-            this.$axios.get("/goods").then(res => {
+            this.$axios.get("/home/goods").then(res => {
                 if (res.data) {
                     console.log(res);
                     this.tableData = res.data;
@@ -186,7 +186,7 @@
             },
             //查询
             beginSearch(){
-                this.$axios.get('/queryGoods',{
+                this.$axios.get('/home/queryGoods',{
                     params:{
                         gid:this.searchInput,
                     }
@@ -204,14 +204,13 @@
             },
             // 删除选中下标的一行数据，index由click处的scope.$index传过来的小标，delItem由scope.$row传过来的元素
             del(delItem, index){
-                console.log(delItem);
                 this.$confirm('你确定要删除这条记录吗？','提示',{
                     confirmButtonText:'确定',
                     cancelButtonText:'取消',
                     type:'warning'
                 }).then(() =>{
                     //如果用户确实要删除，则用delete方式删除，并且传递要删除的记录的eid
-                    this.$axios.delete('/delGoods',{
+                    this.$axios.delete('/home/delGoods',{
                         params:{
                             GoodsId: delItem.gid
                         }
@@ -242,7 +241,7 @@
             addGoods(){
                 this.$refs.dataInfo.validate()
                     .then(res =>{
-                        this.$axios.post('/Goods',{
+                        this.$axios.post('/home/Goods',{
                             gid:this.dataInfo.gid,
                             gname:this.dataInfo.gname,
                             categories:this.dataInfo.categories,

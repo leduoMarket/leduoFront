@@ -57,10 +57,22 @@
             }
         },
         methods: {
+            accessDenied(){
+                this.$axios.get("/identifyFailed").then(successulResponse=>{
+                    console.log(successulResponse.data.code)
+                    console.log(successulResponse.data.msg)
+                        this.$router.replace({path:"/"})
+                    console.log("重定向发生！")
+                }).catch(failedResponse=>{
+                    this.$notify({
+                        title: '对不起',
+                        message: '权限控制失败',
+                        offset: 100
+                    });
+                })
+            },
             login () {
                 this.loadingBtn = true;
-                // this.$router.replace({path: '/home/firstPage'});
-
                 this.$refs.loginForm.validate()
                     .then(res => {
                         this.loadingBtn = false;
