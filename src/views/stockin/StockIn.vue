@@ -48,7 +48,8 @@
       <el-table
         :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)"
         border
-        style="width: 100%"  ref="filterTable">
+        style="width: 100%"  ref="filterTable"
+      >
         <el-table-column
           prop="inumber"
           label="入库单号"
@@ -181,7 +182,6 @@
                         ipayment:'9090',
                         icount:'10'
                     },
-
                 ],
                 nowDate:"",   //当前日期
 
@@ -230,7 +230,8 @@
                     icount:[
                         { required:true ,validator: reg_count, trigger:'blur'}
                     ]
-                }
+                },
+
             }
         },
         //过滤器
