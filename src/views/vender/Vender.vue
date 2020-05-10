@@ -62,9 +62,8 @@
       <el-button type="primary" icon="el-icon-refresh" @click="doReset" size="medium"  round  plain >重置</el-button>
       <el-table
         :data="tableDataEnd.slice((currentPage-1)*pagesize,currentPage*pagesize)"
-        @sort-change="sortChange"
         border
-        style="width: 100%"  ref="filterTable"  fit="true" stripe >
+        style="width: 100%"  ref="filterTable" size="medium"  stripe >
         <el-table-column
           prop="vid"
           label="供应商代码"
@@ -297,7 +296,6 @@
           })
       },
         methods: {
-
             doFilter(){
                 var selectTag = this.selectTags;
                 if(this.searchInput == ""){
