@@ -215,13 +215,6 @@
                 flag:false,
                 selectTags:"",
 
-
-
-
-
-
-
-
                 //正则规则加载
                 venderRules:{
                     vid:[
@@ -280,8 +273,6 @@
             }
         },
       created() {
-          this.totalItems = this.tableData.length;
-          this.tableDataEnd = this.tableData;
           this.$axios.get("/home/Vender").then(res=>{
               if(res.data){
                   console.log(res);
@@ -291,6 +282,7 @@
                   console.log(this.tableData.length);
               }
           }).catch(failResponse=>{
+              this.$message.error('不能加载该页面');
 
           })
       },
@@ -299,6 +291,10 @@
                 var selectTag = this.selectTags;
                 if(this.searchInput == ""){
                     this.$message.warning("查询信息不能为空！！！");
+                    return;
+                }
+                if(selectTag === ""){
+                    this.$message.warning("查询条件不能为空！！！");
                     return;
                 }
                 this.tableDataEnd=[];

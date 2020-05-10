@@ -26,17 +26,28 @@
         </div>
       </el-dialog>
     </div>
-    <div class="text item">
-      <el-input style="width: 300px"
-                placeholder="请输入商品编号"
-                v-model="searchInput"
-                clearable>
-      </el-input>
-      <el-button round @click="beginSearch">查询</el-button>
-    </div>
+<!--    <div class="text item">-->
+<!--      <el-input style="width: 300px"-->
+<!--                placeholder="请输入商品编号"-->
+<!--                v-model="searchInput"-->
+<!--                clearable>-->
+<!--      </el-input>-->
+<!--      <el-button round @click="beginSearch">查询</el-button>-->
+<!--    </div>-->
     <div class="form">
+      <el-select v-model="selectTags" clearable size="medium"  placeholder="请选择" value="" >
+        <el-option
+          v-for="item in options"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value">
+        </el-option>
+      </el-select>
+      <el-input v-model="searchInput" placeholder="请输入信息"  size="medium" style="width:240px; margin-right:23% ;margin-bottom: 1.5%"></el-input>
+      <el-button type="primary" icon="el-icon-search" @click="doFilter"  size="medium" round  plain>搜索</el-button>
+      <el-button type="primary" icon="el-icon-refresh" @click="doReset" size="medium"  round  plain >重置</el-button>
       <el-table
-        :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)"
+        :data="tableDataEnd.slice((currentPage-1)*pagesize,currentPage*pagesize)"
         border
         style="width: 100%">
         <el-table-column
@@ -84,7 +95,7 @@
         :page-sizes="[3,5, 10, 20]"
         :page-size="pagesize"
         layout="total, sizes, prev, pager, next, jumper"
-        :total="tableData.length">
+        :total="tableDataEnd.length">
       </el-pagination>
     </div>
 
@@ -124,7 +135,32 @@
                 formLabelWidth: '120px',
                 pagesize:5,  //分页数量
                 currentPage:1 ,//初始页
+
+                totalItems:0,
+                //最后在页面中显示的数据
+                tableDataEnd:[],
+                //搜索框内的数据
                 searchInput:'',
+                filterTableDataEnd:[],
+                flag:false,
+                selectTags:"",
+                //选择框的选项
+                options: [{
+                    value: 'gid',
+                    label: '商品编号'
+                }, {
+                    value: 'gname',
+                    label: '商品名称'
+                }, {
+                    value: 'rdate',
+                    label: '退货日期'
+
+                }, {
+                    value: 'rcount',
+                    label: '退货数量'
+                }
+                ],
+                value: '',
 
                 goodReturnRules:{
                     gid:[
@@ -146,9 +182,10 @@
         created() {
             this.$axios.get("/home/goodsReturn").then(res=>{
                 if(res.data){
-                    console.log(res);
                     this.tableData = res.data;
                     this.itemCount = res.data.length;
+                    this.tableDataEnd=[];
+                    this.tableDataEnd = this.tableData;
                     console.log(this.itemCount);
                 }
             }).catch(failResponse=>{
@@ -206,6 +243,55 @@
             openAddPage() {
                 this.dialogFormVisible = true;
 
+            },
+            doFilter(){
+                var selectTag = this.selectTags;
+                if(this.searchInput === ""){
+                    this.$message.warning("查询信息不能为空！！！");
+                    return;
+                }
+                if(selectTag === ""){
+                    this.$message.warning("查询条件不能为空！！！");
+                    return;
+                }
+                this.tableDataEnd=[];
+                this.filterTableDataEnd=[];
+                this.tableData.forEach((value,index)=>{
+                    if(selectTag=="gid"){
+                        if(value.gid){
+                            if(value.gid.search(this.searchInput)!==-1){
+                                this.filterTableDataEnd.push(value)
+                            }
+                        }
+                    }
+                    if(selectTag=="gname"){
+                        if(value.gname){
+                            if(value.gname.search(this.searchInput)!==-1){
+                                this.filterTableDataEnd.push(value)
+                            }
+                        }
+                    }
+                    if(selectTag=="rreason"){
+                        if(value.rreason){
+                            if(value.rreason.search(this.searchInput)!==-1){
+                                this.filterTableDataEnd.push(value)
+                            }
+                        }
+                    }
+                    if(selectTag=="rdate"){
+                        if(value.rdate){
+                            if(value.rdate.search(this.searchInput)!==-1){
+                                this.filterTableDataEnd.push(value)
+                            }
+                        }
+                    }
+                });
+                this.tableDataEnd=this.filterTableDataEnd;
+                this.filterTableDataEnd=[];
+            },
+            doReset(){
+                this.searchInput="";
+                this.tableDataEnd = this.tableData;
             },
             addGoodsReturn() {
                 this.$refs.dataInfo.validate()
