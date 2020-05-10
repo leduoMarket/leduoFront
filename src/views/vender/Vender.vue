@@ -63,7 +63,7 @@
       <el-table
         :data="tableDataEnd.slice((currentPage-1)*pagesize,currentPage*pagesize)"
         border
-        style="width: 100%"  ref="filterTable" size="mini" fit="true" stripe >
+        style="width: 100%"  ref="filterTable" size="medium"  stripe >
         <el-table-column
           prop="vid"
           label="供应商代码"
