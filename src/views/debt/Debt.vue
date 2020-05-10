@@ -28,7 +28,7 @@
         </div>
       </el-dialog>
     </div>
-    <div class="text item">
+    <!--<div class="text item">
       <div class="text item">
         <el-input style="width: 300px"
                   placeholder="请输入欠款单号"
@@ -37,8 +37,20 @@
         </el-input>
         <el-button round @click="beginSearch">查询</el-button>
       </div>
-    </div>
+    </div>-->
     <div class="form">
+      <el-select v-model="selectTags" clearable size="medium"  placeholder="请选择" value="" >
+        <el-option
+          v-for="item in options"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value">
+        </el-option>
+      </el-select>
+      <el-input v-model="searchInput" placeholder="请输入信息"  size="medium" style="width:240px; margin-right:23% ;margin-bottom: 1.5%"></el-input>
+
+      <el-button type="primary" icon="el-icon-search" @click="doFilter"  size="medium" round  plain>搜索</el-button>
+      <el-button type="primary" icon="el-icon-refresh" @click="doReset" size="medium"  round  plain >重置</el-button>
       <el-table
         :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)"
         border
@@ -130,6 +142,18 @@
                 pagesize:5,  //分页数量
                 currentPage:1 ,//初始页
                 searchInput:'',
+
+                //初始数据的长度
+                totalItems:0,
+                //最后在页面中显示的数据
+                tableDataEnd:[],
+                //搜索框内的数据
+                searchInput:"",
+                filterTableDataEnd:[],
+                flag:false,
+                selectTags:"",
+
+
                 debtRules:{
                     dnumber:[
                         {required:true ,validator: reg_dnumber,  trigger: 'blur'}
@@ -148,11 +172,31 @@
                     ],
 
                 },
+                //选择框的选项
+                options: [{
+                    value: 'dnumber',
+                    label: '欠款单号'
+                }, {
+                    value: 'gid',
+                    label: '商品编号'
+                }, {
+                    value: 'vname',
+                    label: '供应商名称'
+                }, {
+                    value: 'ddate',
+                    label: '日期'
+                }, {
+                    value: 'ddebt',
+                    label: '欠款金额'
+                }
+                ],
+                value: ''
             }
         },
         // 创建的时候发送请求获取显示数据库所有员工的列表数据
         created() {
-            console.log("vue被创建");
+            this.totalItems = this.tableData.length;
+            this.tableDataEnd = this.tableData;
             this.$axios.get("/home/debt").then(res => {
                 if (res.data) {
                     console.log(res)
@@ -163,6 +207,58 @@
             })
         },
         methods: {
+            doFilter(){
+                var selectTag = this.selectTags;
+                if(this.searchInput == ""){
+                    this.$message.warning("查询信息不能为空！！！");
+                    return;
+                }
+                this.tableDataEnd=[];
+                this.filterTableDataEnd=[];
+                this.tableData.forEach((value,index)=>{
+                    if(selectTag=="dnumber"){
+                        if(value.dnumber){
+                            if(value.dnumber.search(this.searchInput)!==-1){
+                                this.filterTableDataEnd.push(value)
+                            }
+                        }
+                    }
+                    if(selectTag=="gid"){
+                        if(value.gid){
+                            if(value.gid.search(this.searchInput)!==-1){
+                                this.filterTableDataEnd.push(value)
+                            }
+                        }
+                    }
+                    if(selectTag=="vname"){
+                        if(value.vname){
+                            if(value.vname.search(this.searchInput)!==-1){
+                                this.filterTableDataEnd.push(value)
+                            }
+                        }
+                    }
+                    if(selectTag=="ddebt"){
+                        if(value.ddebt){
+                            if(value.ddebt.search(this.searchInput)!==-1){
+                                this.filterTableDataEnd.push(value)
+                            }
+                        }
+                    }if(selectTag=="ddate"){
+                        if(value.ddate){
+                            if(value.ddate.search(this.searchInput)!==-1){
+                                this.filterTableDataEnd.push(value)
+                            }
+                        }
+                    }
+                    console.log(index);
+                });
+                this.tableDataEnd=this.filterTableDataEnd;
+                this.filterTableDataEnd=[];
+            },
+            doReset(){
+                this.searchInput="";
+                this.tableDataEnd = this.tableData;
+            },
             //日期格式化显示
             dateFormat:function(row,column){
 

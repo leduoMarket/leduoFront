@@ -46,7 +46,6 @@
 <!--      <el-button round>查询</el-button>-->
 <!--    </div>-->
 
-
     <div class="form">
       <el-select v-model="selectTags" clearable size="medium"  placeholder="请选择" value="" >
         <el-option
@@ -74,7 +73,7 @@
         <el-table-column
           prop="vname"
           label="供应商名称"
-          width="100"
+          width="180"
         >
         </el-table-column>
         <el-table-column
@@ -87,7 +86,8 @@
         </el-table-column>
         <el-table-column
           prop="vemail"
-          label="E-mail">
+          label="E-mail"
+          width="150">
         </el-table-column>
         <el-table-column
           prop="vfax"

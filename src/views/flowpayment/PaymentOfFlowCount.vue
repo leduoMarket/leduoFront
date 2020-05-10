@@ -32,7 +32,7 @@
         </div>
       </el-dialog>
     </div>
-    <div class="text item">
+<!--    <div class="text item">
       <div class="text item">
         <el-input style="width: 300px"
                   placeholder="请输入交易单号"
@@ -41,8 +41,20 @@
         </el-input>
         <el-button round @click="beginSearch">查询</el-button>
       </div>
-    </div>
+    </div>-->
     <div class="form">
+      <el-select v-model="selectTags" clearable size="medium"  placeholder="请选择" value="" >
+        <el-option
+          v-for="item in options"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value">
+        </el-option>
+      </el-select>
+      <el-input v-model="searchInput" placeholder="请输入信息"  size="medium" style="width:240px; margin-right:23% ;margin-bottom: 1.5%"></el-input>
+
+      <el-button type="primary" icon="el-icon-search" @click="doFilter"  size="medium" round  plain>搜索</el-button>
+      <el-button type="primary" icon="el-icon-refresh" @click="doReset" size="medium"  round  plain >重置</el-button>
       <el-table
         :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)"
         border
@@ -58,11 +70,10 @@
           :formatter="dateFormat"
           prop="pdate"
           label="交易时间"
-          sortable
-          width="180"
-          column-key="date"
+          width="180">
+          <!--column-key="date"
           :filters="[{text: '今年', value: '2020-'}, {text: '去年', value: '2019-'}, {text: '本月', value: '2020-05'}, {text: '上月', value: '2020-04'}]"
-          :filter-method="filterHandler">
+          :filter-method="filterHandler"-->
         </el-table-column>
         <el-table-column
           prop="pcategory"
@@ -131,6 +142,18 @@
                 formLabelWidth: '120px',
                 pagesize:5,  //分页数量
                 currentPage:1, //初始页
+
+                //初始数据的长度
+                totalItems:0,
+                //最后在页面中显示的数据
+                tableDataEnd:[],
+                //搜索框内的数据
+                searchInput:"",
+                filterTableDataEnd:[],
+                flag:false,
+                selectTags:"",
+
+
                 searchInput:'',
                 //提交按钮是否可用
                 submitBtn:false,
@@ -153,15 +176,35 @@
                     premainning_amount: [
                         {required:true ,validator: reg_money,  trigger: 'blur'}
                     ]
+                },
+                //选择框的选项
+                options: [{
+                    value: 'punumber',
+                    label: '交易号'
+                }, {
+                    value: 'pdate',
+                    label: '交易时间'
+                }, {
+                    value: 'pcategory',
+                    label: '交易类别'
+                }, {
+                    value: 'psource_shop',
+                    label: '来源店铺'
                 }
+                ],
+                value: ''
             }
         },
       created(){
-        console.log("vue被创建");
-        this.$axios.get("/home/payments").then(res =>{
+          this.totalItems = this.tableData.length;
+          this.tableDataEnd = this.tableData;
+          this.$axios.get("/home/payments").then(res =>{
             if(res.data){
                 console.log(res);
                 this.tableData=res.data;
+                this.totalItems = this.tableData.length;
+                this.tableDataEnd = this.tableData;
+                console.log(this.tableData.length);
             }
         }).catch(failReasponse =>{
 
@@ -169,6 +212,52 @@
 
       },
         methods: {
+            doFilter(){
+                var selectTag = this.selectTags;
+                if(this.searchInput == ""){
+                    this.$message.warning("查询信息不能为空！！！");
+                    return;
+                }
+                this.tableDataEnd=[];
+                this.filterTableDataEnd=[];
+                this.tableData.forEach((value,index)=>{
+                    if(selectTag=="pnumber"){
+                        if(value.pnumber){
+                            if(value.pnumber.search(this.searchInput)!==-1){
+                                this.filterTableDataEnd.push(value)
+                            }
+                        }
+                    }
+                    if(selectTag=="pdate"){
+                        if(value.pdate){
+                            if(value.pdate.search(this.searchInput)!==-1){
+                                this.filterTableDataEnd.push(value)
+                            }
+                        }
+                    }
+                    if(selectTag=="pcategory"){
+                        if(value.pcategory){
+                            if(value.pcategory.search(this.searchInput)!==-1){
+                                this.filterTableDataEnd.push(value)
+                            }
+                        }
+                    }
+                    if(selectTag=="psource_shop"){
+                        if(value.psource_shop){
+                            if(value.psource_shop.search(this.searchInput)!==-1){
+                                this.filterTableDataEnd.push(value)
+                            }
+                        }
+                    }
+                    console.log(index);
+                });
+                this.tableDataEnd=this.filterTableDataEnd;
+                this.filterTableDataEnd=[];
+            },
+            doReset(){
+                this.searchInput="";
+                this.tableDataEnd = this.tableData;
+            },
             // 初始页currentPage、初始每页数据数pagesize和数据data
             handleSizeChange: function (size) {
                 this.pagesize = size;
@@ -234,7 +323,8 @@
                                     type: 'success',
                                 });
                                 //将信息刷新到表格中
-                                this.tableData.push(this.form);
+                                this.tableData.push(this.addform);
+                                this.tableDataEnd.push(this.addform);
                                 //清空填写单的信息放到请求体中，避免请求延迟已经被清空才刷新在信息到表格中
                                 this.form={
                                     pnumber: '',
@@ -283,6 +373,7 @@
                     }).then(successResponse =>{
                         //数据库删除成功在table表里进行删除,
                         this.tableData.splice(index, 1);
+                        this.tableDataEnd.slice(index,1);
                         this.$message({
                             type: 'success',
                             message: '删除成功!'
