@@ -64,7 +64,7 @@
         :data="tableDataEnd.slice((currentPage-1)*pagesize,currentPage*pagesize)"
         @sort-change="sortChange"
         border
-        style="width: 100%"  ref="filterTable" size="mini" fit="true" stripe >
+        style="width: 100%"  ref="filterTable"  fit="true" stripe >
         <el-table-column
           prop="vid"
           label="供应商代码"
@@ -75,7 +75,7 @@
         <el-table-column
           prop="vname"
           label="供应商名称"
-          width="100"
+          width="180"
         >
         </el-table-column>
         <el-table-column
@@ -88,7 +88,8 @@
         </el-table-column>
         <el-table-column
           prop="vemail"
-          label="E-mail">
+          label="E-mail"
+          width="150">
         </el-table-column>
         <el-table-column
           prop="vfax"
