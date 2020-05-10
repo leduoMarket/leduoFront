@@ -61,6 +61,7 @@
       <el-button type="primary" icon="el-icon-refresh" @click="doReset" round  plain>重置</el-button>
       <el-table
         :data="tableDataEnd.slice((currentPage-1)*pagesize,currentPage*pagesize)"
+        @sort-change="sortChange"
         border
         style="width: 100%"  ref="filterTable">
         <el-table-column
@@ -294,6 +295,7 @@
           })
       },
         methods: {
+
             doFilter(){
                 var selectTag = this.selectTags;
                 if(this.searchInput == ""){

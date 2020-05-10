@@ -65,7 +65,7 @@
                 if (value === '') {
                     callback(new Error('请输入验证码'))
                 } else if (value !== this.identifyCode) {
-                    console.log('verifycode:', value);
+                    console.log('validateVerifycode:', value);
                     callback(new Error('验证码不正确'))
                 } else {
                     callback()
@@ -93,7 +93,10 @@
                             validator: reg_password,
                             trigger: 'blur'
                         }
-                    ]
+                    ],
+                    /*verifycode: [
+                        { required: true, trigger: 'blur', validator: validateVerifycode },
+                    ]*/
                 }
             }
         },
