@@ -1,6 +1,6 @@
 <template>
   <div class="vender">
-  <el-card class="box-card">
+  <el-card class="box-card"  >
     <div slot="header" class="clearfix">
       <span>供应商表</span>
       <el-button style="float: right; padding: 3px 0" type="text" @click="dialogFormVisible = true">新建</el-button>
@@ -48,7 +48,7 @@
 
 
     <div class="form">
-      <el-select v-model="selectTags" clearable placeholder="请选择" value=""  >
+      <el-select v-model="selectTags" clearable size="medium"  placeholder="请选择" value="" >
         <el-option
           v-for="item in options"
           :key="item.value"
@@ -56,13 +56,14 @@
           :value="item.value">
         </el-option>
       </el-select>
-      <el-input v-model="searchInput" placeholder="请输入信息" style="width:240px; margin-right:20% ;margin-bottom: 2%"></el-input>
-      <el-button type="primary" icon="el-icon-search" @click="doFilter" round  plain>搜索</el-button>
-      <el-button type="primary" icon="el-icon-refresh" @click="doReset" round  plain>重置</el-button>
+      <el-input v-model="searchInput" placeholder="请输入信息"  size="medium" style="width:240px; margin-right:23% ;margin-bottom: 1.5%"></el-input>
+
+      <el-button type="primary" icon="el-icon-search" @click="doFilter"  size="medium" round  plain>搜索</el-button>
+      <el-button type="primary" icon="el-icon-refresh" @click="doReset" size="medium"  round  plain >重置</el-button>
       <el-table
         :data="tableDataEnd.slice((currentPage-1)*pagesize,currentPage*pagesize)"
         border
-        style="width: 100%"  ref="filterTable">
+        style="width: 100%"  ref="filterTable" size="mini" fit="true" stripe >
         <el-table-column
           prop="vid"
           label="供应商代码"
@@ -74,7 +75,6 @@
           prop="vname"
           label="供应商名称"
           width="100"
-
         >
         </el-table-column>
         <el-table-column
@@ -102,6 +102,7 @@
           label="贷款结算">
         </el-table-column>
         <el-table-column
+          fixed="right"
           prop="esalary"
           label="操作">
 
@@ -297,10 +298,11 @@
             doFilter(){
                 var selectTag = this.selectTags;
                 if(this.searchInput == ""){
-                    this.$message.warning("查询条件不能为空！！！");
+                    this.$message.warning("查询信息不能为空！！！");
                     return;
                 }
                 this.tableDataEnd=[];
+                this.filterTableDataEnd=[];
                 this.tableData.forEach((value,index)=>{
                     if(selectTag=="vid"){
                         if(value.vid){
