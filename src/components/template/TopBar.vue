@@ -6,7 +6,9 @@
         <a href="http://localhost:8080/home/help">
           <el-button style="float: right; padding: 3px 8px" type="text" >帮助</el-button>
         </a>
-        <el-button style="float: right; padding: 3px 8px" type="text">消息</el-button>
+        <a href="http://localhost:8080/home/marketmsg">
+          <el-button style="float: right; padding: 3px 8px" type="text" >超市</el-button>
+        </a>
       </div>
     </el-col>
   </el-container>

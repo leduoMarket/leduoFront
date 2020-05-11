@@ -3,6 +3,7 @@
   <el-card class="box-card">
     <div slot="header" class="clearfix">
       <span>我家超市</span>
+      <el-button style="float: right; padding: 3px 0" type="text" @click="goBack">返回</el-button>
     </div>
     <div  class="text item">
       <p>超市名称：乐多超市</p>
@@ -22,7 +23,11 @@
 
     export default {
         name: "MarketMsg",
-
+        methods:{
+            goBack() {
+                this.$router.go(-1)
+            },
+        }
     }
 </script>
 
