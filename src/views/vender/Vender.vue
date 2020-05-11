@@ -1,6 +1,6 @@
 <template>
   <div class="vender">
-  <el-card class="box-card">
+  <el-card class="box-card"  >
     <div slot="header" class="clearfix">
       <span>供应商表</span>
       <el-button style="float: right; padding: 3px 0" type="text" @click="dialogFormVisible = true">新建</el-button>
@@ -45,11 +45,24 @@
 <!--      </el-input>-->
 <!--      <el-button round>查询</el-button>-->
 <!--    </div>-->
+
     <div class="form">
+      <el-select v-model="selectTags" clearable size="medium"  placeholder="请选择" value="" >
+        <el-option
+          v-for="item in options"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value">
+        </el-option>
+      </el-select>
+      <el-input v-model="searchInput" placeholder="请输入信息"  size="medium" style="width:240px; margin-right:23% ;margin-bottom: 1.5%"></el-input>
+
+      <el-button type="primary" icon="el-icon-search" @click="doFilter"  size="medium" round  plain>搜索</el-button>
+      <el-button type="primary" icon="el-icon-refresh" @click="doReset" size="medium"  round  plain >重置</el-button>
       <el-table
-        :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)"
+        :data="tableDataEnd.slice((currentPage-1)*pagesize,currentPage*pagesize)"
         border
-        style="width: 100%"  ref="filterTable">
+        style="width: 100%"  ref="filterTable" size="medium"  stripe >
         <el-table-column
           prop="vid"
           label="供应商代码"
@@ -60,8 +73,7 @@
         <el-table-column
           prop="vname"
           label="供应商名称"
-          width="100"
-
+          width="180"
         >
         </el-table-column>
         <el-table-column
@@ -74,7 +86,8 @@
         </el-table-column>
         <el-table-column
           prop="vemail"
-          label="E-mail">
+          label="E-mail"
+          width="150">
         </el-table-column>
         <el-table-column
           prop="vfax"
@@ -89,6 +102,7 @@
           label="贷款结算">
         </el-table-column>
         <el-table-column
+          fixed="right"
           prop="esalary"
           label="操作">
 
@@ -104,7 +118,7 @@
         :page-sizes="[3,5, 10, 20]"
         :page-size="pagesize"
         layout="total, sizes, prev, pager, next, jumper"
-        :total="tableData.length">
+        :total="tableDataEnd.length">
       </el-pagination>
     </div>
   </el-card>
@@ -128,8 +142,46 @@
             return {
                 //添加表单成功吗
                 addSuccessful:false,
-                // 在基础表格中展示的数据
-                tableData: [],
+                // 从后台传来的初始数据
+                tableData: [
+                    {
+                        vid: '20200401',
+                        vname: '王二虎',
+                        vaddress: '北极西南',
+                        vphone: '13677273048',
+                        vemail:'2409981311@qq.com',
+                        vfax: '123',
+                        vcredit: '1',
+                        vsettle_account: '10000'
+                    },{
+                        vid: '20200402',
+                        vname: '王小虎',
+                        vaddress: '成都双流',
+                        vphone: '17289891212',
+                        vemail:'230339223@qq.com',
+                        vfax: '3333',
+                        vcredit: '2',
+                        vsettle_account: '40.0'
+                    },{
+                        vid: '20180901',
+                        vname: '李承',
+                        vaddress: '甘肃金山',
+                        vphone: '18922002121',
+                        vemail:'12902229@qq.com',
+                        vfax: '2ss',
+                        vcredit: '3',
+                        vsettle_account: '5222'
+                    },{
+                        vid: '20180203',
+                        vname: '宋丽',
+                        vaddress: '甘肃成安',
+                        vphone: '13711293939',
+                        vemail:'676710@qq.com',
+                        vfax: 'wewee',
+                        vcredit: '2',
+                        vsettle_account: '10000'
+                    }
+                ],
                 //删除的元素是谁
                 delItem: [
                 ],
@@ -151,6 +203,19 @@
                 pagesize:5,
                 currentPage:1, //初始页
 
+                //搜索功能的数据
+
+                //初始数据的长度
+                totalItems:0,
+                //最后在页面中显示的数据
+                tableDataEnd:[],
+                //搜索框内的数据
+                searchInput:"",
+                filterTableDataEnd:[],
+                flag:false,
+                selectTags:"",
+
+                //正则规则加载
                 venderRules:{
                     vid:[
                         { required:true ,validator: reg_vid,  trigger: 'blur'}
@@ -176,7 +241,35 @@
                     vsettle_account:[
                         {required:true ,validator: reg_count, trigger:'blur'}
                     ]
+                },
+                //选择框的选项
+                options: [{
+                    value: 'vid',
+                    label: '供应商代码'
+                }, {
+                    value: 'vname',
+                    label: '供应商名称'
+                }, {
+                    value: 'vaddress',
+                    label: '供应商地址'
+                }, {
+                    value: 'vphone',
+                    label: '供应商电话'
+                }, {
+                    value: 'vemail',
+                    label: '供应商E-mail'
+                },{
+                    value: 'vfax',
+                    label: '供应商传真'
+                },{
+                    value: 'vcredit',
+                    label: '供应商信誉'
+                },{
+                    value: 'vsettle_account',
+                    label: '供应商贷款'
                 }
+                ],
+                value: ''
             }
         },
       created() {
@@ -184,13 +277,91 @@
               if(res.data){
                   console.log(res);
                   this.tableData = res.data;
+                  this.totalItems = this.tableData.length;
+                  this.tableDataEnd = this.tableData;
                   console.log(this.tableData.length);
               }
           }).catch(failResponse=>{
+              this.$message.error('不能加载该页面');
 
           })
       },
         methods: {
+            doFilter(){
+                var selectTag = this.selectTags;
+                if(this.searchInput == ""){
+                    this.$message.warning("查询信息不能为空！！！");
+                    return;
+                }
+                if(selectTag === ""){
+                    this.$message.warning("查询条件不能为空！！！");
+                    return;
+                }
+                this.tableDataEnd=[];
+                this.filterTableDataEnd=[];
+                this.tableData.forEach((value,index)=>{
+                    if(selectTag=="vid"){
+                        if(value.vid){
+                            if(value.vid.search(this.searchInput)!==-1){
+                                this.filterTableDataEnd.push(value)
+                            }
+                        }
+                    }
+                    if(selectTag=="vname"){
+                        if(value.vname){
+                            if(value.vname.search(this.searchInput)!==-1){
+                                this.filterTableDataEnd.push(value)
+                            }
+                        }
+                    }
+                    if(selectTag=="vaddress"){
+                        if(value.vaddress){
+                            if(value.vaddress.search(this.searchInput)!==-1){
+                                this.filterTableDataEnd.push(value)
+                            }
+                        }
+                    }
+                    if(selectTag=="vphone"){
+                        if(value.vphone){
+                            if(value.vphone.search(this.searchInput)!==-1){
+                                this.filterTableDataEnd.push(value)
+                            }
+                        }
+                    }if(selectTag=="vemail"){
+                        if(value.vemail){
+                            if(value.vemail.search(this.searchInput)!==-1){
+                                this.filterTableDataEnd.push(value)
+                            }
+                        }
+                    }if(selectTag=="vfax"){
+                        if(value.vfax){
+                            if(value.vfax.search(this.searchInput)!==-1){
+                                this.filterTableDataEnd.push(value)
+                            }
+                        }
+                    }if(selectTag=="vcredit"){
+                        if(value.vcredit){
+                            if(value.vcredit.search(this.searchInput)!==-1){
+                                this.filterTableDataEnd.push(value)
+                            }
+                        }
+                    }if(selectTag=="vsettle_account"){
+                        if(value.vsettle_account){
+                            if(value.vsettle_account.search(this.searchInput)!==-1){
+                                this.filterTableDataEnd.push(value)
+                            }
+                        }
+                    }
+                    console.log(index);
+                });
+                this.tableDataEnd=this.filterTableDataEnd;
+                this.filterTableDataEnd=[];
+            },
+            doReset(){
+                this.searchInput="";
+                this.tableDataEnd = this.tableData;
+            },
+
             // 初始页currentPage、初始每页数据数pagesize和数据data
             handleSizeChange: function (size) {
                 this.pagesize = size;
@@ -222,6 +393,7 @@
                                 });
                                 //将信息刷新到表格中
                                 this.tableData.push(this.addform);
+                                this.tableDataEnd.push(this.addform);
                                 //清空填写单的信息放到请求体中，避免请求延迟已经被清空才刷新在信息到表格中
                                 this.addform = {
                                     vid: '',
@@ -275,6 +447,7 @@
                     }).then(successResponse =>{
                         //数据库删除成功在table表里进行删除,
                         this.tableData.splice(index, 1);
+                        this.tableDataEnd.slice(index,1);
                         this.$message({
                             type: 'success',
                             message: '删除成功!'

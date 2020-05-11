@@ -3,7 +3,7 @@
   <el-card class="box-card">
     <div slot="header" class="clearfix">
       <span>欠款单</span>
-      <el-button style="float: right; padding: 3px 0" type="text" @click="dialogFormVisible = true">新建</el-button>
+      <!--<el-button style="float: right; padding: 3px 0" type="text" @click="dialogFormVisible = true">新建</el-button>-->
       <el-dialog title="欠款单" :visible.sync="dialogFormVisible">
         <el-form :model="dataInfo" :rules="debtRules" ref="dataInfo">
           <el-form-item label="欠款单号" :label-width="formLabelWidth" prop="dnumber">
@@ -28,7 +28,7 @@
         </div>
       </el-dialog>
     </div>
-    <div class="text item">
+    <!--<div class="text item">
       <div class="text item">
         <el-input style="width: 300px"
                   placeholder="请输入欠款单号"
@@ -37,8 +37,20 @@
         </el-input>
         <el-button round @click="beginSearch">查询</el-button>
       </div>
-    </div>
+    </div>-->
     <div class="form">
+      <el-select v-model="selectTags" clearable size="medium"  placeholder="请选择" value="" >
+        <el-option
+          v-for="item in options"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value">
+        </el-option>
+      </el-select>
+      <el-input v-model="searchInput" placeholder="请输入信息"  size="medium" style="width:240px; margin-right:23% ;margin-bottom: 1.5%"></el-input>
+
+      <el-button type="primary" icon="el-icon-search" @click="doFilter"  size="medium" round  plain>搜索</el-button>
+      <el-button type="primary" icon="el-icon-refresh" @click="doReset" size="medium"  round  plain >重置</el-button>
       <el-table
         :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)"
         border
@@ -46,7 +58,9 @@
         <el-table-column
           prop="dnumber"
           label="欠款单号"
-          width="180">
+          width="180"
+          sortable
+        >
         </el-table-column>
         <el-table-column
           prop="gid"
@@ -62,15 +76,22 @@
           label="欠款金额">
         </el-table-column>
         <el-table-column
+          :formatter="dateFormat"
           prop="ddate"
-          label="日期">
+          label="日期"
+          sortable
+          width="180"
+          column-key="date"
+          :filters="[{text: '今年', value: '2020-'}, {text: '去年', value: '2019-'}, {text: '本月', value: '2020-05'}, {text: '上月', value: '2020-04'}]"
+          :filter-method="filterHandler"
+        >
         </el-table-column>
         <el-table-column
           prop="esalary"
           label="操作">
 
           <template slot-scope="scope">
-            <el-button style="float: left; padding-right: 3px;" type="text"><span style="color: red" @click="del">删除</span></el-button>
+            <el-button style="float: left; padding-right: 3px;" type="text"><span style="color: red" @click="del(scope.row,scope.$index)">删除</span></el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -121,6 +142,18 @@
                 pagesize:5,  //分页数量
                 currentPage:1 ,//初始页
                 searchInput:'',
+
+                //初始数据的长度
+                totalItems:0,
+                //最后在页面中显示的数据
+                tableDataEnd:[],
+                //搜索框内的数据
+                searchInput:"",
+                filterTableDataEnd:[],
+                flag:false,
+                selectTags:"",
+
+
                 debtRules:{
                     dnumber:[
                         {required:true ,validator: reg_dnumber,  trigger: 'blur'}
@@ -139,11 +172,31 @@
                     ],
 
                 },
+                //选择框的选项
+                options: [{
+                    value: 'dnumber',
+                    label: '欠款单号'
+                }, {
+                    value: 'gid',
+                    label: '商品编号'
+                }, {
+                    value: 'vname',
+                    label: '供应商名称'
+                }, {
+                    value: 'ddate',
+                    label: '日期'
+                }, {
+                    value: 'ddebt',
+                    label: '欠款金额'
+                }
+                ],
+                value: ''
             }
         },
         // 创建的时候发送请求获取显示数据库所有员工的列表数据
         created() {
-            console.log("vue被创建");
+            this.totalItems = this.tableData.length;
+            this.tableDataEnd = this.tableData;
             this.$axios.get("/home/debt").then(res => {
                 if (res.data) {
                     console.log(res)
@@ -154,6 +207,77 @@
             })
         },
         methods: {
+            doFilter(){
+                var selectTag = this.selectTags;
+                if(this.searchInput == ""){
+                    this.$message.warning("查询信息不能为空！！！");
+                    return;
+                }
+                this.tableDataEnd=[];
+                this.filterTableDataEnd=[];
+                this.tableData.forEach((value,index)=>{
+                    if(selectTag=="dnumber"){
+                        if(value.dnumber){
+                            if(value.dnumber.search(this.searchInput)!==-1){
+                                this.filterTableDataEnd.push(value)
+                            }
+                        }
+                    }
+                    if(selectTag=="gid"){
+                        if(value.gid){
+                            if(value.gid.search(this.searchInput)!==-1){
+                                this.filterTableDataEnd.push(value)
+                            }
+                        }
+                    }
+                    if(selectTag=="vname"){
+                        if(value.vname){
+                            if(value.vname.search(this.searchInput)!==-1){
+                                this.filterTableDataEnd.push(value)
+                            }
+                        }
+                    }
+                    if(selectTag=="ddebt"){
+                        if(value.ddebt){
+                            if(value.ddebt.search(this.searchInput)!==-1){
+                                this.filterTableDataEnd.push(value)
+                            }
+                        }
+                    }if(selectTag=="ddate"){
+                        if(value.ddate){
+                            if(value.ddate.search(this.searchInput)!==-1){
+                                this.filterTableDataEnd.push(value)
+                            }
+                        }
+                    }
+                    console.log(index);
+                });
+                this.tableDataEnd=this.filterTableDataEnd;
+                this.filterTableDataEnd=[];
+            },
+            doReset(){
+                this.searchInput="";
+                this.tableDataEnd = this.tableData;
+            },
+            //日期格式化显示
+            dateFormat:function(row,column){
+
+                var date = row[column.property];
+
+                if(date == undefined){return ''};
+
+                return moment(date).format("YYYY-MM-DD")
+
+            },
+            //日期筛选器
+            filterHandler(value, row, column) {
+                const property = column['property'];
+
+                return row[property].search(value) !== -1;
+
+
+                // return row[property] == value;
+            },
             // 初始页currentPage、初始每页数据数pagesize和数据data
             handleSizeChange: function (size) {
                 this.pagesize = size;
@@ -185,7 +309,7 @@
                 this.dialogFormVisible = true;
 
             },
-            addDebt() {
+            /*addDebt() {
                 this.$refs.dataInfo.validate()
                     .then(res =>{
                         this.$axios.post('/home/addDebt', {
@@ -228,7 +352,7 @@
                     });
                 });
 
-            },
+            },*/
 
             // 删除选中下标的一行数据，index由click处的scope.$index传过来的下标，delItem由scope.$row传过来的元素
             del(delItem, index) {

@@ -4,7 +4,7 @@
     <div slot="header" class="clearfix">
       <span>库存账</span>
     </div>
-    <div class="text item">
+    <!--<div class="text item">
       <div class="text item">
         <el-input style="width: 300px"
                   placeholder="请输入商品编号"
@@ -13,8 +13,20 @@
         </el-input>
         <el-button round @click="beginSearch">查询</el-button>
       </div>
-    </div>
+    </div>-->
     <div class="form">
+      <el-select v-model="selectTags" clearable size="medium"  placeholder="请选择" value="" >
+        <el-option
+          v-for="item in options"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value">
+        </el-option>
+      </el-select>
+      <el-input v-model="searchInput" placeholder="请输入信息"  size="medium" style="width:240px; margin-right:23% ;margin-bottom: 1.5%"></el-input>
+
+      <el-button type="primary" icon="el-icon-search" @click="doFilter"  size="medium" round  plain>搜索</el-button>
+      <el-button type="primary" icon="el-icon-refresh" @click="doReset" size="medium"  round  plain >重置</el-button>
       <el-table
         :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)"
         border
@@ -22,7 +34,9 @@
         <el-table-column
           prop="gid"
           label="商品代码"
-          width="180">
+          width="180"
+          sortable
+        >
         </el-table-column>
         <el-table-column
           prop="gname"
@@ -61,22 +75,97 @@
                 tableData: [],
                 pagesize:5,  //分页数量
                 currentPage:1, //初始页
-                searchInput:''
+                searchInput:'',
+
+                // 控制员工新增页面的form表单可见性
+                dialogTableVisible: false,
+                dialogFormVisible: false,
+
+
+                //初始数据的长度
+                totalItems:0,
+                //最后在页面中显示的数据
+                tableDataEnd:[],
+                //搜索框内的数据
+                searchInput:"",
+                filterTableDataEnd:[],
+                flag:false,
+                selectTags:"",
+
+                //选择框的选项
+                options: [{
+                    value: 'gid',
+                    label: '商品代码'
+                }, {
+                    value: 'gname',
+                    label: '商品名称'
+                }, {
+                    value: 'counts',
+                    label: '库存量'
+                }
+                ],
+                value: ''
+
             }
         },
         // 创建的时候发送请求获取显示数据库列表数据
         created() {
-            console.log("vue被创建");
+            this.totalItems = this.tableData.length;
+            this.tableDataEnd = this.tableData;
             this.$axios.get("/home/inventory").then(res => {
                 if (res.data) {
                     console.log(res);
                     this.tableData = res.data;
+                    this.totalItems = this.tableData.length;
+                    this.tableDataEnd = this.tableData;
+                    console.log(this.tableData.length);
                 }
             }).catch(failResponse => {
 
             })
         },
         methods: {
+            doFilter(){
+                var selectTag = this.selectTags;
+                if(this.searchInput == ""){
+                    this.$message.warning("查询信息不能为空！！！");
+                    return;
+                }
+                this.tableDataEnd=[];
+                this.filterTableDataEnd=[];
+                this.tableData.forEach((value,index)=>{
+                    if(selectTag=="gid"){
+                        if(value.gid){
+                            if(value.gid.search(this.searchInput)!==-1){
+                                this.filterTableDataEnd.push(value)
+                            }
+                        }
+                    }
+                    if(selectTag=="gname"){
+                        if(value.gname){
+                            if(value.gname.search(this.searchInput)!==-1){
+                                this.filterTableDataEnd.push(value)
+                            }
+                        }
+                    }
+                    if(selectTag=="counts"){
+                        if(value.counts){
+                            if(value.counts.search(this.searchInput)!==-1){
+                                this.filterTableDataEnd.push(value)
+                            }
+                        }
+                    }
+
+                    console.log(index);
+                });
+                this.tableDataEnd=this.filterTableDataEnd;
+                this.filterTableDataEnd=[];
+            },
+            doReset(){
+                this.searchInput="";
+                this.tableDataEnd = this.tableData;
+            },
+
             // 初始页currentPage、初始每页数据数pagesize和数据data
             handleSizeChange: function (size) {
                 this.pagesize = size;

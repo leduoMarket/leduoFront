@@ -92,13 +92,13 @@ export var reg_gchange_unit = (rule, value, callback) => {
 }
 //入库单号
 export var reg_inumber = (rule, value, callback) => {
-  const reg = /^I\d{8}$/;
+  const reg = /^I\d{10}$/;
   if(!value){
     callback(new Error('入库单单号为空'));
   }else{
     let check = reg.test(value);
     if (!check) {
-      callback(new Error('入库单单号格式错误 (例：I20200401)'))
+      callback(new Error('入库单单号格式错误 (例：I2020040101)'))
     }else{
       callback()
     }
@@ -107,13 +107,13 @@ export var reg_inumber = (rule, value, callback) => {
 
 //出库单号
 export var reg_onumber = (rule, value, callback) => {
-  const reg = /^O\d{8}$/;
+  const reg = /^O\d{10}$/;
   if(!value){
     callback(new Error('出库单单号为空'));
   }else{
     let check = reg.test(value);
     if (!check) {
-      callback(new Error('出库单单号格式错误 (例：O20200401)'))
+      callback(new Error('出库单单号格式错误 (例：O2020040101)'))
     }else{
       callback()
     }
@@ -180,13 +180,13 @@ export var reg_money = (rule, value, callback) => {
 
 //某种数量
 export var reg_count = (rule, value, callback) => {
-  const reg = /^\d{1,4}$|^10000$/;
+  const reg = /^\d{1,5}$|^100000$/;
   if(!value){
     callback(new Error('数量为空'));
   }else{
     let check = reg.test(value);
     if (!check) {
-      callback(new Error('数量为整数且小于10000'))
+      callback(new Error('数量为整数且小于100000'))
     }else{
       callback()
     }
@@ -261,7 +261,7 @@ export var reg_fax = (rule, value, callback) => {
   }else{
     let check = reg.test(value);
     if (!check) {
-      callback(new Error('传真名字过长(>50个字符)'))
+      callback(new Error('传真名字过长(<50个字符)'))
     }else{
       callback()
     }

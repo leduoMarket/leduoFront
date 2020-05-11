@@ -31,6 +31,18 @@
         </el-dialog>
       </div>
       <div class="form">
+        <el-select v-model="selectTags" clearable size="medium"  placeholder="请选择" value="" >
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+        <el-input v-model="searchInput" placeholder="请输入信息"  size="medium" style="width:240px; margin-right:23% ;margin-bottom: 1.5%"></el-input>
+
+        <el-button type="primary" icon="el-icon-search" @click="doFilter"  size="medium" round  plain>搜索</el-button>
+        <el-button type="primary" icon="el-icon-refresh" @click="doReset" size="medium"  round  plain >重置</el-button>
         <el-table
           :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)"
           border
@@ -38,7 +50,9 @@
           <el-table-column
             prop="eid"
             label="员工编号"
-            width="180">
+            width="180"
+            sortable
+          >
           </el-table-column>
           <el-table-column
             prop="ename"
@@ -113,6 +127,17 @@
                 formLabelWidth: '120px',
                 pagesize:5,
                 currentPage:1, //初始页
+
+                //初始数据的长度
+                totalItems:0,
+                //最后在页面中显示的数据
+                tableDataEnd:[],
+                //搜索框内的数据
+                searchInput:"",
+                filterTableDataEnd:[],
+                flag:false,
+                selectTags:"",
+
                 employeesRules:{
                     eid:[
                         {required:true ,validator: reg_eid,  trigger: 'blur'}
@@ -129,22 +154,78 @@
                     esalary:[
                         {required:true ,validator: reg_money,  trigger: 'blur'}
                     ]
+                },
+                //选择框的选项
+                options: [{
+                    value: 'eid',
+                    label: '员工编号'
+                }, {
+                    value: 'ename',
+                    label: '员工姓名'
+                },{
+                    value: 'erole',
+                    label: '角色'
                 }
+                ],
+                value: ''
                 }
         },
         // 创建的时候发送请求获取显示数据库所有员工的列表数据
         created() {
-            console.log("vue被创建");
+            this.totalItems = this.tableData.length;
+            this.tableDataEnd = this.tableData;
             this.$axios.get("/home/emps").then(res => {
                 if (res.data) {
                     console.log(res);
                     this.tableData = res.data;
+                    this.totalItems = this.tableData.length;
+                    this.tableDataEnd = this.tableData;
+                    console.log(this.tableData.length);
                 }
             }).catch(failResponse => {
 
             })
         },
         methods: {
+            doFilter(){
+                var selectTag = this.selectTags;
+                if(this.searchInput == ""){
+                    this.$message.warning("查询信息不能为空！！！");
+                    return;
+                }
+                this.tableDataEnd=[];
+                this.filterTableDataEnd=[];
+                this.tableData.forEach((value,index)=>{
+                    if(selectTag=="eid"){
+                        if(value.eid){
+                            if(value.eid.search(this.searchInput)!==-1){
+                                this.filterTableDataEnd.push(value)
+                            }
+                        }
+                    }
+                    if(selectTag=="ename"){
+                        if(value.ename){
+                            if(value.ename.search(this.searchInput)!==-1){
+                                this.filterTableDataEnd.push(value)
+                            }
+                        }
+                    }
+                    if(selectTag=="erole"){
+                        if(value.erole){
+                            if(value.erole.search(this.searchInput)!==-1){
+                                this.filterTableDataEnd.push(value)
+                            }
+                        }
+                    }
+                    console.log(index);
+                });
+                this.tableDataEnd=this.filterTableDataEnd;
+                this.filterTableDataEnd=[];
+            },
+            doReset(){
+                this.searchInput="";
+                this.tableDataEnd = this.tableData;
+            },
             // 初始页currentPage、初始每页数据数pagesize和数据data
             handleSizeChange: function (size) {
                 this.pagesize = size;
@@ -172,7 +253,8 @@
                                     type: 'success',
                                 });
                                 //将信息刷新到表格中
-                                this.tableData.push(this.userInfo);
+                                this.tableData.push(this.addform);
+                                this.tableDataEnd.push(this.addform);
                                 //清空填写单的信息放到请求体中，避免请求延迟已经被清空才刷新在信息到表格中
                                 this.userInfo = {
                                     eid: '',
@@ -225,6 +307,7 @@
                     }).then(successResponse => {
                         //数据库删除成功在table表里进行删除,
                         this.tableData.splice(index, 1);
+                        this.tableDataEnd.slice(index,1);
                             this.$message({
                                 type: 'success',
                                 message: '删除成功!'

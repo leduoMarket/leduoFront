@@ -1,12 +1,12 @@
 <template>
   <div class="help">
   <el-card class="box-card">
-    <div slot="header" class="clearfix">
+    <div slot="header" class="text">
       <span>帮助文档</span>
-     <!-- <a href="http://localhost:8080/home">-->
         <el-button style="float: right; padding: 3px 0" type="text" @click="goBack">返回</el-button>
-      <!--</a>-->
-    <el-collapse v-model="activeNames" @change="handleChange">
+
+    <el-collapse v-model="activeNames" @change="handleChange" class="total">
+      <!--<div class="text">-->
       <el-collapse-item title="为什么部分页面无法访问？" name="1">
         <div>关于部分页面无法访问问题：由于该超市系统设置了员工级别权限，按照员工级别授权部分页面访问权限。</div>
         <div>员工只可访问所属部门权限的页面。如有其他权限请求，请上报经理。</div>
@@ -22,6 +22,7 @@
         <div>如若对该系统有什么意见或建议，烦请联系我们，我们将尽快解决。</div>
         <div>联系邮箱：2516035648@qq.com</div>
       </el-collapse-item>
+    <!--</div>-->
     </el-collapse>
     </div>
   </el-card>
@@ -33,7 +34,7 @@
         name: "Help",
         data() {
             return {
-                activeNames: ['1']
+                activeNames: []
             };
         },
         methods: {
@@ -51,5 +52,9 @@
   .box-card{
     width: 75%;
     height: 500px;
+  }
+  .text{
+    font-size: large;
+    height: 80%;
   }
 </style>
