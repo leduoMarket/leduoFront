@@ -43,7 +43,7 @@
         </el-col>
       </el-form-item>
       <el-form-item style="width: 100%">
-        <el-button type="primary" style="width: 100%;background: #000066;border: none" v-on:click="login" :loading="loadingBtn">登录</el-button>
+        <el-button type="primary" style="width: 100%;background: #000066;border: none" v-on:click="login" >登录</el-button>
       </el-form-item>
     </el-form>
     </body>
@@ -125,10 +125,10 @@
             },
             accessDenied(){
                 this.$axios.get("/identifyFailed").then(successulResponse=>{
-                    console.log(successulResponse.data.code)
-                    console.log(successulResponse.data.msg)
-                    this.$router.replace({path:"/"})
-                    console.log("重定向发生！")
+                    console.log(successulResponse.data.code);
+                    console.log(successulResponse.data.msg);
+                    this.$router.replace({path:"/"});
+                    console.log("重定向发生！");
                 }).catch(failedResponse=>{
                     this.$notify({
                         title: '对不起',
@@ -138,31 +138,33 @@
                 })
             },
             login () {
-                this.loadingBtn = true;
-                // this.$router.replace({path: '/home/firstPage'});
 
-                this.$refs.loginForm.validate()
-                    .then(res => {
-                        this.loadingBtn = false;
-                        this.$axios
-                            .post('/login', {
-                                userName: this.loginForm.userName,
-                                password: this.loginForm.password
-                            })
-                            .then(successResponse => {
-                                if (successResponse.data.code === 200) {
-                                    this.$router.replace({path: '/home/firstPage'})
-                                }
-                            })
-                            .catch(failResponse => {
-                            })
+                sessionStorage.setItem('user',JSON.stringify(this.loginForm.userName));
 
-                    }).catch(error =>{
-                    this.$message({
-                        message: '无法提交，用户名或者密码格式错误',
-                        type: 'error'
-                    });
-                });
+                this.$router.replace({path: '/home/firstPage'});
+
+                // this.$refs.loginForm.validate()
+                //     .then(res => {
+                //         this.loadingBtn = false;
+                //         this.$axios
+                //             .post('/login', {
+                //                 userName: this.loginForm.userName,
+                //                 password: this.loginForm.password
+                //             })
+                //             .then(successResponse => {
+                //                 if (successResponse.data.code === 200) {
+                //                     this.$router.replace({path: '/home/firstPage'})
+                //                 }
+                //             })
+                //             .catch(failResponse => {
+                //             })
+                //
+                //     }).catch(error =>{
+                //     this.$message({
+                //         message: '无法提交，用户名或者密码格式错误',
+                //         type: 'error'
+                //     });
+                // });
             }
         }
     }

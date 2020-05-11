@@ -2,11 +2,11 @@
 export var reg_userName = (rule, value, callback) => {
   const reg = /^\d{7}$/;
   if (!value) {
-    callback(new Error('    用户名为空'));
+    callback(new Error(' 用户名为空'));
   } else {
     let check = reg.test(value);
     if (!check) {
-      callback(new Error('    用户名错误 (为7位纯数字)'))
+      callback(new Error(' 用户名错误 (为7位纯数字)'))
     }else{
       return true,
         callback()
@@ -17,7 +17,7 @@ export var reg_userName = (rule, value, callback) => {
 export var reg_password = (rule, value, callback) => {
   const reg = /^(?![a-zA-Z]+$)(?![0-9]+$)[A-Za-z0-9]{8,18}$/;
   if(!value){
-    callback(new Error('    密码为空'));
+    callback(new Error('密码为空'));
   }else{
     let check = reg.test(value);
     if (!check) {

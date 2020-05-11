@@ -1,5 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+
+
 const StockIn = ()=>import("../views/stockin/StockIn")
 const StockOut = ()=>import("../views/stockout/StockOut")
 const Vender = ()=>import("../views/vender/Vender")
@@ -18,24 +20,35 @@ const Debt = ()=>import("../views/debt/Debt")
 const Employees = ()=>import("../views/employees/Employees")
 const ProfitAnalysis=()=>import("../views/analysis/ProfitAnalysis")
 const Goods=()=>import("../views/goods/Goods")
+const NotFound = ()=>import("../views/failvue/404")
 
 
 Vue.use(Router)
-
-export default new Router({
+const router = new Router({
   mode:'history',
   routes: [
     {
       path: '/',
       name: 'Login',
       component: Login,
+      meta: {
+        requireAuth: false
+      },
     },{
       path: '/404',
-      component: resolve => require(['../views/failvue/404'], resolve)
+      name:'404',
+      component: NotFound,
+      meta:{
+        requireAuth:true
+      }
     }, {
       path: '/home',
       name: 'Home',
       component: Home,
+      //添加该字段，表示进入这个路由需要登录
+      meta: {
+        requireAuth: true
+      },
       children:[
         /*{
           path:'welcome',
@@ -43,13 +56,13 @@ export default new Router({
           component:Welcome
         },*/
         {
-        path: 'stockOut',
-        name: 'StockOut',
-        component: StockOut
+          path: 'stockOut',
+          name: 'StockOut',
+          component: StockOut
         },{
-        path: 'profitAnalysis',
-        name: 'profit',
-        component: ProfitAnalysis
+          path: 'profitAnalysis',
+          name: 'profit',
+          component: ProfitAnalysis
         },{
           path: 'log',
           name: 'log',
@@ -129,4 +142,28 @@ export default new Router({
       ]
     }
   ]
-})
+});
+router.beforeEach((to, from, next) => {
+  console.log(to);
+  console.log(from);
+  //允许自动登录的页面
+  if (to.matched.some(record => record.meta.requireAuth)) {
+    console.log("true");
+    if(to.path == '/'){
+      sessionStorage.removeItem("user");
+    }
+    let user = JSON.parse(sessionStorage.getItem("user"));
+    console.log(user);
+    if(!user&&to.path!='/'){
+
+      next({path:'/'});
+
+    }
+  }//不允许自动登录的页面
+  else {
+    next() // 确保一定要调用 next()
+  }
+});
+export default router
+
+
