@@ -48,19 +48,18 @@
       <el-table
         :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)"
         border
-        style="width: 100%"  ref="filterTable"
+        style="width: 100%"  ref="filterTable" @sort-change="changeTableSort"
       >
         <el-table-column
           prop="inumber"
           label="入库单号"
-          sortable
         >
         </el-table-column>
         <el-table-column
           prop="gid"
           label="商品代码"
           width="180"
-          sortable
+          sortable="custom"
         >
         </el-table-column>
         <el-table-column
@@ -72,7 +71,6 @@
           :formatter="dateFormat"
           prop="idate"
           label="入库日期"
-          sortable
           width="180"
           column-key="date"
           :filters="[{text: '今年', value: '2020-'}, {text: '去年', value: '2019-'}, {text: '本月', value: '2020-05'}, {text: '上月', value: '2020-04'}]"
@@ -88,13 +86,13 @@
         <el-table-column
           prop="ipayment"
           label="已付款项"
-          sortable
+          sortable="custom"
         >
         </el-table-column>
         <el-table-column
           prop="icount"
           label="数量"
-          sortable
+          sortable="custom"
         >
         </el-table-column>
         <el-table-column
@@ -169,7 +167,7 @@
                         inumber:'I2020040201',
                         gid:'1234567890123',
                         vname:'可乐',
-                        idate:'2020-04-02T00:00:00.0000000',
+                        idate:'2019-04-02T00:00:00.0000000',
                         iprice:'12.22',
                         ipayment:'9090',
                         icount:'10'
@@ -249,7 +247,47 @@
 
             })
         },
+
         methods: {
+            /*//初始化加载列表
+            getDeviceTypes() {
+                this.loading = true;         //将“创建时间”转换为所需的时间格式
+                 this.tableData.map(item => {
+                     item.createTime = this.$moment(item.createTime).format("YYYY-MM-DD HH:mm:ss");
+                 });
+                 this.loading = false;
+                 },*/
+
+            //分页排序整体表格数据
+            changeTableSort(column){
+                console.log(column);
+                //获取字段名称和排序类型
+                var fieldName = column.prop;
+                var sortingType = column.order;
+                //如果字段名称为“创建时间”，将“创建时间”转换为时间戳，才能进行大小比较
+                if(fieldName=="idate"){
+                 this.tableData.map(item => {
+                     item.idate = this.$moment(item.idate).valueOf();
+                 });
+                }
+                //按照降序排序
+                if(sortingType == "descending"){
+                    this.tableData = this.tableData.sort((a, b) => b[fieldName] - a[fieldName]);
+                }
+                //按照升序排序
+                else{
+                    this.tableData = this.tableData.sort((a, b) => a[fieldName] - b[fieldName]);
+                    console.log(this.tableData)
+                }
+                if(fieldName=="idate"){
+                    this.tableData.map(item => {
+                        item.idate = this.$moment(item.idate).format(
+                            "YYYY-MM-DD HH:mm:ss"
+                        );
+                    });
+                }
+
+            },
 
             //日期格式化显示
             dateFormat:function(row,column){

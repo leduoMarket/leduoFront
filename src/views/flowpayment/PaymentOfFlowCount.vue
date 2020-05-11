@@ -58,7 +58,7 @@
       <el-table
         :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)"
         border
-        style="width: 100%">
+        style="width: 100%"  @sort-change="changeTableSort">
         <el-table-column
           prop="pnumber"
           label="交易号"
@@ -85,11 +85,15 @@
         </el-table-column>
         <el-table-column
           prop="ptrading_amount"
-          label="交易金额">
+          label="交易金额"
+          sortable="custom"
+        >
         </el-table-column>
         <el-table-column
           prop="premainning_amount"
-          label="现余额">
+          label="现余额"
+          sortable="custom"
+        >
         </el-table-column>
 
         <el-table-column
@@ -212,6 +216,23 @@
 
       },
         methods: {
+            //分页排序整体表格数据
+            changeTableSort(column){
+                console.log(column);
+                //获取字段名称和排序类型
+                var fieldName = column.prop;
+                var sortingType = column.order;
+                //按照降序排序
+                if(sortingType == "descending"){
+                    this.tableData = this.tableData.sort((a, b) => b[fieldName] - a[fieldName]);
+                }
+                //按照升序排序
+                else{
+                    this.tableData = this.tableData.sort((a, b) => a[fieldName] - b[fieldName]);
+                    console.log(this.tableData)
+                }
+            },
+
             doFilter(){
                 var selectTag = this.selectTags;
                 if(this.searchInput == ""){

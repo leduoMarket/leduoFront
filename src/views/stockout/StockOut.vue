@@ -48,7 +48,7 @@
       <el-table
         :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)"
         border
-        style="width: 100%" ref="filterTable" >
+        style="width: 100%" ref="filterTable"  @sort-change="changeTableSort">
         <el-table-column
           prop="onumber"
           label="出库单号"
@@ -59,7 +59,7 @@
           prop="gid"
           label="商品代码"
           width="180"
-          sortable
+          sortable="custom"
         >
         </el-table-column>
         <el-table-column
@@ -85,11 +85,15 @@
         </el-table-column>
         <el-table-column
           prop="opayment"
-          label="已付款项">
+          label="已付款项"
+          sortable="custom"
+        >
         </el-table-column>
         <el-table-column
           prop="ocount"
-          label="数量">
+          label="数量"
+          sortable="custom"
+        >
         </el-table-column>
         <el-table-column
           prop="esalary"
@@ -193,6 +197,23 @@
             })
         },
         methods: {
+            //分页排序整体表格数据
+            changeTableSort(column){
+                console.log(column);
+                //获取字段名称和排序类型
+                var fieldName = column.prop;
+                var sortingType = column.order;
+                //按照降序排序
+                if(sortingType == "descending"){
+                    this.tableData = this.tableData.sort((a, b) => b[fieldName] - a[fieldName]);
+                }
+                //按照升序排序
+                else{
+                    this.tableData = this.tableData.sort((a, b) => a[fieldName] - b[fieldName]);
+                    console.log(this.tableData)
+                }
+            },
+
             // 初始页currentPage、初始每页数据数pagesize和数据data
             handleSizeChange: function (size) {
                 this.pagesize = size;

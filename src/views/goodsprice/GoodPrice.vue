@@ -46,12 +46,12 @@
       <el-table
         :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)"
         border
-        style="width: 100%"   ref="filterTable">
+        style="width: 100%"   ref="filterTable" @sort-change="changeTableSort">
         <el-table-column
           prop="gid"
           label="商品编号"
           width="120"
-          sortable
+          sortable="custom"
         >
         </el-table-column>
         <el-table-column
@@ -77,7 +77,7 @@
           prop="pdate"
           label="日期"
           :formatter="dateFormat"
-          sortable
+
           column-key="date"
           :filters="[{text: '今年', value: '2020-'}, {text: '去年', value: '2019-'}, {text: '本月', value: '2020-05'}, {text: '上月', value: '2020-04'}]"
           :filter-method="filterHandler"
@@ -192,6 +192,23 @@
             })
         },
         methods: {
+            //分页排序整体表格数据
+            changeTableSort(column){
+                console.log(column);
+                //获取字段名称和排序类型
+                var fieldName = column.prop;
+                var sortingType = column.order;
+                //按照降序排序
+                if(sortingType == "descending"){
+                    this.tableData = this.tableData.sort((a, b) => b[fieldName] - a[fieldName]);
+                }
+                //按照升序排序
+                else{
+                    this.tableData = this.tableData.sort((a, b) => a[fieldName] - b[fieldName]);
+                    console.log(this.tableData)
+                }
+            },
+
             // 初始页currentPage、初始每页数据数pagesize和数据data
             handleSizeChange: function (size) {
                 this.pagesize = size;

@@ -54,18 +54,20 @@
       <el-table
         :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)"
         border
-        style="width: 100%">
+        style="width: 100%"  @sort-change="changeTableSort">
         <el-table-column
           prop="dnumber"
           label="欠款单号"
           width="180"
-          sortable
+
         >
         </el-table-column>
         <el-table-column
           prop="gid"
           label="商品代码"
-          width="180">
+          width="180"
+          sortable="custom"
+        >
         </el-table-column>
         <el-table-column
           prop="vname"
@@ -73,13 +75,14 @@
         </el-table-column>
         <el-table-column
           prop="ddebt"
-          label="欠款金额">
+          label="欠款金额"
+          sortable="custom"
+        >
         </el-table-column>
         <el-table-column
           :formatter="dateFormat"
           prop="ddate"
           label="日期"
-          sortable
           width="180"
           column-key="date"
           :filters="[{text: '今年', value: '2020-'}, {text: '去年', value: '2019-'}, {text: '本月', value: '2020-05'}, {text: '上月', value: '2020-04'}]"
@@ -207,6 +210,23 @@
             })
         },
         methods: {
+            //分页排序整体表格数据
+            changeTableSort(column){
+                console.log(column);
+                //获取字段名称和排序类型
+                var fieldName = column.prop;
+                var sortingType = column.order;
+                //按照降序排序
+                if(sortingType == "descending"){
+                    this.tableData = this.tableData.sort((a, b) => b[fieldName] - a[fieldName]);
+                }
+                //按照升序排序
+                else{
+                    this.tableData = this.tableData.sort((a, b) => a[fieldName] - b[fieldName]);
+                    console.log(this.tableData)
+                }
+            },
+
             doFilter(){
                 var selectTag = this.selectTags;
                 if(this.searchInput == ""){
