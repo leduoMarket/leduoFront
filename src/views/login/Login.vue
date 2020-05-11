@@ -1,14 +1,14 @@
 <template >
   <body id="poster">
   <div id="logo">
-<!--    <img src="../../assets/pic/logo.png" style="width: 100px; height: 100px" alt=""/>-->
+    <img src="../../assets/pic/logo.png" style="width: 100px; height: 100px" alt=""/>
   </div>
   <el-form class="login-container" label-position="left"
            label-width="0px"   :rules="rules" ref="loginForm" :model="loginForm">
     <h3 class="login_title">系统登录</h3>
     <el-form-item prop="userName">
       <el-col :span="2"><i class="el-icon-s-custom"></i></el-col>
-      <el-col :span="22"><el-input type="text" v-model="loginForm.userName"
+      <el-col :span="22"><el-input type="text" v-model="loginForm.uid"
                                    auto-complete="off" placeholder="账号"></el-input></el-col>
     </el-form-item>
     <el-form-item prop="password">
@@ -17,7 +17,8 @@
                                    auto-complete="off" placeholder="密码"></el-input></el-col>
     </el-form-item>
     <el-form-item style="width: 100%">
-      <el-button type="primary" style="width: 100%;background: #000066;border: none" v-on:click="login" :loading="loadingBtn">登录</el-button>
+<!--      :loading="loadingBtn"-->
+      <el-button type="primary" style="width: 100%;background: #000066;border: none" v-on:click="login">登录</el-button>
     </el-form-item>
   </el-form>
   </body>
@@ -28,58 +29,45 @@
         reg_userName,
         reg_password,
     } from "./validator";
-
+    import md5 from 'js-md5';
     export default {
         name: 'Login',
         data () {
             return {
-                loadingBtn: false,
+                // loadingBtn: false,
                 loginForm: {
-                    userName: '',
+                    uid: '',
                     password: ''
                 },
                 responseResult: [],
                 //表单验证规则的设置
-                rules:{
-                    userName:[{
-                        required:true,
-                        validator:reg_userName,
-                        trigger:'blur',
-                    }],
-                    password:[
-                        {
-                            required:true,
-                            validator: reg_password,
-                            trigger: 'blur'
-                        }
-                    ]
-                }
+                // rules:{
+                //     userName:[{
+                //         required:true,
+                //         validator:reg_userName,
+                //         trigger:'blur',
+                //     }],
+                //     password:[
+                //         {
+                //             required:true,
+                //             validator: reg_password,
+                //             trigger: 'blur'
+                //         }
+                //     ]
+                // }
             }
         },
         methods: {
-            accessDenied(){
-                this.$axios.get("/identifyFailed").then(successulResponse=>{
-                    console.log(successulResponse.data.code)
-                    console.log(successulResponse.data.msg)
-                        this.$router.replace({path:"/"})
-                    console.log("重定向发生！")
-                }).catch(failedResponse=>{
-                    this.$notify({
-                        title: '对不起',
-                        message: '权限控制失败',
-                        offset: 100
-                    });
-                })
-            },
             login () {
-                this.loadingBtn = true;
-                this.$refs.loginForm.validate()
-                    .then(res => {
-                        this.loadingBtn = false;
+                // console.log("password:"+userpassword);
+                // this.loadingBtn = true;
+                // this.$refs.loginForm.validate()
+                //     .then(res => {
+                //         this.loadingBtn = false;
                         this.$axios
                             .post('/login', {
-                                userName: this.loginForm.userName,
-                                password: this.loginForm.password
+                                uid:this.uid,
+                                password: this.password
                             })
                             .then(successResponse => {
                                 if (successResponse.data.code === 200) {
@@ -88,16 +76,16 @@
                             })
                             .catch(failResponse => {
                             })
-
-                    }).catch(error =>{
-                    this.$message({
-                        message: '无法提交，用户名或者密码格式错误',
-                        type: 'error'
-                    });
-                });
+                    // }).catch(error =>{
+                    // this.$message({
+                    //     message: '无法提交，用户名或者密码格式错误',
+                    //     type: 'error'
+                    // });
+                // });
             }
         }
     }
+
 </script>
 <style>
   .login-container {
