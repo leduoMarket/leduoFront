@@ -36,15 +36,26 @@
         </div>
       </el-dialog>
     </div>
-    <div class="text item">
-      <el-input style="width: 300px"
-                placeholder="请输入出库单单号"
-                v-model="searchInput"
-                clearable>
-      </el-input>
-      <el-button round @click="beginSearch">查询</el-button>
-    </div>
+<!--    <div class="text item">-->
+<!--      <el-input style="width: 300px"-->
+<!--                placeholder="请输入出库单单号"-->
+<!--                v-model="searchInput"-->
+<!--                clearable>-->
+<!--      </el-input>-->
+<!--      <el-button round @click="beginSearch">查询</el-button>-->
+<!--    </div>-->
     <div class="form">
+      <el-select v-model="selectTags" clearable size="medium"  placeholder="请选择" value="" >
+        <el-option
+          v-for="item in options"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value">
+        </el-option>
+      </el-select>
+      <el-input v-model="searchInput" placeholder="请输入信息"  size="medium" style="width:240px; margin-right:23% ;margin-bottom: 1.5%"></el-input>
+      <el-button type="primary" icon="el-icon-search" @click="doFilter"  size="medium" round  plain>搜索</el-button>
+      <el-button type="primary" icon="el-icon-refresh" @click="doReset" size="medium"  round  plain >重置</el-button>
       <el-table
         :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)"
         border
@@ -155,9 +166,47 @@
                 formLabelWidth: '120px',
                 pagesize:5,
                 currentPage:1, //初始页
-                searchInput:'',
+
+                //初始数据的长度
+                totalItems:0,
+                //最后在页面中显示的数据
+                tableDataEnd:[],
                 //提交按钮的加载情况
                 // submitBtn:false,
+                //搜索框内的数据
+                searchInput:'',
+                filterTableDataEnd:[],
+                flag:false,
+                selectTags:"",
+                //选择框的选项
+                options: [{
+                    value: 'onumber',
+                    label: '出库单代码'
+                }, {
+                    value: 'gid',
+                    label: '商品代码'
+                }, {
+                    value: 'vname',
+                    label: '供应商名称'
+
+                }, {
+                    value: 'odate',
+                    label: '出库日期'
+                }, {
+                    value: 'oprice',
+                    label: '价格'
+                },{
+                    value: 'opayment',
+                    label: '已付款项'
+                },{
+                    value: 'ocount',
+                    label: '数量'
+                }
+                ],
+                value: '',
+
+
+
                 //表单验证规则
                 stockOutRules:{
                     gid:[
@@ -191,6 +240,8 @@
                 if(res.data){
                     console.log(res);
                     this.tableData = res.data;
+                    this.tableDataEnd=[];
+                    this.tableDataEnd = this.tableData;
                 }
             }).catch(failResponse=>{
 
@@ -263,6 +314,78 @@
                 return row[property].search(value) !== -1;
                 // return row[property] == value;
             },
+            doFilter(){
+                var selectTag = this.selectTags;
+                if(this.searchInput === ""){
+                    this.$message.warning("查询信息不能为空！！！");
+                    return;
+                }
+                if(selectTag === ""){
+                    this.$message.warning("查询条件不能为空！！！");
+                    return;
+                }
+                this.tableDataEnd=[];
+                this.filterTableDataEnd=[];
+                this.tableData.forEach((value,index)=>{
+                    if(selectTag=="onumber"){
+                        if(value.onumber){
+                            if(value.onumber.search(this.searchInput)!==-1){
+                                this.filterTableDataEnd.push(value)
+                            }
+                        }
+                    }
+                    if(selectTag=="vname"){
+                        if(value.vname){
+                            if(value.vname.search(this.searchInput)!==-1){
+                                this.filterTableDataEnd.push(value)
+                            }
+                        }
+                    }
+                    if(selectTag=="gid"){
+                        if(value.gid){
+                            if(value.gid.search(this.searchInput)!==-1){
+                                this.filterTableDataEnd.push(value)
+                            }
+                        }
+                    }
+                    if(selectTag=="odate"){
+                        if(value.odate){
+                            if(value.odate.search(this.searchInput)!==-1){
+                                this.filterTableDataEnd.push(value)
+                            }
+                        }
+                    }
+                    if(selectTag=="oprice"){
+                        if(value.oprice){
+                            if(value.oprice.search(this.searchInput)!==-1){
+                                this.filterTableDataEnd.push(value)
+                            }
+                        }
+                    }
+                    if(selectTag=="opayment"){
+                        if(value.opayment){
+                            if(value.opayment.search(this.searchInput)!==-1){
+                                this.filterTableDataEnd.push(value)
+                            }
+                        }
+                    }
+                    if(selectTag=="ocount"){
+                        if(value.ocount){
+                            if(value.ocount.search(this.searchInput)!==-1){
+                                this.filterTableDataEnd.push(value)
+                            }
+                        }
+                    }
+
+                    console.log(index);
+                });
+                this.tableDataEnd=this.filterTableDataEnd;
+                this.filterTableDataEnd=[];
+            },
+            doReset(){
+                this.searchInput="";
+                this.tableDataEnd = this.tableData;
+            },
             //新增出库单
             addStockOut() {
                 this.$refs.dataInfo.validate()
@@ -286,6 +409,7 @@
                             this.$message.error('插入数据失败');
                         } else {
                             this.tableData.push(this.dataInfo);
+                            this.tableDataEnd.push(this.dataInfo);
                             this.$message({
                                 message: '成功添加一条记录',
                                 type: 'success'
@@ -330,6 +454,7 @@
                     }).then(successResponse =>{
                         //数据库删除成功在table表里进行删除,
                         this.tableData.splice(index, 1);
+                        this.tableDataEnd.slice(index,1);
                         this.$message({
                             type: 'success',
                             message: '删除成功!'

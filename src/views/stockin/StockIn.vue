@@ -36,17 +36,30 @@
       </el-dialog>
     </div>
 <!--    查询模块-->
-    <div class="text item">
-      <el-input style="width: 300px"
-                placeholder="请输入入库单单号"
-                v-model="searchInput"
-                clearable>
-      </el-input>
-      <el-button round @click="beginSearch">查询</el-button>
-    </div>
+<!--    <div class="text item">-->
+<!--      <el-input style="width: 300px"-->
+<!--                placeholder="请输入入库单单号"-->
+<!--                v-model="searchInput"-->
+<!--                clearable>-->
+<!--      </el-input>-->
+<!--      <el-button round @click="beginSearch">查询</el-button>-->
+<!--    </div>-->
     <div class="form">
+      <el-select v-model="selectTags" clearable size="medium"  placeholder="请选择" value="" >
+        <el-option
+          v-for="item in options"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value">
+        </el-option>
+      </el-select>
+      <el-input v-model="searchInput" placeholder="请输入信息"  size="medium" style="width:240px; margin-right:23% ;margin-bottom: 1.5%"></el-input>
+
+      <el-button type="primary" icon="el-icon-search" @click="doFilter"  size="medium" round  plain>搜索</el-button>
+      <el-button type="primary" icon="el-icon-refresh" @click="doReset" size="medium"  round  plain >重置</el-button>
+
       <el-table
-        :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)"
+        :data="tableDataEnd.slice((currentPage-1)*pagesize,currentPage*pagesize)"
         border
         style="width: 100%"  ref="filterTable" @sort-change="changeTableSort"
       >
@@ -202,7 +215,44 @@
                 formLabelWidth: '120px',
                 pagesize:5,
                 currentPage:1, //初始页
+                //初始数据的长度
+                totalItems:0,
+                //最后在页面中显示的数据
+                tableDataEnd:[],
+                //搜索框内的数据
                 searchInput:'',
+                filterTableDataEnd:[],
+                flag:false,
+                selectTags:"",
+                //选择框的选项
+                options: [{
+                    value: 'inumber',
+                    label: '入库单代码'
+                }, {
+                    value: 'gid',
+                    label: '商品代码'
+                }, {
+                    value: 'vname',
+                    label: '供应商名称'
+
+                }, {
+                    value: 'idate',
+                    label: '入库日期'
+                }, {
+                    value: 'iprice',
+                    label: '价格'
+                },{
+                    value: 'ipayment',
+                    label: '已付款项'
+                },{
+                    value: 'icount',
+                    label: '数量'
+                }
+                ],
+                value: '',
+                addLastForm:'',
+
+
                 //提交按钮是否可用
                 submitBtn:false,
                 //表单验证规则
@@ -241,8 +291,13 @@
                 if (res.data) {
                     console.log(res);
                     this.tableData = res.data;
+                    this.tableDataEnd=[];
+                    this.tableData.forEach((value,index)=>{
+                        this.tableDataEnd.push(value);
+                    });
                 }
             }).catch(failResponse => {
+                this.$message.error('不能加载该页面');
 
 
             })
@@ -308,6 +363,81 @@
 
                 // return row[property] == value;
             },
+            doFilter(){
+                var selectTag = this.selectTags;
+                if(this.searchInput == ""){
+                    this.$message.warning("查询信息不能为空！！！");
+                    return;
+                }
+                if(selectTag === ""){
+                    this.$message.warning("查询条件不能为空！！！");
+                    return;
+                }
+                this.tableDataEnd=[];
+                this.filterTableDataEnd=[];
+                this.tableData.forEach((value,index)=>{
+                    if(selectTag=="inumber"){
+                        if(value.inumber){
+                            if(value.inumber.search(this.searchInput)!==-1){
+                                this.filterTableDataEnd.push(value)
+                            }
+                        }
+                    }
+                    if(selectTag=="vname"){
+                        if(value.vname){
+                            if(value.vname.search(this.searchInput)!==-1){
+                                this.filterTableDataEnd.push(value)
+                            }
+                        }
+                    }
+                    if(selectTag=="gid"){
+                        if(value.gid){
+                            if(value.gid.search(this.searchInput)!==-1){
+                                this.filterTableDataEnd.push(value)
+                            }
+                        }
+                    }
+                    if(selectTag=="idate"){
+                        if(value.idate){
+                            if(value.idate.search(this.searchInput)!==-1){
+                                this.filterTableDataEnd.push(value)
+                            }
+                        }
+                    }
+                    if(selectTag=="iprice"){
+                        if(value.iprice){
+                            if(value.iprice.search(this.searchInput)!==-1){
+                                this.filterTableDataEnd.push(value)
+                            }
+                        }
+                    }
+                    if(selectTag=="ipayment"){
+                        if(value.ipayment){
+                            if(value.ipayment.search(this.searchInput)!==-1){
+                                this.filterTableDataEnd.push(value)
+                            }
+                        }
+                    }
+                    if(selectTag=="icount"){
+                        if(value.icount){
+                            if(value.icount.search(this.searchInput)!==-1){
+                                this.filterTableDataEnd.push(value)
+                            }
+                        }
+                    }
+
+                    console.log(index);
+                });
+                this.tableDataEnd=this.filterTableDataEnd;
+                this.filterTableDataEnd=[];
+            },
+            doReset(){
+                this.searchInput="";
+                this.tableDataEnd=[];
+                this.tableData.forEach((value,index)=>{
+                    this.tableDataEnd.push(value);
+                });
+            },
             // 初始页currentPage、初始每页数据数pagesize和数据data
             handleSizeChange: function (size) {
                 this.pagesize = size;
@@ -358,7 +488,22 @@
                         }
                     }).then(successResponse =>{
                         //数据库删除成功在table表里进行删除,
-                        this.tableData.splice(index, 1);
+                        this.filterTableDataEnd=[];
+                        this.tableDataEnd.forEach((value,i)=>{
+                            if(i !==index){
+                                this.filterTableDataEnd.push(value);
+                            }
+                        });
+                        this.tableDataEnd=this.filterTableDataEnd;
+                        this.filterTableDataEnd=[];
+                        this.tableData.forEach((value,i)=>{
+                            //通过主码快速过滤
+                            if(value.inumber!=delItem.inumber){
+                                this.filterTableDataEnd.push(value);
+                            }
+                        });
+                        this.tableData = this.filterTableDataEnd;
+                        this.filterTableDataEnd=[];
                         this.$message({
                             type: 'success',
                             message: '删除成功!'
@@ -383,10 +528,12 @@
             addStockIn(){
                 //逻辑前端判断
                 this.submitBtn=true;
+
                 this.$refs.addform.validate()  //判断表单验证是否通过，验证通过执行.then()，否则执行.catch()
                     .then(res =>{
-                        this.submitBtn=false;
-                        console.log("提交成功");
+                        if(this.addLastForm===this.addform){
+                            this.$message.warning('您已经提交过，请勿重复提交');
+                        }
                         this.$axios.post('/home/addstockIn',{
                             inumber:this.addform.inumber,
                             gid:this.addform.gid,
@@ -397,13 +544,16 @@
                             icount:this.addform.icount,
                         }).then(successResponse =>{
                             if(successResponse.data.code == 200){
+                                this.submitBtn=false;
                                 this.addSuccessful = true;
                                 this.$message({
                                     message: '成功添加一条记录',
                                     type: 'success',
                                 });
-                                //将信息刷新到表格中
-                                this.tableData.push(this.addform);
+                                this.addLastForm=this.addform;
+                                //将信息刷新到表格中，指向同一个数据源所以只添加一次
+                                this.tableDataEnd.push(this.addform);
+                                this.tableDataEnd.push(this.addform);
                                 //清空填写单的信息放到请求体中，避免请求延迟已经被清空才刷新在信息到表格中
                                 this.addform = {
                                     inumber : '',
@@ -417,6 +567,7 @@
                             }
                         }).catch(failedResponse =>{
                             this.addSuccessful = false;
+                            this.submitBtn=false;
 
                         } );
                         // 让表格消失
@@ -432,6 +583,7 @@
                         this.dialogFormVisible = false;
                     }).catch(error =>{
                         console.log("提交失败");
+                        this.submitBtn=false;
                         this.$message({
                              message: '无法提交，表单中数据有错误',
                              type: 'error'

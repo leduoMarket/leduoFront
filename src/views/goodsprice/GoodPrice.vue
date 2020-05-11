@@ -34,17 +34,28 @@
         </div>
       </el-dialog>
     </div>
-    <div class="text item">
-      <el-input style="width: 300px"
-                placeholder="请输入商品编号"
-                v-model="searchInput"
-                clearable>
-      </el-input>
-      <el-button round @click="beginSearch">查询</el-button>
-    </div>
+<!--    <div class="text item">-->
+<!--      <el-input style="width: 300px"-->
+<!--                placeholder="请输入商品编号"-->
+<!--                v-model="searchInput"-->
+<!--                clearable>-->
+<!--      </el-input>-->
+<!--      <el-button round @click="beginSearch">查询</el-button>-->
+<!--    </div>-->
     <div class="form">
+      <el-select v-model="selectTags" clearable size="medium"  placeholder="请选择" value="" >
+        <el-option
+          v-for="item in options"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value">
+        </el-option>
+      </el-select>
+      <el-input v-model="searchInput" placeholder="请输入信息"  size="medium" style="width:240px; margin-right:23% ;margin-bottom: 1.5%"></el-input>
+      <el-button type="primary" icon="el-icon-search" @click="doFilter"  size="medium" round  plain>搜索</el-button>
+      <el-button type="primary" icon="el-icon-refresh" @click="doReset" size="medium"  round  plain >重置</el-button>
       <el-table
-        :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)"
+        :data="tableDataEnd.slice((currentPage-1)*pagesize,currentPage*pagesize)"
         border
         style="width: 100%"   ref="filterTable" @sort-change="changeTableSort">
         <el-table-column
@@ -105,7 +116,7 @@
         :page-sizes="[3,5, 10, 20]"
         :page-size="pagesize"
         layout="total, sizes, prev, pager, next, jumper"
-        :total="tableData.length">
+        :total="tableDataEnd.length">
       </el-pagination>
     </div>
   </el-card>
@@ -151,7 +162,41 @@
                 formLabelWidth: '120px',
                 pagesize:5,  //分页数量
                 currentPage:1 ,//初始页
+
+                totalItems:0,
+                //最后在页面中显示的数据
+                tableDataEnd:[],
+                //搜索框内的数据
                 searchInput:'',
+                filterTableDataEnd:[],
+                flag:false,
+                selectTags:"",
+                //选择框的选项
+                options: [{
+                    value: 'gid',
+                    label: '商品编号'
+                }, {
+                    value: 'gname',
+                    label: '商品名称'
+                }, {
+                    value: 'pold_price',
+                    label: '历史价格'
+
+                }, {
+                    value: 'pnew_price',
+                    label: '调整价格'
+                }, {
+                    value: 'preason',
+                    label: '调整原因'
+                },{
+                    value: 'pdate',
+                    label: '调整日期'
+                },{
+                    value: 'phandler',
+                    label: '操作人'
+                }
+                ],
+                value: '',
 
                 goodPriceRules:{
                     gid:[
@@ -182,9 +227,11 @@
         created() {
             this.$axios.get("/home/commodityPricing").then(res=>{
                 if(res.data){
-                    console.log(res)
+                    console.log(res);
                     this.tableData = res.data;
                     this.itemCount = res.data.length;
+                    this.tableDataEnd=[];
+                    this.tableDataEnd = this.tableData;
                     console.log(this.itemCount);
                 }
             }).catch(failResponse=>{
@@ -241,6 +288,77 @@
 
                 // return row[property] == value;
             },
+            doFilter(){
+                var selectTag = this.selectTags;
+                if(this.searchInput === ""){
+                    this.$message.warning("查询信息不能为空！！！");
+                    return;
+                }
+                if(selectTag === ""){
+                    this.$message.warning("查询条件不能为空！！！");
+                    return;
+                }
+                this.tableDataEnd=[];
+                this.filterTableDataEnd=[];
+                this.tableData.forEach((value,index)=>{
+                    if(selectTag=="gid"){
+                        if(value.gid){
+                            if(value.gid.search(this.searchInput)!==-1){
+                                this.filterTableDataEnd.push(value)
+                            }
+                        }
+                    }
+                    if(selectTag=="gname"){
+                        if(value.gname){
+                            if(value.gname.search(this.searchInput)!==-1){
+                                this.filterTableDataEnd.push(value)
+                            }
+                        }
+                    }
+                    if(selectTag=="pold_price"){
+                        if(value.pold_price){
+                            if(value.pold_price.search(this.searchInput)!==-1){
+                                this.filterTableDataEnd.push(value)
+                            }
+                        }
+                    }
+                    if(selectTag=="pnew_price"){
+                        if(value.pnew_price){
+                            if(value.pnew_price.search(this.searchInput)!==-1){
+                                this.filterTableDataEnd.push(value)
+                            }
+                        }
+                    }
+                    if(selectTag=="preason"){
+                        if(value.preason){
+                            if(value.preason.search(this.searchInput)!==-1){
+                                this.filterTableDataEnd.push(value)
+                            }
+                        }
+                    }
+                    if(selectTag=="pdate"){
+                        if(value.pdate){
+                            if(value.pdate.search(this.searchInput)!==-1){
+                                this.filterTableDataEnd.push(value)
+                            }
+                        }
+                    }
+                    if(selectTag=="phandler"){
+                        if(value.phandler){
+                            if(value.phandler.search(this.searchInput)!==-1){
+                                this.filterTableDataEnd.push(value)
+                            }
+                        }
+                    }
+
+                });
+                this.tableDataEnd=this.filterTableDataEnd;
+                this.filterTableDataEnd=[];
+            },
+            doReset(){
+                this.searchInput="";
+                this.tableDataEnd = this.tableData;
+            },
             //查询
             beginSearch(){
                 this.$axios.get('/home/querycommodityPricing',{
@@ -284,6 +402,7 @@
 
                         } else {
                             this.tableData.push(this.dataInfo);
+                            this.tableDataEnd.push(this.dataInfo);
                             this.$message({
                                 message: '成功添加一条记录',
                                 type: 'success'
@@ -328,6 +447,7 @@
                     }).then(successResponse => {
                         //数据库删除成功在table表里进行删除,
                         this.tableData.splice(index, 1);
+                        this.tableDataEnd.slice(index,1);
                         this.$message({
                             type: 'success',
                             message: '删除成功!'
