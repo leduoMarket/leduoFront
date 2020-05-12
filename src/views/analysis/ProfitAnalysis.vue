@@ -17,22 +17,28 @@
       </div>
       <div class="form">
         <el-table
-          :data="tableData"
+          :data="tableDataEnd"
           border
-          style="width: 100%">
+          style="width: 100%" @sort-change="changeTableSort">
           <el-table-column
             prop="sale"
             label="销售总额"
-            width="180">
+            width="180"
+            sortable="custom"
+          >
           </el-table-column>
           <el-table-column
             prop="principal"
             label="本金总额"
-            width="180">
+            width="180"
+            sortable="custom"
+          >
           </el-table-column>
           <el-table-column
             prop="profit"
-            label="利润总额">
+            label="利润总额"
+            sortable="custom"
+          >
           </el-table-column>
         </el-table>
       </div>
@@ -52,6 +58,24 @@
                 dialogFormVisible: false,
                 searchInput:''
             }
+        },
+        methods:{
+            //分页排序整体表格数据
+            changeTableSort(column){
+                console.log(column);
+                //获取字段名称和排序类型
+                var fieldName = column.prop;
+                var sortingType = column.order;
+                //按照降序排序
+                if(sortingType == "descending"){
+                    this.tableData = this.tableData.sort((a, b) => b[fieldName] - a[fieldName]);
+                }
+                //按照升序排序
+                else{
+                    this.tableData = this.tableData.sort((a, b) => a[fieldName] - b[fieldName]);
+                    console.log(this.tableData)
+                }
+            },
         }
     }
 </script>

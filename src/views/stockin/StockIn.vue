@@ -35,15 +35,6 @@
         </div>
       </el-dialog>
     </div>
-<!--    查询模块-->
-<!--    <div class="text item">-->
-<!--      <el-input style="width: 300px"-->
-<!--                placeholder="请输入入库单单号"-->
-<!--                v-model="searchInput"-->
-<!--                clearable>-->
-<!--      </el-input>-->
-<!--      <el-button round @click="beginSearch">查询</el-button>-->
-<!--    </div>-->
     <div class="form">
       <el-select v-model="selectTags" clearable size="medium"  placeholder="请选择" value="" >
         <el-option
@@ -61,19 +52,18 @@
       <el-table
         :data="tableDataEnd.slice((currentPage-1)*pagesize,currentPage*pagesize)"
         border
-        style="width: 100%"  ref="filterTable" size="medium"  stripe
+        style="width: 100%"  ref="filterTable" @sort-change="changeTableSort"
       >
         <el-table-column
           prop="inumber"
           label="入库单号"
-          sortable
         >
         </el-table-column>
         <el-table-column
           prop="gid"
           label="商品代码"
           width="180"
-          sortable
+          sortable="custom"
         >
         </el-table-column>
         <el-table-column
@@ -85,7 +75,6 @@
           :formatter="dateFormat"
           prop="idate"
           label="入库日期"
-          sortable
           width="180"
           column-key="date"
           :filters="[{text: '今年', value: '2020-'}, {text: '去年', value: '2019-'}, {text: '本月', value: '2020-05'}, {text: '上月', value: '2020-04'}]"
@@ -95,19 +84,19 @@
         <el-table-column
           prop="iprice"
           label="价格"
-          sortable
+          sortable="custom"
         >
         </el-table-column>
         <el-table-column
           prop="ipayment"
           label="已付款项"
-          sortable
+          sortable="custom"
         >
         </el-table-column>
         <el-table-column
           prop="icount"
           label="数量"
-          sortable
+          sortable="custom"
         >
         </el-table-column>
         <el-table-column
@@ -151,6 +140,7 @@
                 addSuccessful: false,
                 //显示页面的表单数据
                 tableData: [
+
                     {
                         inumber:'I2020040101',
                         gid:'1234567890123',
@@ -165,7 +155,7 @@
                         gid:'1234567890123',
                         vname:'橙汁',
                         idate:'2020-04-03T00:00:00.0000000',
-                        iprice:'12.22',
+                        iprice:'9',
                         ipayment:'9090',
                         icount:'10'
                     },
@@ -174,7 +164,7 @@
                         gid:'1234567890123',
                         vname:'橙汁',
                         idate:'2020-04-05T00:00:00.0000000',
-                        iprice:'12.22',
+                        iprice:'15.5',
                         ipayment:'9090',
                         icount:'10'
                     },
@@ -182,8 +172,8 @@
                         inumber:'I2020040201',
                         gid:'1234567890123',
                         vname:'可乐',
-                        idate:'2020-04-02T00:00:00.0000000',
-                        iprice:'12.22',
+                        idate:'2019-04-02T00:00:00.0000000',
+                        iprice:'12.2',
                         ipayment:'9090',
                         icount:'10'
                     },{
@@ -191,7 +181,7 @@
                         gid:'1234567890123',
                         vname:'橙汁',
                         idate:'2020-04-03T00:00:00.0000000',
-                        iprice:'12.22',
+                        iprice:'13.7',
                         ipayment:'9090',
                         icount:'10'
                     },
@@ -288,23 +278,63 @@
 
         // 创建的时候发送请求获取显示数据库所有员工的列表数据
         created() {
-            console.log("vue被创建");
+
             this.$axios.get("/home/stockIn").then(res => {
                 if (res.data) {
                     console.log(res);
                     this.tableData = res.data;
+                    this.totalItems = this.tableData.length;
                     this.tableDataEnd=[];
                     this.tableData.forEach((value,index)=>{
                         this.tableDataEnd.push(value);
                     });
+                    console.log(this.tableData.length);
                 }
             }).catch(failResponse => {
-                this.$message.error('不能加载该页面');
-
 
             })
         },
+
         methods: {
+            /*//初始化加载列表
+            getDeviceTypes() {
+                this.loading = true;         //将“创建时间”转换为所需的时间格式
+                 this.tableData.map(item => {
+                     item.createTime = this.$moment(item.createTime).format("YYYY-MM-DD HH:mm:ss");
+                 });
+                 this.loading = false;
+                 },*/
+
+            //分页排序整体表格数据
+            changeTableSort(column){
+                console.log(column);
+                //获取字段名称和排序类型
+                var fieldName = column.prop;
+                var sortingType = column.order;
+                //如果字段名称为“创建时间”，将“创建时间”转换为时间戳，才能进行大小比较
+                if(fieldName=="idate"){
+                 this.tableData.map(item => {
+                     item.idate = this.$moment(item.idate).valueOf();
+                 });
+                }
+                //按照降序排序
+                if(sortingType == "descending"){
+                    this.tableData = this.tableData.sort((a, b) => b[fieldName] - a[fieldName]);
+                }
+                //按照升序排序
+                else{
+                    this.tableData = this.tableData.sort((a, b) => a[fieldName] - b[fieldName]);
+                    console.log(this.tableData)
+                }
+                if(fieldName=="idate"){
+                    this.tableData.map(item => {
+                        item.idate = this.$moment(item.idate).format(
+                            "YYYY-MM-DD HH:mm:ss"
+                        );
+                    });
+                }
+
+            },
 
             //日期格式化显示
             dateFormat:function(row,column){
@@ -438,8 +468,6 @@
             // 删除选中下标的一行数据，index由click处的scope.$index传过来的小标，delItem由scope.$row传过来的元素
             del(delItem, index){
                 console.log(delItem);
-                console.log(index);
-                console.log(this.tableDataEnd);
                 this.$confirm('你确定要删除这条记录吗？','提示',{
                     confirmButtonText:'确定',
                     cancelButtonText:'取消',
@@ -451,8 +479,9 @@
                             stockInId: delItem.inumber
                         }
                     }).then(successResponse =>{
-                        //数据库删除成功在table表里进行删除,
+
                         this.filterTableDataEnd=[];
+                        //删除在表格中tableDataEnd显示的哪个数据
                         this.tableDataEnd.forEach((value,i)=>{
                             if(i !==index){
                                 this.filterTableDataEnd.push(value);
@@ -460,6 +489,8 @@
                         });
                         this.tableDataEnd=this.filterTableDataEnd;
                         this.filterTableDataEnd=[];
+
+                        //删除从数据源中tableData获得的数据
                         this.tableData.forEach((value,i)=>{
                             //通过主码快速过滤
                             if(value.inumber!=delItem.inumber){
@@ -468,6 +499,7 @@
                         });
                         this.tableData = this.filterTableDataEnd;
                         this.filterTableDataEnd=[];
+
                         this.$message({
                             type: 'success',
                             message: '删除成功!'
@@ -492,7 +524,6 @@
             addStockIn(){
                 //逻辑前端判断
                 this.submitBtn=true;
-
                 this.$refs.addform.validate()  //判断表单验证是否通过，验证通过执行.then()，否则执行.catch()
                     .then(res =>{
                         if(this.addLastForm===this.addform){
@@ -514,10 +545,10 @@
                                     message: '成功添加一条记录',
                                     type: 'success',
                                 });
-                                this.addLastForm=this.addform;
                                 //将信息刷新到表格中，指向同一个数据源所以只添加一次
                                 this.tableDataEnd.push(this.addform);
-                                this.tableDataEnd.push(this.addform);
+                                this.tableData.push(this.addform);
+
                                 //清空填写单的信息放到请求体中，避免请求延迟已经被清空才刷新在信息到表格中
                                 this.addform = {
                                     inumber : '',

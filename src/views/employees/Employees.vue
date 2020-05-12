@@ -4,7 +4,7 @@
       <div slot="header" class="clearfix">
         <span>员工基本信息</span>
         <!--        新增员工弹窗-->
-        <el-button style="float: right; padding-right: 3px;" type="text" @click="dialogFormVisible = true">新增
+        <!--<el-button style="float: right; padding-right: 3px;" type="text" @click="dialogFormVisible = true">新增
         </el-button>
         <el-dialog title="员工基本信息" :visible.sync="dialogFormVisible">
           <el-form :model="userInfo" :rules="employeesRules" ref="userInfo">
@@ -28,10 +28,10 @@
             <el-button @click="dialogFormVisible = false">取 消</el-button>
             <el-button type="primary" @click="addEmployee">确 定</el-button>
           </div>
-        </el-dialog>
+        </el-dialog>-->
       </div>
       <div class="form">
-        <el-select v-model="selectTags" clearable size="medium"  placeholder="请选择" value="" >
+       <!-- <el-select v-model="selectTags" clearable size="medium"  placeholder="请选择" value="" >
           <el-option
             v-for="item in options"
             :key="item.value"
@@ -42,37 +42,41 @@
         <el-input v-model="searchInput" placeholder="请输入信息"  size="medium" style="width:240px; margin-right:23% ;margin-bottom: 1.5%"></el-input>
 
         <el-button type="primary" icon="el-icon-search" @click="doFilter"  size="medium" round  plain>搜索</el-button>
-        <el-button type="primary" icon="el-icon-refresh" @click="doReset" size="medium"  round  plain >重置</el-button>
+        <el-button type="primary" icon="el-icon-refresh" @click="doReset" size="medium"  round  plain >重置</el-button>-->
         <el-table
-          :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)"
+          :data="tableDataEnd.slice((currentPage-1)*pagesize,currentPage*pagesize)"
           border
           style="width: 100%">
           <el-table-column
-            prop="eid"
+            prop="uid"
             label="员工编号"
             width="180"
             sortable
           >
           </el-table-column>
           <el-table-column
-            prop="ename"
-            label="姓名"
+            prop="user_name"
+            label="用户名"
             width="180">
           </el-table-column>
           <el-table-column
-            prop="ephone"
+            prop="password"
+            label="密码">
+          </el-table-column>
+          <el-table-column
+            prop="phone"
             label="手机号">
           </el-table-column>
           <el-table-column
-            prop="erole"
+            prop="role"
             label="角色">
           </el-table-column>
           <el-table-column
-            prop="esalary"
-            label="工资/月">
+            prop="satatus"
+            label="帐号状态">
           </el-table-column>
           <el-table-column
-            prop="esalary"
+            prop="ehandle"
             label="操作">
             <template slot-scope="scope">
               <el-button style="float: left; padding-right: 3px;" type="text"><span style="color: red" @click="del(scope.row,scope.$index)">删除</span>
@@ -87,7 +91,7 @@
           :page-sizes="[3,5, 10, 20]"
           :page-size="pagesize"
           layout="total, sizes, prev, pager, next, jumper"
-          :total="tableData.length">
+          :total="tableDataEnd.length">
         </el-pagination>
       </div>
 
@@ -117,11 +121,11 @@
                 delItem: [],
                 // 用于新增员工数据时候的绑定
                 userInfo: {
-                    eid: '',
-                    ename: '',
-                    ephone: '',
-                    erole: '',
-                    esalary: ''
+                    uid: '',
+                    user_name: '',
+                    phone: '',
+                    role: '',
+                    satatus: ''
 
                 },
                 formLabelWidth: '120px',
@@ -138,7 +142,7 @@
                 flag:false,
                 selectTags:"",
 
-                employeesRules:{
+                /*employeesRules:{
                     eid:[
                         {required:true ,validator: reg_eid,  trigger: 'blur'}
                     ],
@@ -154,16 +158,16 @@
                     esalary:[
                         {required:true ,validator: reg_money,  trigger: 'blur'}
                     ]
-                },
+                },*/
                 //选择框的选项
                 options: [{
-                    value: 'eid',
+                    value: 'uid',
                     label: '员工编号'
                 }, {
-                    value: 'ename',
+                    value: 'user_name',
                     label: '员工姓名'
                 },{
-                    value: 'erole',
+                    value: 'role',
                     label: '角色'
                 }
                 ],
@@ -172,8 +176,7 @@
         },
         // 创建的时候发送请求获取显示数据库所有员工的列表数据
         created() {
-            this.totalItems = this.tableData.length;
-            this.tableDataEnd = this.tableData;
+
             this.$axios.get("/admin/emps").then(res => {
                 if (res.data) {
                     console.log(res);
@@ -196,23 +199,23 @@
                 this.tableDataEnd=[];
                 this.filterTableDataEnd=[];
                 this.tableData.forEach((value,index)=>{
-                    if(selectTag=="eid"){
-                        if(value.eid){
-                            if(value.eid.search(this.searchInput)!==-1){
+                    if(selectTag=="uid"){
+                        if(value.uid){
+                            if(value.uid.search(this.searchInput)!==-1){
                                 this.filterTableDataEnd.push(value)
                             }
                         }
                     }
-                    if(selectTag=="ename"){
-                        if(value.ename){
-                            if(value.ename.search(this.searchInput)!==-1){
+                    if(selectTag=="user_name"){
+                        if(value.user_name){
+                            if(value.user_name.search(this.searchInput)!==-1){
                                 this.filterTableDataEnd.push(value)
                             }
                         }
                     }
-                    if(selectTag=="erole"){
-                        if(value.erole){
-                            if(value.erole.search(this.searchInput)!==-1){
+                    if(selectTag=="role"){
+                        if(value.role){
+                            if(value.role.search(this.searchInput)!==-1){
                                 this.filterTableDataEnd.push(value)
                             }
                         }
@@ -236,7 +239,7 @@
                 console.log(this.currentPage)
             },
             // 执行新增员工操作
-            addEmployee() {
+            /*addEmployee() {
                 this.$refs.userInfo.validate()
                     .then(res =>{
                         this.$axios.post('/admin/addemp', {
@@ -290,7 +293,7 @@
                 });
 
 
-            },
+            },*/
 
             // 删除选中下标的一行数据，index由click处的scope.$index传过来的下标，delItem由scope.$row传过来的元素
             del(delItem, index) {

@@ -3,11 +3,10 @@
     <el-card class="box-card">
       <div slot="header" class="clearfix">
         <span>权限管理</span>
-        <el-button style="float: right; padding: 3px 0" type="text">新建</el-button>
       </div>
       <div>
         <el-table
-          :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)"
+          :data="tableDataEnd"
           border
           style="width: 100%">
           <el-table-column
@@ -35,19 +34,10 @@
             label="操作">
 
             <template slot-scope="scope">
-              <el-button style="float: left; padding-right: 3px;" type="text"><span style="color: red" @click="del">删除</span></el-button>
+              <el-button style="float: left; padding-right: 3px;" type="text"><span style="color: red" @click="updateForm">修改</span></el-button>
             </template>
           </el-table-column>
         </el-table>
-<!--        <el-pagination-->
-<!--          @size-change="handleSizeChange"-->
-<!--          @current-change="handleCurrentChange"-->
-<!--          :current-page="currentPage"-->
-<!--          :page-sizes="[3,5, 10, 20, 40]"-->
-<!--          :page-size="pagesize"-->
-<!--          layout="total, sizes, prev, pager, next, jumper"-->
-<!--          :total="tableData.length">-->
-<!--        </el-pagination>-->
       </div>
     </el-card>
 
@@ -60,6 +50,7 @@
         data() {
             return {
                 options: [],
+                //从数据中获得的数据
                 tableData: [{
                     id:1,
                     role:"经理",
@@ -83,18 +74,18 @@
                     ability:"拥有采购菜单栏、退货菜单栏、商品菜单栏下的所有权限",
                     rmember:"刘兰"
 
-                }
-                ],
-                pagesize:5,  //分页数量
-                currentPage:1 //初始页
+                }],
+                //最后显示在表单的内容
+                tableDataEnd:[],
             }
         },
+        created(){
+
+        },
+
         methods: {
-            handleEdit(index, row) {
-                console.log(index, row);
-            },
-            handleDelete(index, row) {
-                console.log(index, row);
+            updateForm(){
+
             },
             // 初始页currentPage、初始每页数据数pagesize和数据data
             // handleSizeChange: function (size) {

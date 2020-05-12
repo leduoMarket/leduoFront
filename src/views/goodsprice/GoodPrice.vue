@@ -57,12 +57,12 @@
       <el-table
         :data="tableDataEnd.slice((currentPage-1)*pagesize,currentPage*pagesize)"
         border
-        style="width: 100%"   ref="filterTable" size="medium"  stripe>
+        style="width: 100%"   ref="filterTable" @sort-change="changeTableSort">
         <el-table-column
           prop="gid"
           label="商品编号"
           width="120"
-          sortable
+          sortable="custom"
         >
         </el-table-column>
         <el-table-column
@@ -88,7 +88,7 @@
           prop="pdate"
           label="日期"
           :formatter="dateFormat"
-          sortable
+
           column-key="date"
           :filters="[{text: '今年', value: '2020-'}, {text: '去年', value: '2019-'}, {text: '本月', value: '2020-05'}, {text: '上月', value: '2020-04'}]"
           :filter-method="filterHandler"
@@ -225,14 +225,15 @@
         },
         // 创建的时候发送请求获取显示数据库所有退货单的列表数据
         created() {
-            console.log("vue被创建");
             this.$axios.get("/home/commodityPricing").then(res=>{
                 if(res.data){
                     console.log(res);
                     this.tableData = res.data;
                     this.itemCount = res.data.length;
                     this.tableDataEnd=[];
-                    this.tableDataEnd = this.tableData;
+                    this.tableData.forEach((value,index)=>{
+                        this.tableDataEnd.push(value);
+                    });
                     console.log(this.itemCount);
                 }
             }).catch(failResponse=>{
@@ -240,6 +241,23 @@
             })
         },
         methods: {
+            //分页排序整体表格数据
+            changeTableSort(column){
+                console.log(column);
+                //获取字段名称和排序类型
+                var fieldName = column.prop;
+                var sortingType = column.order;
+                //按照降序排序
+                if(sortingType == "descending"){
+                    this.tableData = this.tableData.sort((a, b) => b[fieldName] - a[fieldName]);
+                }
+                //按照升序排序
+                else{
+                    this.tableData = this.tableData.sort((a, b) => a[fieldName] - b[fieldName]);
+                    console.log(this.tableData)
+                }
+            },
+
             // 初始页currentPage、初始每页数据数pagesize和数据data
             handleSizeChange: function (size) {
                 this.pagesize = size;
@@ -341,7 +359,10 @@
             },
             doReset(){
                 this.searchInput="";
-                this.tableDataEnd = this.tableData;
+                this.tableDataEnd=[];
+                this.tableData.forEach((value,index)=>{
+                    this.tableDataEnd.push(value);
+                });
             },
             //查询
             beginSearch(){
@@ -430,8 +451,27 @@
                         }
                     }).then(successResponse => {
                         //数据库删除成功在table表里进行删除,
-                        this.tableData.splice(index, 1);
-                        this.tableDataEnd.slice(index,1);
+                        this.filterTableDataEnd=[];
+                        //删除在表格中tableDataEnd显示的哪个数据
+                        this.tableDataEnd.forEach((value,i)=>{
+                            if(i !==index){
+                                this.filterTableDataEnd.push(value);
+                            }
+                        });
+                        this.tableDataEnd=this.filterTableDataEnd;
+                        this.filterTableDataEnd=[];
+
+                        //删除从数据源中tableData获得的数据
+                        this.tableData.forEach((value,i)=>{
+                            //通过主码快速过滤
+                            if(value.gid!=delItem.gid||value.gname!=delItem.gname||value.pold_price!=delItem.pold_price||value.pnew_price!=delItem.pnew_price||value.preason!=delItem.preason||value.pdate!=delItem.pdate||value.phandler!=delItem.phandler){
+
+                                this.filterTableDataEnd.push(value);
+                            }
+                        });
+                        this.tableData = this.filterTableDataEnd;
+                        this.filterTableDataEnd=[];
+
                         this.$message({
                             type: 'success',
                             message: '删除成功!'

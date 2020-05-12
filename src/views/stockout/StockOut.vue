@@ -59,7 +59,7 @@
       <el-table
         :data="tableDataEnd.slice((currentPage-1)*pagesize,currentPage*pagesize)"
         border
-        style="width: 100%" ref="filterTable"  size="medium"  stripe >
+        style="width: 100%" ref="filterTable"  @sort-change="changeTableSort">
         <el-table-column
           prop="onumber"
           label="出库单号"
@@ -70,7 +70,7 @@
           prop="gid"
           label="商品代码"
           width="180"
-          sortable
+          sortable="custom"
         >
         </el-table-column>
         <el-table-column
@@ -96,11 +96,15 @@
         </el-table-column>
         <el-table-column
           prop="opayment"
-          label="已付款项">
+          label="已付款项"
+          sortable="custom"
+        >
         </el-table-column>
         <el-table-column
           prop="ocount"
-          label="数量">
+          label="数量"
+          sortable="custom"
+        >
         </el-table-column>
         <el-table-column
           prop="esalary"
@@ -230,20 +234,41 @@
                 }
             }
         },
-        // 创建的时候发送请求获取显示数据库所有退货单的列表数据
-        created() {
-            this.$axios.get("/staff/stockOut").then(res=>{
-                if(res.data){
-                    console.log(res);
-                    this.tableData = res.data;
-                    this.tableDataEnd=[];
-                    this.tableDataEnd = this.tableData;
-                }
-            }).catch(failResponse=>{
+      // 创建的时候发送请求获取显示数据库所有员工的列表数据
+      created() {
 
-            })
-        },
+          this.$axios.get("/staff/stockOut").then(res => {
+              if (res.data) {
+                  console.log(res);
+                  this.tableData = res.data;
+                  this.totalItems = this.tableData.length;
+                  this.tableData.forEach((value,index)=>{
+                      this.tableDataEnd.push(value);
+                  });
+                  console.log(this.tableData.length);
+              }
+          }).catch(failResponse => {
+
+          })
+      },
         methods: {
+            //分页排序整体表格数据
+            changeTableSort(column){
+                console.log(column);
+                //获取字段名称和排序类型
+                var fieldName = column.prop;
+                var sortingType = column.order;
+                //按照降序排序
+                if(sortingType == "descending"){
+                    this.tableData = this.tableData.sort((a, b) => b[fieldName] - a[fieldName]);
+                }
+                //按照升序排序
+                else{
+                    this.tableData = this.tableData.sort((a, b) => a[fieldName] - b[fieldName]);
+                    console.log(this.tableData)
+                }
+            },
+
             // 初始页currentPage、初始每页数据数pagesize和数据data
             handleSizeChange: function (size) {
                 this.pagesize = size;
@@ -363,7 +388,11 @@
             },
             doReset(){
                 this.searchInput="";
-                this.tableDataEnd = this.tableData;
+                this.tableDataEnd=[];
+                this.tableData.forEach((value,index)=>{
+                    this.tableDataEnd.push(value);
+                });
+
             },
             //新增出库单
             addStockOut() {
@@ -395,6 +424,7 @@
                             });
                         }
                         //将信息刷新到表格中
+                        this.tableData.push(this.addform);
                         // 将填写框置空，方便下次填写
                         this.dataInfo = {
                             gid: '',
@@ -430,9 +460,25 @@
                             stockOutId: delItem.onumber
                         }
                     }).then(successResponse =>{
-                        //数据库删除成功在table表里进行删除,
-                        this.tableData.splice(index, 1);
-                        this.tableDataEnd.slice(index,1);
+                        this.filterTableDataEnd=[];
+                        //删除在表格中tableDataEnd显示的哪个数据
+                        this.tableDataEnd.forEach((value,i)=>{
+                            if(i !==index){
+                                this.filterTableDataEnd.push(value);
+                            }
+                        });
+                        this.tableDataEnd=this.filterTableDataEnd;
+                        this.filterTableDataEnd=[];
+
+                        //删除从数据源中tableData获得的数据
+                        this.tableData.forEach((value,i)=>{
+                            //通过主码快速过滤
+                            if(value.onumber!=delItem.onumber){
+                                this.filterTableDataEnd.push(value);
+                            }
+                        });
+                        this.tableData = this.filterTableDataEnd;
+                        this.filterTableDataEnd=[];
                         this.$message({
                             type: 'success',
                             message: '删除成功!'

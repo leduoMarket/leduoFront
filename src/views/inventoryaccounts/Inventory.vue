@@ -30,12 +30,12 @@
       <el-table
         :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)"
         border
-        style="width: 100%">
+        style="width: 100%"  @sort-change="changeTableSort">
         <el-table-column
           prop="gid"
           label="商品代码"
           width="180"
-          sortable
+          sortable="custom"
         >
         </el-table-column>
         <el-table-column
@@ -45,7 +45,9 @@
         </el-table-column>
         <el-table-column
           prop="counts"
-          label="库存量">
+          label="库存量"
+          sortable="custom"
+        >
         </el-table-column>
         <el-table-column
           prop="stockAlert"
@@ -125,6 +127,23 @@
             })
         },
         methods: {
+            //分页排序整体表格数据
+            changeTableSort(column){
+                console.log(column);
+                //获取字段名称和排序类型
+                var fieldName = column.prop;
+                var sortingType = column.order;
+                //按照降序排序
+                if(sortingType == "descending"){
+                    this.tableData = this.tableData.sort((a, b) => b[fieldName] - a[fieldName]);
+                }
+                //按照升序排序
+                else{
+                    this.tableData = this.tableData.sort((a, b) => a[fieldName] - b[fieldName]);
+                    console.log(this.tableData)
+                }
+            },
+
             doFilter(){
                 var selectTag = this.selectTags;
                 if(this.searchInput == ""){

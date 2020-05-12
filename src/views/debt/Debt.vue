@@ -52,20 +52,22 @@
       <el-button type="primary" icon="el-icon-search" @click="doFilter"  size="medium" round  plain>搜索</el-button>
       <el-button type="primary" icon="el-icon-refresh" @click="doReset" size="medium"  round  plain >重置</el-button>
       <el-table
-        :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)"
+        :data="tableDataEnd.slice((currentPage-1)*pagesize,currentPage*pagesize)"
         border
-        style="width: 100%">
+        style="width: 100%"  @sort-change="changeTableSort">
         <el-table-column
           prop="dnumber"
           label="欠款单号"
           width="180"
-          sortable
+
         >
         </el-table-column>
         <el-table-column
           prop="gid"
           label="商品代码"
-          width="180">
+          width="180"
+          sortable="custom"
+        >
         </el-table-column>
         <el-table-column
           prop="vname"
@@ -73,13 +75,14 @@
         </el-table-column>
         <el-table-column
           prop="ddebt"
-          label="欠款金额">
+          label="欠款金额"
+          sortable="custom"
+        >
         </el-table-column>
         <el-table-column
           :formatter="dateFormat"
           prop="ddate"
           label="日期"
-          sortable
           width="180"
           column-key="date"
           :filters="[{text: '今年', value: '2020-'}, {text: '去年', value: '2019-'}, {text: '本月', value: '2020-05'}, {text: '上月', value: '2020-04'}]"
@@ -102,7 +105,7 @@
         :page-sizes="[3,5, 10, 20]"
         :page-size="pagesize"
         layout="total, sizes, prev, pager, next, jumper"
-        :total="tableData.length">
+        :total="tableDataEnd.length">
       </el-pagination>
     </div>
   </el-card>
@@ -193,20 +196,41 @@
                 value: ''
             }
         },
-        // 创建的时候发送请求获取显示数据库所有员工的列表数据
+        // 创建的时候发送请求获取显示数据库所有的列表数据
         created() {
-            this.totalItems = this.tableData.length;
-            this.tableDataEnd = this.tableData;
             this.$axios.get("/home/debt").then(res => {
-                if (res.data) {
-                    console.log(res)
+                if(res.data){
+                    console.log(res);
                     this.tableData = res.data;
+                    this.itemCount = res.data.length;
+                    this.tableDataEnd=[];
+                    this.tableData.forEach((value,index)=>{
+                        this.tableDataEnd.push(value);
+                    });
+                    console.log(this.itemCount);
                 }
             }).catch(failResponse => {
 
             })
         },
         methods: {
+            //分页排序整体表格数据
+            changeTableSort(column){
+                console.log(column);
+                //获取字段名称和排序类型
+                var fieldName = column.prop;
+                var sortingType = column.order;
+                //按照降序排序
+                if(sortingType == "descending"){
+                    this.tableData = this.tableData.sort((a, b) => b[fieldName] - a[fieldName]);
+                }
+                //按照升序排序
+                else{
+                    this.tableData = this.tableData.sort((a, b) => a[fieldName] - b[fieldName]);
+                    console.log(this.tableData)
+                }
+            },
+
             doFilter(){
                 var selectTag = this.selectTags;
                 if(this.searchInput == ""){
@@ -257,7 +281,10 @@
             },
             doReset(){
                 this.searchInput="";
-                this.tableDataEnd = this.tableData;
+                this.tableDataEnd=[];
+                this.tableData.forEach((value,index)=>{
+                    this.tableDataEnd.push(value);
+                });
             },
             //日期格式化显示
             dateFormat:function(row,column){
@@ -369,7 +396,25 @@
                         }
                     }).then(successResponse => {
                         //数据库删除成功在table表里进行删除,
-                        this.tableData.splice(index, 1);
+                        this.filterTableDataEnd=[];
+                        //删除在表格中tableDataEnd显示的哪个数据
+                        this.tableDataEnd.forEach((value,i)=>{
+                            if(i !==index){
+                                this.filterTableDataEnd.push(value);
+                            }
+                        });
+                        this.tableDataEnd=this.filterTableDataEnd;
+                        this.filterTableDataEnd=[];
+
+                        //删除从数据源中tableData获得的数据
+                        this.tableData.forEach((value,i)=>{
+                            //通过主码快速过滤
+                            if(value.dnumber!=delItem.dnumber){
+                                this.filterTableDataEnd.push(value);
+                            }
+                        });
+                        this.tableData = this.filterTableDataEnd;
+                        this.filterTableDataEnd=[];
                         this.$message({
                             type: 'success',
                             message: '删除成功!'

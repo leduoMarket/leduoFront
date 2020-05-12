@@ -62,12 +62,12 @@
       <el-table
         :data="tableDataEnd.slice((currentPage-1)*pagesize,currentPage*pagesize)"
         border
-        style="width: 100%"  ref="filterTable" size="medium"  stripe >
+        style="width: 100%"  ref="filterTable" size="medium"  stripe  @sort-change="changeTableSort">
         <el-table-column
           prop="vid"
           label="供应商代码"
           width="120"
-          sortable
+          sortable="custom"
         >
         </el-table-column>
         <el-table-column
@@ -95,7 +95,9 @@
         </el-table-column>
         <el-table-column
           prop="vcredit"
-          label="信誉">
+          label="信誉"
+          sortable="custom"
+        >
         </el-table-column>
         <el-table-column
           prop="vsettle_account"
@@ -272,21 +274,42 @@
                 value: ''
             }
         },
+      // 创建的时候发送请求获取显示数据库所有员工的列表数据
       created() {
           this.$axios.get("/home/Vender").then(res=>{
               if(res.data){
                   console.log(res);
                   this.tableData = res.data;
                   this.totalItems = this.tableData.length;
-                  this.tableDataEnd = this.tableData;
+                  this.tableDataEnd=[];
+                  this.tableData.forEach((value,index)=>{
+                      this.tableDataEnd.push(value);
+                  });
                   console.log(this.tableData.length);
               }
           }).catch(failResponse=>{
-              this.$message.error('不能加载该页面');
+              this.$message.error('不能加载该页面的数据');
 
           })
       },
         methods: {
+            //分页排序整体表格数据
+            changeTableSort(column){
+                console.log(column);
+                //获取字段名称和排序类型
+                var fieldName = column.prop;
+                var sortingType = column.order;
+                //按照降序排序
+                if(sortingType == "descending"){
+                    this.tableData = this.tableData.sort((a, b) => b[fieldName] - a[fieldName]);
+                }
+                //按照升序排序
+                else{
+                this.tableData = this.tableData.sort((a, b) => a[fieldName] - b[fieldName]);
+                console.log(this.tableData)
+                }
+                },
+
             doFilter(){
                 var selectTag = this.selectTags;
                 if(this.searchInput == ""){
@@ -359,7 +382,10 @@
             },
             doReset(){
                 this.searchInput="";
-                this.tableDataEnd = this.tableData;
+                this.tableDataEnd=[];
+                this.tableData.forEach((value,index)=>{
+                    this.tableDataEnd.push(value);
+                });
             },
 
             // 初始页currentPage、初始每页数据数pagesize和数据data
@@ -446,8 +472,25 @@
                         }
                     }).then(successResponse =>{
                         //数据库删除成功在table表里进行删除,
-                        this.tableData.splice(index, 1);
-                        this.tableDataEnd.slice(index,1);
+                        this.filterTableDataEnd=[];
+                        //删除在表格中tableDataEnd显示的哪个数据
+                        this.tableDataEnd.forEach((value,i)=>{
+                            if(i !==index){
+                                this.filterTableDataEnd.push(value);
+                            }
+                        });
+                        this.tableDataEnd=this.filterTableDataEnd;
+                        this.filterTableDataEnd=[];
+
+                        //删除从数据源中tableData获得的数据
+                        this.tableData.forEach((value,i)=>{
+                            //通过主码快速过滤
+                            if(value.vid!=delItem.vid){
+                                this.filterTableDataEnd.push(value);
+                            }
+                        });
+                        this.tableData = this.filterTableDataEnd;
+                        this.filterTableDataEnd=[];
                         this.$message({
                             type: 'success',
                             message: '删除成功!'
