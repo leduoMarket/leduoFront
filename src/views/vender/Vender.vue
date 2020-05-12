@@ -62,12 +62,12 @@
       <el-table
         :data="tableDataEnd.slice((currentPage-1)*pagesize,currentPage*pagesize)"
         border
-        style="width: 100%"  ref="filterTable" size="medium"  stripe >
+        style="width: 100%"  ref="filterTable" size="medium"  stripe  @sort-change="changeTableSort">
         <el-table-column
           prop="vid"
           label="供应商代码"
           width="120"
-          sortable
+          sortable="custom"
         >
         </el-table-column>
         <el-table-column
@@ -95,7 +95,9 @@
         </el-table-column>
         <el-table-column
           prop="vcredit"
-          label="信誉">
+          label="信誉"
+          sortable="custom"
+        >
         </el-table-column>
         <el-table-column
           prop="vsettle_account"
@@ -282,11 +284,28 @@
                   console.log(this.tableData.length);
               }
           }).catch(failResponse=>{
-              this.$message.error('不能加载该页面');
+              this.$message.error('不能加载该页面的数据');
 
           })
       },
         methods: {
+            //分页排序整体表格数据
+            changeTableSort(column){
+                console.log(column);
+                //获取字段名称和排序类型
+                var fieldName = column.prop;
+                var sortingType = column.order;
+                //按照降序排序
+                if(sortingType == "descending"){
+                    this.tableData = this.tableData.sort((a, b) => b[fieldName] - a[fieldName]);
+                }
+                //按照升序排序
+                else{
+                this.tableData = this.tableData.sort((a, b) => a[fieldName] - b[fieldName]);
+                console.log(this.tableData)
+                }
+                },
+
             doFilter(){
                 var selectTag = this.selectTags;
                 if(this.searchInput == ""){
@@ -393,7 +412,6 @@
                                 });
                                 //将信息刷新到表格中
                                 this.tableData.push(this.addform);
-                                this.tableDataEnd.push(this.addform);
                                 //清空填写单的信息放到请求体中，避免请求延迟已经被清空才刷新在信息到表格中
                                 this.addform = {
                                     vid: '',

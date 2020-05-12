@@ -16,12 +16,15 @@ export default {
   name: 'TopBar',
     methods:{
         goBack() {
-            this.$router.go(-1)
+            this.$router.go(-1);
         },
         logOut(){
+
             this.$axios.get("/logout").then(successfulResponse=>{
                 if(successfulResponse.data.code==405){
-                    this.$router.replace({path: '/'})
+                    sessionStorage.removeItem('user');
+                    sessionStorage.removeItem('role');
+                    this.$router.replace({path: '/'});
                 }
             }).catch(failedResponse=>{
                 this.$notify({

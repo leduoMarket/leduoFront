@@ -79,6 +79,21 @@
                     userName: '',
                     password: ''
                 },
+                user1:{
+                  username:"1234567",
+                  password: "a12345678",
+                  role:"1",
+                },
+                user2:{
+                    username:"2234567",
+                    password: "a12345678",
+                    role:"2",
+                },
+                user3:{
+                    username:"3234567",
+                    password: "a12345678",
+                    role:"3",
+                },
                 responseResult: [],
                 //表单验证规则的设置
                 rules:{
@@ -138,33 +153,60 @@
                 })
             },
             login () {
-
-                sessionStorage.setItem('user',JSON.stringify(this.loginForm.userName));
-
-                this.$router.replace({path: '/home/firstPage'});
-
-                // this.$refs.loginForm.validate()
-                //     .then(res => {
-                //         this.loadingBtn = false;
-                //         this.$axios
-                //             .post('/login', {
-                //                 userName: this.loginForm.userName,
-                //                 password: this.loginForm.password
-                //             })
-                //             .then(successResponse => {
-                //                 if (successResponse.data.code === 200) {
-                //                     this.$router.replace({path: '/home/firstPage'})
-                //                 }
-                //             })
-                //             .catch(failResponse => {
-                //             })
+                //前端测试代码
+                // if(this.loginForm.userName == this.user1.username){
+                //     console.log(this.user1.role);
+                //     sessionStorage.setItem('user',JSON.stringify(this.loginForm.userName));
+                //     sessionStorage.setItem('role',JSON.stringify(this.user1.role));
+                //     this.$router.replace({path: '/home/firstPage'});
+                // }else if(this.loginForm.userName == this.user2.username){
+                //     console.log(this.user2.role);
+                //     sessionStorage.setItem('user',JSON.stringify(this.loginForm.userName));
+                //     sessionStorage.setItem('role',JSON.stringify(this.user2.role));
+                //     this.$router.replace({path:'/homet/firstPage'})
                 //
-                //     }).catch(error =>{
-                //     this.$message({
-                //         message: '无法提交，用户名或者密码格式错误',
-                //         type: 'error'
-                //     });
-                // });
+                // }else if(this.loginForm.userName == this.user3.username){
+                //     console.log(this.user3.role);
+                //     sessionStorage.setItem('user',JSON.stringify(this.loginForm.userName));
+                //     sessionStorage.setItem('role',JSON.stringify(this.user3.role));
+                //     this.$router.replace({path:'/homes/firstPage'})
+                //
+                // }
+                this.$refs.loginForm.validate()
+                    .then(res => {
+                        this.loadingBtn = false;
+                        this.$axios
+                            .post('/login', {
+                                userName: this.loginForm.userName,
+                                password: this.loginForm.password
+                            })
+                            .then(successResponse => {
+                                if (successResponse.data.code === 200) {
+                                    //得到响应中的role值，1：系统管理员，2.财务人员，3.普通员工
+                                    //获得从后端得到role的代码可能有误
+                                    var role = successResponse.data.role;
+                                    sessionStorage.setItem('user',JSON.stringify(this.loginForm.userName));
+                                    sessionStorage.setItem('role',JSON.stringify(role));
+                                    if(role == '1'){
+                                        this.$router.replace({path: '/home/firstPage'})
+                                    }else if(role == '2'){
+                                        this.$router.replace({path:'/homet/firstPage'})
+                                    }else if(role == '3'){
+                                        this.$router.replace({path:'/homes/firstPage'})
+                                    }
+                                    this.$router.replace({path: '/404'})
+                                }
+                            })
+                            .catch(failResponse => {
+                                this.$router.replace({path: '/404'})
+                            })
+
+                    }).catch(error =>{
+                    this.$message({
+                        message: '无法提交，用户名或者密码格式错误',
+                        type: 'error'
+                    });
+                });
             }
         }
     }

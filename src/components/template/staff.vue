@@ -1,7 +1,7 @@
 <template>
   <el-col :span="4" class="leftMenu">
     <div class="logo">
-<!--      <img src="../../assets/pic/logo.png" height="70" />-->
+      <!--      <img src="../../assets/pic/logo.png" height="70" />-->
       <p>欢迎光临，</p>
       <p>乐多超市！</p>
     </div>
@@ -49,7 +49,7 @@
           </el-menu-item>
         </el-menu-item-group>
       </el-submenu>
-      <el-submenu index="4">
+      <el-submenu index="4" >
         <template slot="title">
           <i class="el-icon-present"></i>
           <span style="font-size: 18px;font-weight: bold">商品</span>
@@ -65,37 +65,6 @@
             <router-link to="/home/inventory">库存账</router-link>
           </el-menu-item>
         </el-menu-item-group>
-      </el-submenu>
-      <el-submenu index="5">
-        <template slot="title">
-          <i class="el-icon-edit-outline"></i>
-          <span style="font-size: 18px;font-weight: bold">财务</span>
-        </template>
-        <el-menu-item-group>
-          <el-menu-item index="5-1">
-            <router-link to="/home/debt">欠款单</router-link>
-          </el-menu-item>
-          <el-menu-item index="5-2">
-            <router-link to="/home/flowCount">支付流水账</router-link>
-          </el-menu-item>
-          <el-menu-item index="5-3">
-            <router-link to="/home/profitAnalysis">盈亏分析</router-link>
-          </el-menu-item>
-        </el-menu-item-group>
-      </el-submenu>
-      <el-submenu index="6">
-        <template slot="title">
-          <i class="el-icon-user"></i>
-          <span style="font-size: 18px;font-weight: bold">员工</span>
-        </template>
-        <el-menu-item-group>
-        <el-menu-item index="6-1">
-          <router-link to="/home/rolePermissinon">角色权限</router-link>
-        </el-menu-item>
-        <el-menu-item index="6-2">
-          <router-link to="/home/employee">员工基本信息</router-link>
-        </el-menu-item>
-      </el-menu-item-group>
       </el-submenu>
       <el-submenu index="7">
         <template slot="title">

@@ -57,9 +57,9 @@
       <el-button type="primary" icon="el-icon-search" @click="doFilter"  size="medium" round  plain>搜索</el-button>
       <el-button type="primary" icon="el-icon-refresh" @click="doReset" size="medium"  round  plain >重置</el-button>
       <el-table
-        :data="tableDataEnd.slice((currentPage-1)*pagesize,currentPage*pagesize)"
+        :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)"
         border
-        style="width: 100%" ref="filterTable"  size="medium"  stripe >
+        style="width: 100%" ref="filterTable"  @sort-change="changeTableSort">
         <el-table-column
           prop="onumber"
           label="出库单号"
@@ -70,7 +70,7 @@
           prop="gid"
           label="商品代码"
           width="180"
-          sortable
+          sortable="custom"
         >
         </el-table-column>
         <el-table-column
@@ -96,11 +96,15 @@
         </el-table-column>
         <el-table-column
           prop="opayment"
-          label="已付款项">
+          label="已付款项"
+          sortable="custom"
+        >
         </el-table-column>
         <el-table-column
           prop="ocount"
-          label="数量">
+          label="数量"
+          sortable="custom"
+        >
         </el-table-column>
         <el-table-column
           prop="esalary"
@@ -118,7 +122,7 @@
         :page-sizes="[3,5, 10, 20, 40]"
         :page-size="pagesize"
         layout="total, sizes, prev, pager, next, jumper"
-        :total="tableDataEnd.length">
+        :total="tableData.length">
       </el-pagination>
     </div>
   </el-card>
@@ -244,6 +248,23 @@
             })
         },
         methods: {
+            //分页排序整体表格数据
+            changeTableSort(column){
+                console.log(column);
+                //获取字段名称和排序类型
+                var fieldName = column.prop;
+                var sortingType = column.order;
+                //按照降序排序
+                if(sortingType == "descending"){
+                    this.tableData = this.tableData.sort((a, b) => b[fieldName] - a[fieldName]);
+                }
+                //按照升序排序
+                else{
+                    this.tableData = this.tableData.sort((a, b) => a[fieldName] - b[fieldName]);
+                    console.log(this.tableData)
+                }
+            },
+
             // 初始页currentPage、初始每页数据数pagesize和数据data
             handleSizeChange: function (size) {
                 this.pagesize = size;
@@ -395,6 +416,7 @@
                             });
                         }
                         //将信息刷新到表格中
+                        this.tableData.push(this.addform);
                         // 将填写框置空，方便下次填写
                         this.dataInfo = {
                             gid: '',

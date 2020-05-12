@@ -61,19 +61,18 @@
       <el-table
         :data="tableDataEnd.slice((currentPage-1)*pagesize,currentPage*pagesize)"
         border
-        style="width: 100%"  ref="filterTable" size="medium"  stripe
+        style="width: 100%"  ref="filterTable" @sort-change="changeTableSort"
       >
         <el-table-column
           prop="inumber"
           label="入库单号"
-          sortable
         >
         </el-table-column>
         <el-table-column
           prop="gid"
           label="商品代码"
           width="180"
-          sortable
+          sortable="custom"
         >
         </el-table-column>
         <el-table-column
@@ -85,7 +84,6 @@
           :formatter="dateFormat"
           prop="idate"
           label="入库日期"
-          sortable
           width="180"
           column-key="date"
           :filters="[{text: '今年', value: '2020-'}, {text: '去年', value: '2019-'}, {text: '本月', value: '2020-05'}, {text: '上月', value: '2020-04'}]"
@@ -101,13 +99,13 @@
         <el-table-column
           prop="ipayment"
           label="已付款项"
-          sortable
+          sortable="custom"
         >
         </el-table-column>
         <el-table-column
           prop="icount"
           label="数量"
-          sortable
+          sortable="custom"
         >
         </el-table-column>
         <el-table-column
@@ -126,7 +124,7 @@
         :page-sizes="[3,5, 10, 20]"
         :page-size="pagesize"
         layout="total, sizes, prev, pager, next, jumper"
-        :total="tableDataEnd.length">
+        :total="tableData.length">
       </el-pagination>
     </div>
   </el-card>
@@ -151,50 +149,51 @@
                 addSuccessful: false,
                 //显示页面的表单数据
                 tableData: [
-                    // {
-                    //     inumber:'I2020040101',
-                    //     gid:'1234567890123',
-                    //     vname:'雪碧',
-                    //     idate:'2020-04-01T00:00:00.0000000',
-                    //     iprice:'10',
-                    //     ipayment:'300',
-                    //     icount:'40'
-                    // },
-                    // {
-                    //     inumber:'I2020040302',
-                    //     gid:'1234567890123',
-                    //     vname:'橙汁',
-                    //     idate:'2020-04-03T00:00:00.0000000',
-                    //     iprice:'12.22',
-                    //     ipayment:'9090',
-                    //     icount:'10'
-                    // },
-                    // {
-                    //     inumber:'I2020040502',
-                    //     gid:'1234567890123',
-                    //     vname:'橙汁',
-                    //     idate:'2020-04-05T00:00:00.0000000',
-                    //     iprice:'12.22',
-                    //     ipayment:'9090',
-                    //     icount:'10'
-                    // },
-                    // {
-                    //     inumber:'I2020040201',
-                    //     gid:'1234567890123',
-                    //     vname:'可乐',
-                    //     idate:'2020-04-02T00:00:00.0000000',
-                    //     iprice:'12.22',
-                    //     ipayment:'9090',
-                    //     icount:'10'
-                    // },{
-                    //     inumber:'I2020040301',
-                    //     gid:'1234567890123',
-                    //     vname:'橙汁',
-                    //     idate:'2020-04-03T00:00:00.0000000',
-                    //     iprice:'12.22',
-                    //     ipayment:'9090',
-                    //     icount:'10'
-                    // },
+
+                    {
+                        inumber:'I2020040101',
+                        gid:'1234567890123',
+                        vname:'雪碧',
+                        idate:'2020-04-01T00:00:00.0000000',
+                        iprice:'10',
+                        ipayment:'300',
+                        icount:'40'
+                    },
+                    {
+                        inumber:'I2020040302',
+                        gid:'1234567890123',
+                        vname:'橙汁',
+                        idate:'2020-04-03T00:00:00.0000000',
+                        iprice:'12.22',
+                        ipayment:'9090',
+                        icount:'10'
+                    },
+                    {
+                        inumber:'I2020040502',
+                        gid:'1234567890123',
+                        vname:'橙汁',
+                        idate:'2020-04-05T00:00:00.0000000',
+                        iprice:'12.22',
+                        ipayment:'9090',
+                        icount:'10'
+                    },
+                    {
+                        inumber:'I2020040201',
+                        gid:'1234567890123',
+                        vname:'可乐',
+                        idate:'2019-04-02T00:00:00.0000000',
+                        iprice:'12.22',
+                        ipayment:'9090',
+                        icount:'10'
+                    },{
+                        inumber:'I2020040301',
+                        gid:'1234567890123',
+                        vname:'橙汁',
+                        idate:'2020-04-03T00:00:00.0000000',
+                        iprice:'12.22',
+                        ipayment:'9090',
+                        icount:'10'
+                    },
                 ],
                 nowDate:"",   //当前日期
 
@@ -304,7 +303,47 @@
 
             })
         },
+
         methods: {
+            /*//初始化加载列表
+            getDeviceTypes() {
+                this.loading = true;         //将“创建时间”转换为所需的时间格式
+                 this.tableData.map(item => {
+                     item.createTime = this.$moment(item.createTime).format("YYYY-MM-DD HH:mm:ss");
+                 });
+                 this.loading = false;
+                 },*/
+
+            //分页排序整体表格数据
+            changeTableSort(column){
+                console.log(column);
+                //获取字段名称和排序类型
+                var fieldName = column.prop;
+                var sortingType = column.order;
+                //如果字段名称为“创建时间”，将“创建时间”转换为时间戳，才能进行大小比较
+                if(fieldName=="idate"){
+                 this.tableData.map(item => {
+                     item.idate = this.$moment(item.idate).valueOf();
+                 });
+                }
+                //按照降序排序
+                if(sortingType == "descending"){
+                    this.tableData = this.tableData.sort((a, b) => b[fieldName] - a[fieldName]);
+                }
+                //按照升序排序
+                else{
+                    this.tableData = this.tableData.sort((a, b) => a[fieldName] - b[fieldName]);
+                    console.log(this.tableData)
+                }
+                if(fieldName=="idate"){
+                    this.tableData.map(item => {
+                        item.idate = this.$moment(item.idate).format(
+                            "YYYY-MM-DD HH:mm:ss"
+                        );
+                    });
+                }
+
+            },
 
             //日期格式化显示
             dateFormat:function(row,column){
@@ -438,8 +477,6 @@
             // 删除选中下标的一行数据，index由click处的scope.$index传过来的小标，delItem由scope.$row传过来的元素
             del(delItem, index){
                 console.log(delItem);
-                console.log(index);
-                console.log(this.tableDataEnd);
                 this.$confirm('你确定要删除这条记录吗？','提示',{
                     confirmButtonText:'确定',
                     cancelButtonText:'取消',
