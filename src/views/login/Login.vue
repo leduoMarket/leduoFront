@@ -10,7 +10,7 @@
       <h3 class="login_title">系统登录</h3>
       <el-form-item prop="userName">
         <el-col :span="2"><i class="el-icon-s-custom"></i></el-col>
-        <el-col :span="22"><el-input type="text" v-model="loginForm.userName"
+        <el-col :span="22"><el-input type="text" v-model="loginForm.uid"
                                      auto-complete="off" placeholder="账号"></el-input></el-col>
       </el-form-item>
       <el-form-item prop="password">
@@ -71,7 +71,7 @@
                 } else {
                     callback()
                 }
-            };
+            }
             return {
                 identifyCodes: '1234567890',
                 identifyCode: '',
@@ -80,25 +80,26 @@
                     uid: '',
                     password: ''
                 },
+                token:'',
                 responseResult: [],
                 //表单验证规则的设置
-                rules:{
-                    userName:[{
-                        required:true,
-                        validator:reg_userName,
-                        trigger:'blur',
-                    }],
-                    password:[
-                        {
-                            required:true,
-                            validator: reg_password,
-                            trigger: 'blur'
-                        }
-                    ],
+                // rules:{
+                //     userName:[{
+                //         required:true,
+                //         validator:reg_userName,
+                //         trigger:'blur',
+                //     }],
+                //     password:[
+                //         {
+                //             required:true,
+                //             validator: reg_password,
+                //             trigger: 'blur'
+                //         }
+                //     ],
                     /*verifycode: [
                         { required: true, trigger: 'blur', validator: validateVerifycode },
                     ]*/
-                }
+                // }
             }
         },
         mounted() {
@@ -124,46 +125,34 @@
                 }
                 console.log(this.identifyCode)
             },
-            accessDenied(){
-                this.$axios.get("/identifyFailed").then(successulResponse=>{
-                    console.log(successulResponse.data.code)
-                    console.log(successulResponse.data.msg)
-                    this.$router.replace({path:"/"})
-                    console.log("重定向发生！")
-                }).catch(failedResponse=>{
-                    this.$notify({
-                        title: '对不起',
-                        message: '权限控制失败',
-                        offset: 100
-                    });
-                })
-            },
             login () {
-                this.loadingBtn = true;
+                // this.loadingBtn = true;
                 // this.$router.replace({path: '/home/firstPage'});
-
-                this.$refs.loginForm.validate()
-                    .then(res => {
-                        this.loadingBtn = false;
+                // this.$refs.loginForm.validate()
+                //     .then(res => {
+                //         this.loadingBtn = false;
+                        console.log(md5(this.loginForm.password))
                         this.$axios
                             .post('/login', {
-                                uid:this.uid,
-                                password: this.password
+                                uid:this.loginForm.uid,
+                                password: md5(this.loginForm.password)
                             })
                             .then(successResponse => {
                                 if (successResponse.data.code === 200) {
+                                    this.token = successResponse.data;
+                                    console.log(this.token);
                                     this.$router.replace({path: '/home/firstPage'})
                                 }
                             })
                             .catch(failResponse => {
                             })
 
-                    }).catch(error =>{
-                    this.$message({
-                        message: '无法提交，用户名或者密码格式错误',
-                        type: 'error'
-                    });
-                });
+                //     }).catch(error =>{
+                //     this.$message({
+                //         message: '无法提交，用户名或者密码格式错误',
+                //         type: 'error'
+                //     });
+                // });
             }
         }
     }

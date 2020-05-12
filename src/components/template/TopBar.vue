@@ -19,7 +19,7 @@ export default {
             this.$router.go(-1)
         },
         logOut(){
-            this.$axios.get("/logout").then(successfulResponse=>{
+            this.$axios.get("/staff/logout").then(successfulResponse=>{
                 if(successfulResponse.data.code==405){
                     this.$router.replace({path: '/'})
                 }

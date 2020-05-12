@@ -14,6 +14,8 @@ import axios from 'axios'
 Vue.prototype.$axios = axios
 Vue.prototype.$md5=md5
 axios.defaults.baseURL = 'http://localhost:8088/api'
+//配置发送的请求携带cookie
+axios.defaults.withCredentials = true
 Vue.config.productionTip = false
 new Vue({
   el: '#app',
