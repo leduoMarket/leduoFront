@@ -202,7 +202,7 @@
                                 }
                             })
                             .catch(failResponse => {
-                                this.$router.replace({path: '/404'})
+                                // this.$router.replace({path: '/404'})
                             })
 
                     }).catch(error =>{

@@ -1,7 +1,7 @@
 <template>
   <div class="error-page">
-    <div class="error-code">404</div>
-    <div class="error-desc">你访问的页面不在</div>
+    <div class="error-code">您还没有该权限</div>
+    <div class="error-desc">如所需，请向上级部门申请相关权限</div>
     <div class="error-handle">
       <router-link to="/">
         <el-button type="primary" size="large">返回登录页面</el-button>
@@ -41,7 +41,7 @@
   }
   .error-code{
     line-height: 1;
-    font-size: 150px;
+    font-size: 70px;
     font-weight: bold;
     color: #2d8cf0;
   }
