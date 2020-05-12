@@ -279,7 +279,7 @@
         // 创建的时候发送请求获取显示数据库所有员工的列表数据
         created() {
 
-            this.$axios.get("/home/stockIn").then(res => {
+            this.$axios.get("/staff/stockIn").then(res => {
                 if (res.data) {
                     console.log(res);
                     this.tableData = res.data;
@@ -351,9 +351,6 @@
                 const property = column['property'];
 
                 return row[property].search(value) !== -1;
-
-
-                // return row[property] == value;
             },
             doFilter(){
                 var selectTag = this.selectTags;
@@ -441,7 +438,7 @@
             },
             //查询
             beginSearch(){
-                this.$axios.get('/home/queryStockIn',{
+                this.$axios.get('/staff/queryStockIn',{
                     params:{
                         inumber:this.searchInput,
                     }

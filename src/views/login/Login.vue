@@ -3,7 +3,7 @@
     <!--  <RandomCode></RandomCode>-->
     <body id="poster">
     <div id="logo">
-      <!--    <img src="../../assets/pic/logo.png" style="width: 100px; height: 100px" alt=""/>-->
+<!--          <img src="../../assets/pic/logo.png" style="width: 100px; height: 100px" alt=""/>-->
     </div>
     <el-form class="login-container" label-position="left"
              label-width="0px"   :rules="rules" ref="loginForm" :model="loginForm">
@@ -98,23 +98,23 @@
                 },
                 responseResult: [],
                 //表单验证规则的设置
-                rules:{
-                    userName:[{
-                        required:true,
-                        validator:reg_userName,
-                        trigger:'blur',
-                    }],
-                    password:[
-                        {
-                            required:true,
-                            validator: reg_password,
-                            trigger: 'blur'
-                        }
-                    ],
+                // rules:{
+                //     userName:[{
+                //         required:true,
+                //         validator:reg_userName,
+                //         trigger:'blur',
+                //     }],
+                //     password:[
+                //         {
+                //             required:true,
+                //             validator: reg_password,
+                //             trigger: 'blur'
+                //         }
+                //     ],
                     /*verifycode: [
                         { required: true, trigger: 'blur', validator: validateVerifycode },
                     ]*/
-                }
+                // }
             }
         },
         mounted() {
@@ -142,27 +142,27 @@
             },
             login () {
                 //前端测试代码
-                if(this.loginForm.userName == this.user1.username){
-                    console.log(this.user1.role);
-                    sessionStorage.setItem('user',JSON.stringify(this.loginForm.userName));
-                    sessionStorage.setItem('role',JSON.stringify(this.user1.role));
-                    this.$router.replace({path: '/home/firstPage'});
-                }else if(this.loginForm.userName == this.user2.username){
-                    console.log(this.user2.role);
-                    sessionStorage.setItem('user',JSON.stringify(this.loginForm.userName));
-                    sessionStorage.setItem('role',JSON.stringify(this.user2.role));
-                    this.$router.replace({path:'/homet/firstPage'})
-
-                }else if(this.loginForm.userName == this.user3.username){
-                    console.log(this.user3.role);
-                    sessionStorage.setItem('user',JSON.stringify(this.loginForm.userName));
-                    sessionStorage.setItem('role',JSON.stringify(this.user3.role));
-                    this.$router.replace({path:'/homes/firstPage'})
-
-                }
-                this.$refs.loginForm.validate()
-                    .then(res => {
-                        this.loadingBtn = false;
+                // if(this.loginForm.userName == this.user1.username){
+                //     console.log(this.user1.role);
+                //     sessionStorage.setItem('user',JSON.stringify(this.loginForm.userName));
+                //     sessionStorage.setItem('role',JSON.stringify(this.user1.role));
+                //     this.$router.replace({path: '/home/firstPage'});
+                // }else if(this.loginForm.userName == this.user2.username){
+                //     console.log(this.user2.role);
+                //     sessionStorage.setItem('user',JSON.stringify(this.loginForm.userName));
+                //     sessionStorage.setItem('role',JSON.stringify(this.user2.role));
+                //     this.$router.replace({path:'/homet/firstPage'})
+                //
+                // }else if(this.loginForm.userName == this.user3.username){
+                //     console.log(this.user3.role);
+                //     sessionStorage.setItem('user',JSON.stringify(this.loginForm.userName));
+                //     sessionStorage.setItem('role',JSON.stringify(this.user3.role));
+                //     this.$router.replace({path:'/homes/firstPage'})
+                //
+                // }
+                // this.$refs.loginForm.validate()
+                //     .then(res => {
+                //         this.loadingBtn = false;
                         this.$axios
                             .post('/login', {
                                 uid:this.loginForm.uid,
@@ -172,29 +172,30 @@
                                 if (successResponse.data.code === 200) {
                                     //得到响应中的role值，1：系统管理员，2.财务人员，3.普通员工
                                     //获得从后端得到role的代码可能有误
-                                    var role = successResponse.data.role;
-                                    sessionStorage.setItem('user',JSON.stringify(this.loginForm.userName));
-                                    sessionStorage.setItem('role',JSON.stringify(role));
-                                    if(role == '1'){
+                                    let role = successResponse.data.role
+                                    sessionStorage.setItem('user',successResponse.data.sessionId);
+                                    sessionStorage.setItem('role',successResponse.data.role);
+                                    console.log("role from dataBase:"+successResponse.data.role);
+                                    if(successResponse.data.role === '1'){
                                         this.$router.replace({path: '/home/firstPage'})
-                                    }else if(role == '2'){
+                                    }else if(successResponse.data.role == 2){
                                         this.$router.replace({path:'/homet/firstPage'})
-                                    }else if(role == '3'){
+                                    }else if(successResponse.data.role == 3){
                                         this.$router.replace({path:'/homes/firstPage'})
                                     }
-                                    this.$router.replace({path: '/404'})
+                                    this.$router.replace({path: '/homes/firstPage'})
                                 }
                             })
                             .catch(failResponse => {
                                 // this.$router.replace({path: '/404'})
                             })
-
-                    }).catch(error =>{
-                    this.$message({
-                        message: '无法提交，用户名或者密码格式错误',
-                        type: 'error'
-                    });
-                });
+                //
+                //     }).catch(error =>{
+                //     this.$message({
+                //         message: '无法提交，用户名或者密码格式错误',
+                //         type: 'error'
+                //     });
+                // });
             }
         }
     }

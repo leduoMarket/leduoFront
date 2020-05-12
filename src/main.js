@@ -5,16 +5,14 @@ import App from './App'
 import router from './router'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
-import md5 from 'js-md5'
 import{Select,Option}from 'element-ui'
 Vue.use(Select)
 Vue.use(Option)
 Vue.use(ElementUI)
 import axios from 'axios'
 Vue.prototype.$axios = axios
-Vue.prototype.$md5=md5
 axios.defaults.baseURL = 'http://localhost:8088/api'
-//配置发送的请求携带cookie
+//配置发送带请求携带cookie
 axios.defaults.withCredentials = true
 Vue.config.productionTip = false
 new Vue({

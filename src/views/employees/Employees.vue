@@ -3,46 +3,8 @@
     <el-card class="box-card">
       <div slot="header" class="clearfix">
         <span>员工基本信息</span>
-        <!--        新增员工弹窗-->
-        <!--<el-button style="float: right; padding-right: 3px;" type="text" @click="dialogFormVisible = true">新增
-        </el-button>
-        <el-dialog title="员工基本信息" :visible.sync="dialogFormVisible">
-          <el-form :model="userInfo" :rules="employeesRules" ref="userInfo">
-            <el-form-item label="员工编号" :label-width="formLabelWidth" prop="eid">
-              <el-input v-model="userInfo.eid" autocomplete="off"></el-input>
-            </el-form-item>
-            <el-form-item label="员工姓名" :label-width="formLabelWidth" prop="ename">
-              <el-input v-model="userInfo.ename" autocomplete="off"></el-input>
-            </el-form-item>
-            <el-form-item label="电话" :label-width="formLabelWidth" prop="ephone">
-              <el-input v-model="userInfo.ephone" autocomplete="off"></el-input>
-            </el-form-item>
-            <el-form-item label="角色" :label-width="formLabelWidth" prop="erole">
-              <el-input v-model="userInfo.erole" autocomplete="off"></el-input>
-            </el-form-item>
-            <el-form-item label="工资" :label-width="formLabelWidth" prop="esalary">
-              <el-input v-model="userInfo.esalary" autocomplete="off"></el-input>
-            </el-form-item>
-          </el-form>
-          <div slot="footer" class="dialog-footer">
-            <el-button @click="dialogFormVisible = false">取 消</el-button>
-            <el-button type="primary" @click="addEmployee">确 定</el-button>
-          </div>
-        </el-dialog>-->
       </div>
       <div class="form">
-       <!-- <el-select v-model="selectTags" clearable size="medium"  placeholder="请选择" value="" >
-          <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
-          </el-option>
-        </el-select>
-        <el-input v-model="searchInput" placeholder="请输入信息"  size="medium" style="width:240px; margin-right:23% ;margin-bottom: 1.5%"></el-input>
-
-        <el-button type="primary" icon="el-icon-search" @click="doFilter"  size="medium" round  plain>搜索</el-button>
-        <el-button type="primary" icon="el-icon-refresh" @click="doReset" size="medium"  round  plain >重置</el-button>-->
         <el-table
           :data="tableDataEnd.slice((currentPage-1)*pagesize,currentPage*pagesize)"
           border

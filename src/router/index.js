@@ -267,24 +267,26 @@ const router = new Router({
     }
   ]
 });
+
 router.beforeEach((to, from, next) => {
-  console.log('下一个页面',to);
-  console.log('上一个页面',from);
-  let user = JSON.parse(sessionStorage.getItem("user"));
-  let role = JSON.parse(sessionStorage.getItem("role"));
+  //从SessionStorage里面取出需要的角色和user ==> cookie
+  let user = sessionStorage.getItem("user");
+  let role = sessionStorage.getItem("role");
   console.log(user);
   console.log(typeof (role),role);
   //不允许未登录的可以访问的页面
   if (to.meta.requireAuth) { // 判断该路由是否需要登录权限
-    if (user) { // 判断本地是否存在token
+    if (user) { // 判断本地是否存在cookie
       if (to.meta.roles.length !== 0) {
+        //1,2,3,分别代表什么权限？
         for (let i = 0; i < to.meta.roles.length; i++) {
-
-          if (role == to.meta.roles[i]) {
+          if (role==to.meta.roles[i]) {
+            console.log("相等")
             next();
             break;
           } else if (i == to.meta.roles.length - 1) {
             next({
+
               path: '/404'
             })
           }
