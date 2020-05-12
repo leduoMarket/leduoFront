@@ -20,10 +20,16 @@
 export default {
   name: 'TopBar',
     methods:{
-      logOut(){
-          this.$axios.get("/logout").then(successfulResponse=>{
+        goBack() {
+            this.$router.go(-1);
+        },
+        logOut(){
+
+            this.$axios.get("/logout").then(successfulResponse=>{
                 if(successfulResponse.data.code==405){
-                    this.$router.replace({path: '/'})
+                    sessionStorage.removeItem('user');
+                    sessionStorage.removeItem('role');
+                    this.$router.replace({path: '/'});
                 }
             }).catch(failedResponse=>{
                 this.$notify({
@@ -34,7 +40,7 @@ export default {
             })
         }
     }
-  }
+}
 </script>
 <style scoped>
   .header-info{

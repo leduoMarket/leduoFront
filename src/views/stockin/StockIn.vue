@@ -149,6 +149,7 @@
                 addSuccessful: false,
                 //显示页面的表单数据
                 tableData: [
+
                     {
                         inumber:'I2020040101',
                         gid:'1234567890123',

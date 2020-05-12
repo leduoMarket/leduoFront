@@ -43,7 +43,7 @@
         </el-col>
       </el-form-item>
       <el-form-item style="width: 100%">
-        <el-button type="primary" style="width: 100%;background: #000066;border: none" v-on:click="login" :loading="loadingBtn">登录</el-button>
+        <el-button type="primary" style="width: 100%;background: #000066;border: none" v-on:click="login" >登录</el-button>
       </el-form-item>
     </el-form>
     </body>
@@ -78,6 +78,21 @@
                 loginForm: {
                     userName: '',
                     password: ''
+                },
+                user1:{
+                  username:"1234567",
+                  password: "a12345678",
+                  role:"1",
+                },
+                user2:{
+                    username:"2234567",
+                    password: "a12345678",
+                    role:"2",
+                },
+                user3:{
+                    username:"3234567",
+                    password: "a12345678",
+                    role:"3",
                 },
                 responseResult: [],
                 //表单验证规则的设置
@@ -125,10 +140,10 @@
             },
             accessDenied(){
                 this.$axios.get("/identifyFailed").then(successulResponse=>{
-                    console.log(successulResponse.data.code)
-                    console.log(successulResponse.data.msg)
-                    this.$router.replace({path:"/"})
-                    console.log("重定向发生！")
+                    console.log(successulResponse.data.code);
+                    console.log(successulResponse.data.msg);
+                    this.$router.replace({path:"/"});
+                    console.log("重定向发生！");
                 }).catch(failedResponse=>{
                     this.$notify({
                         title: '对不起',
@@ -138,9 +153,25 @@
                 })
             },
             login () {
-                this.loadingBtn = true;
-                // this.$router.replace({path: '/home/firstPage'});
-
+                //前端测试代码
+                // if(this.loginForm.userName == this.user1.username){
+                //     console.log(this.user1.role);
+                //     sessionStorage.setItem('user',JSON.stringify(this.loginForm.userName));
+                //     sessionStorage.setItem('role',JSON.stringify(this.user1.role));
+                //     this.$router.replace({path: '/home/firstPage'});
+                // }else if(this.loginForm.userName == this.user2.username){
+                //     console.log(this.user2.role);
+                //     sessionStorage.setItem('user',JSON.stringify(this.loginForm.userName));
+                //     sessionStorage.setItem('role',JSON.stringify(this.user2.role));
+                //     this.$router.replace({path:'/homet/firstPage'})
+                //
+                // }else if(this.loginForm.userName == this.user3.username){
+                //     console.log(this.user3.role);
+                //     sessionStorage.setItem('user',JSON.stringify(this.loginForm.userName));
+                //     sessionStorage.setItem('role',JSON.stringify(this.user3.role));
+                //     this.$router.replace({path:'/homes/firstPage'})
+                //
+                // }
                 this.$refs.loginForm.validate()
                     .then(res => {
                         this.loadingBtn = false;
@@ -151,10 +182,23 @@
                             })
                             .then(successResponse => {
                                 if (successResponse.data.code === 200) {
-                                    this.$router.replace({path: '/home/firstPage'})
+                                    //得到响应中的role值，1：系统管理员，2.财务人员，3.普通员工
+                                    //获得从后端得到role的代码可能有误
+                                    var role = successResponse.data.role;
+                                    sessionStorage.setItem('user',JSON.stringify(this.loginForm.userName));
+                                    sessionStorage.setItem('role',JSON.stringify(role));
+                                    if(role == '1'){
+                                        this.$router.replace({path: '/home/firstPage'})
+                                    }else if(role == '2'){
+                                        this.$router.replace({path:'/homet/firstPage'})
+                                    }else if(role == '3'){
+                                        this.$router.replace({path:'/homes/firstPage'})
+                                    }
+                                    this.$router.replace({path: '/404'})
                                 }
                             })
                             .catch(failResponse => {
+                                this.$router.replace({path: '/404'})
                             })
 
                     }).catch(error =>{
