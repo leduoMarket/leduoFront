@@ -79,7 +79,7 @@ const router = new Router({
       //添加该字段，表示进入这个路由需要登录
       meta: {
         requireAuth: true,
-        roles: ['1'],
+        roles: ['1','2','3'],
       },
       children:[
         {

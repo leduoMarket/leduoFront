@@ -35,15 +35,6 @@
         </div>
       </el-dialog>
     </div>
-<!--    查询模块-->
-<!--    <div class="text item">-->
-<!--      <el-input style="width: 300px"-->
-<!--                placeholder="请输入入库单单号"-->
-<!--                v-model="searchInput"-->
-<!--                clearable>-->
-<!--      </el-input>-->
-<!--      <el-button round @click="beginSearch">查询</el-button>-->
-<!--    </div>-->
     <div class="form">
       <el-select v-model="selectTags" clearable size="medium"  placeholder="请选择" value="" >
         <el-option
@@ -287,14 +278,15 @@
 
         // 创建的时候发送请求获取显示数据库所有员工的列表数据
         created() {
-            this.totalItems = this.tableData.length;
-            this.tableDataEnd = this.tableData;
+
             this.$axios.get("/home/stockIn").then(res => {
                 if (res.data) {
                     console.log(res);
                     this.tableData = res.data;
-                   /* this.totalItems = this.tableData.length;
-                    this.tableDataEnd = this.tableData;*/
+                    this.totalItems = this.tableData.length;
+                    this.tableData.forEach((value,index)=>{
+                        this.tableDataEnd.push(value);
+                    });
                     console.log(this.tableData.length);
                 }
             }).catch(failResponse => {
@@ -475,6 +467,12 @@
             // 删除选中下标的一行数据，index由click处的scope.$index传过来的小标，delItem由scope.$row传过来的元素
             del(delItem, index){
                 console.log(delItem);
+
+                this.$message({
+                    type: 'success',
+                    message: '删除成功!'
+                });
+
                 this.$confirm('你确定要删除这条记录吗？','提示',{
                     confirmButtonText:'确定',
                     cancelButtonText:'取消',
@@ -486,8 +484,9 @@
                             stockInId: delItem.inumber
                         }
                     }).then(successResponse =>{
-                        //数据库删除成功在table表里进行删除,
+
                         this.filterTableDataEnd=[];
+                        //删除在表格中tableDataEnd显示的哪个数据
                         this.tableDataEnd.forEach((value,i)=>{
                             if(i !==index){
                                 this.filterTableDataEnd.push(value);
@@ -495,6 +494,8 @@
                         });
                         this.tableDataEnd=this.filterTableDataEnd;
                         this.filterTableDataEnd=[];
+
+                        //删除从数据源中tableData获得的数据
                         this.tableData.forEach((value,i)=>{
                             //通过主码快速过滤
                             if(value.inumber!=delItem.inumber){
@@ -503,6 +504,7 @@
                         });
                         this.tableData = this.filterTableDataEnd;
                         this.filterTableDataEnd=[];
+
                         this.$message({
                             type: 'success',
                             message: '删除成功!'
@@ -527,7 +529,6 @@
             addStockIn(){
                 //逻辑前端判断
                 this.submitBtn=true;
-
                 this.$refs.addform.validate()  //判断表单验证是否通过，验证通过执行.then()，否则执行.catch()
                     .then(res =>{
                         if(this.addLastForm===this.addform){
@@ -549,10 +550,10 @@
                                     message: '成功添加一条记录',
                                     type: 'success',
                                 });
-                                this.addLastForm=this.addform;
                                 //将信息刷新到表格中，指向同一个数据源所以只添加一次
                                 this.tableDataEnd.push(this.addform);
-                                this.tableDataEnd.push(this.addform);
+                                this.tableData.push(this.addform);
+
                                 //清空填写单的信息放到请求体中，避免请求延迟已经被清空才刷新在信息到表格中
                                 this.addform = {
                                     inumber : '',
