@@ -154,24 +154,24 @@
             },
             login () {
                 //前端测试代码
-                // if(this.loginForm.userName == this.user1.username){
-                //     console.log(this.user1.role);
-                //     sessionStorage.setItem('user',JSON.stringify(this.loginForm.userName));
-                //     sessionStorage.setItem('role',JSON.stringify(this.user1.role));
-                //     this.$router.replace({path: '/home/firstPage'});
-                // }else if(this.loginForm.userName == this.user2.username){
-                //     console.log(this.user2.role);
-                //     sessionStorage.setItem('user',JSON.stringify(this.loginForm.userName));
-                //     sessionStorage.setItem('role',JSON.stringify(this.user2.role));
-                //     this.$router.replace({path:'/homet/firstPage'})
-                //
-                // }else if(this.loginForm.userName == this.user3.username){
-                //     console.log(this.user3.role);
-                //     sessionStorage.setItem('user',JSON.stringify(this.loginForm.userName));
-                //     sessionStorage.setItem('role',JSON.stringify(this.user3.role));
-                //     this.$router.replace({path:'/homes/firstPage'})
-                //
-                // }
+                if(this.loginForm.userName == this.user1.username){
+                    console.log(this.user1.role);
+                    sessionStorage.setItem('user',JSON.stringify(this.loginForm.userName));
+                    sessionStorage.setItem('role',JSON.stringify(this.user1.role));
+                    this.$router.replace({path: '/home/firstPage'});
+                }else if(this.loginForm.userName == this.user2.username){
+                    console.log(this.user2.role);
+                    sessionStorage.setItem('user',JSON.stringify(this.loginForm.userName));
+                    sessionStorage.setItem('role',JSON.stringify(this.user2.role));
+                    this.$router.replace({path:'/homet/firstPage'})
+
+                }else if(this.loginForm.userName == this.user3.username){
+                    console.log(this.user3.role);
+                    sessionStorage.setItem('user',JSON.stringify(this.loginForm.userName));
+                    sessionStorage.setItem('role',JSON.stringify(this.user3.role));
+                    this.$router.replace({path:'/homes/firstPage'})
+
+                }
                 this.$refs.loginForm.validate()
                     .then(res => {
                         this.loadingBtn = false;
@@ -198,7 +198,7 @@
                                 }
                             })
                             .catch(failResponse => {
-                                this.$router.replace({path: '/404'})
+                                // this.$router.replace({path: '/404'})
                             })
 
                     }).catch(error =>{
