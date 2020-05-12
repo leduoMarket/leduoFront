@@ -284,6 +284,7 @@
                     console.log(res);
                     this.tableData = res.data;
                     this.totalItems = this.tableData.length;
+                    this.tableDataEnd=[];
                     this.tableData.forEach((value,index)=>{
                         this.tableDataEnd.push(value);
                     });
@@ -467,12 +468,6 @@
             // 删除选中下标的一行数据，index由click处的scope.$index传过来的小标，delItem由scope.$row传过来的元素
             del(delItem, index){
                 console.log(delItem);
-
-                this.$message({
-                    type: 'success',
-                    message: '删除成功!'
-                });
-
                 this.$confirm('你确定要删除这条记录吗？','提示',{
                     confirmButtonText:'确定',
                     cancelButtonText:'取消',
