@@ -57,7 +57,7 @@
       <el-button type="primary" icon="el-icon-search" @click="doFilter"  size="medium" round  plain>搜索</el-button>
       <el-button type="primary" icon="el-icon-refresh" @click="doReset" size="medium"  round  plain >重置</el-button>
       <el-table
-        :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)"
+        :data="tableDataEnd.slice((currentPage-1)*pagesize,currentPage*pagesize)"
         border
         style="width: 100%" ref="filterTable"  @sort-change="changeTableSort">
         <el-table-column
@@ -122,7 +122,7 @@
         :page-sizes="[3,5, 10, 20, 40]"
         :page-size="pagesize"
         layout="total, sizes, prev, pager, next, jumper"
-        :total="tableData.length">
+        :total="tableDataEnd.length">
       </el-pagination>
     </div>
   </el-card>
@@ -234,19 +234,21 @@
                 }
             }
         },
-        // 创建的时候发送请求获取显示数据库所有退货单的列表数据
-        created() {
-            this.$axios.get("/home/stockOut").then(res=>{
-                if(res.data){
-                    console.log(res);
-                    this.tableData = res.data;
-                    this.tableDataEnd=[];
-                    this.tableDataEnd = this.tableData;
-                }
-            }).catch(failResponse=>{
+      // 创建的时候发送请求获取显示数据库所有员工的列表数据
+      created() {
 
-            })
-        },
+          this.$axios.get("/home/stockOut").then(res => {
+              if (res.data) {
+                  console.log(res);
+                  this.tableData = res.data;
+                  this.totalItems = this.tableData.length;
+                  this.tableDataEnd = this.tableData;
+                  console.log(this.tableData.length);
+              }
+          }).catch(failResponse => {
+
+          })
+      },
         methods: {
             //分页排序整体表格数据
             changeTableSort(column){

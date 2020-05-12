@@ -184,6 +184,7 @@
         created() {
             this.$axios.get("/home/goodsReturn").then(res=>{
                 if(res.data){
+                    console.log(res);
                     this.tableData = res.data;
                     this.itemCount = res.data.length;
                     this.tableDataEnd=[];

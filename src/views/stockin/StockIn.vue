@@ -93,7 +93,7 @@
         <el-table-column
           prop="iprice"
           label="价格"
-          sortable
+          sortable="custom"
         >
         </el-table-column>
         <el-table-column
@@ -124,7 +124,7 @@
         :page-sizes="[3,5, 10, 20]"
         :page-size="pagesize"
         layout="total, sizes, prev, pager, next, jumper"
-        :total="tableData.length">
+        :total="tableDataEnd.length">
       </el-pagination>
     </div>
   </el-card>
@@ -163,7 +163,7 @@
                         gid:'1234567890123',
                         vname:'橙汁',
                         idate:'2020-04-03T00:00:00.0000000',
-                        iprice:'12.22',
+                        iprice:'9',
                         ipayment:'9090',
                         icount:'10'
                     },
@@ -172,7 +172,7 @@
                         gid:'1234567890123',
                         vname:'橙汁',
                         idate:'2020-04-05T00:00:00.0000000',
-                        iprice:'12.22',
+                        iprice:'15.5',
                         ipayment:'9090',
                         icount:'10'
                     },
@@ -181,7 +181,7 @@
                         gid:'1234567890123',
                         vname:'可乐',
                         idate:'2019-04-02T00:00:00.0000000',
-                        iprice:'12.22',
+                        iprice:'12.2',
                         ipayment:'9090',
                         icount:'10'
                     },{
@@ -189,7 +189,7 @@
                         gid:'1234567890123',
                         vname:'橙汁',
                         idate:'2020-04-03T00:00:00.0000000',
-                        iprice:'12.22',
+                        iprice:'13.7',
                         ipayment:'9090',
                         icount:'10'
                     },
@@ -286,19 +286,17 @@
 
         // 创建的时候发送请求获取显示数据库所有员工的列表数据
         created() {
-            console.log("vue被创建");
+            this.totalItems = this.tableData.length;
+            this.tableDataEnd = this.tableData;
             this.$axios.get("/home/stockIn").then(res => {
                 if (res.data) {
                     console.log(res);
                     this.tableData = res.data;
-                    this.tableDataEnd=[];
-                    this.tableData.forEach((value,index)=>{
-                        this.tableDataEnd.push(value);
-                    });
+                   /* this.totalItems = this.tableData.length;
+                    this.tableDataEnd = this.tableData;*/
+                    console.log(this.tableData.length);
                 }
             }).catch(failResponse => {
-                this.$message.error('不能加载该页面');
-
 
             })
         },

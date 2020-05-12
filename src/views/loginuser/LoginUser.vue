@@ -3,6 +3,7 @@
   <el-card class="box-card">
     <div slot="header" class="clearfix">
       <span>登陆账号</span>
+      <el-button style="float: right; padding: 3px 0" type="text" @click="goBack">返回</el-button>
     </div>
     <div  class="text item">
 
@@ -65,6 +66,11 @@
                 formLabelWidth: '120px'
             }
         },
+        methods:{
+            goBack() {
+                this.$router.go(-1)
+            },
+        }
        /* methods: {
             handleChange (val) {
                 console.log(val)

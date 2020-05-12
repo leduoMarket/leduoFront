@@ -200,16 +200,16 @@
             }
         },
       created(){
-          this.totalItems = this.tableData.length;
-          this.tableDataEnd = this.tableData;
+
           this.$axios.get("/home/payments").then(res =>{
-            if(res.data){
-                console.log(res);
-                this.tableData=res.data;
-                this.totalItems = this.tableData.length;
-                this.tableDataEnd = this.tableData;
-                console.log(this.tableData.length);
-            }
+              if(res.data){
+                  console.log(res);
+                  this.tableData = res.data;
+                  this.itemCount = res.data.length;
+                  this.tableDataEnd=[];
+                  this.tableDataEnd = this.tableData;
+                  console.log(this.itemCount);
+              }
         }).catch(failReasponse =>{
 
         });

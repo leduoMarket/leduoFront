@@ -17,7 +17,7 @@
       </div>
       <div class="form">
         <el-table
-          :data="tableData"
+          :data="tableDataEnd"
           border
           style="width: 100%" @sort-change="changeTableSort">
           <el-table-column

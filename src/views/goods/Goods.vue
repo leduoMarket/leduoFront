@@ -61,7 +61,7 @@
       <el-button type="primary" icon="el-icon-search" @click="doFilter"  size="medium" round  plain>搜索</el-button>
       <el-button type="primary" icon="el-icon-refresh" @click="doReset" size="medium"  round  plain >重置</el-button>
       <el-table
-        :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)"
+        :data="tableDataEnd.slice((currentPage-1)*pagesize,currentPage*pagesize)"
         border
         style="width: 100%" @sort-change="changeTableSort">
         <el-table-column
@@ -115,7 +115,7 @@
         :page-sizes="[3,5, 10, 20]"
         :page-size="pagesize"
         layout="total, sizes, prev, pager, next, jumper"
-        :total="tableData.length">
+        :total="tableDataEnd.length">
       </el-pagination>
     </div>
   </el-card>
@@ -210,12 +210,15 @@
         },
         // 创建的时候发送请求获取显示数据库列表数据
         created() {
-            this.totalItems = this.tableData.length;
-            this.tableDataEnd = this.tableData;
+
             this.$axios.get("/home/goods").then(res => {
-                if (res.data) {
+                if(res.data){
                     console.log(res);
                     this.tableData = res.data;
+                    this.itemCount = res.data.length;
+                    this.tableDataEnd=[];
+                    this.tableDataEnd = this.tableData;
+                    console.log(this.itemCount);
                 }
             }).catch(failResponse => {
 
