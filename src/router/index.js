@@ -23,6 +23,7 @@ const Goods=()=>import("../views/goods/Goods")
 const NotFound = ()=>import("../views/failvue/404")
 const HomeTreassure =()=>import("../components/HomeTreassure")
 const HomeStaff =()=>import("../components/HomeStaff")
+const Register =()=>import("../views/failvue/register")
 
 
 Vue.use(Router)
@@ -43,6 +44,14 @@ const router = new Router({
       meta:{
         requireAuth:false
       }
+    },{
+      path: '/register',
+      name:'Register',
+      component: Register,
+      meta:{
+        requireAuth:false
+      }
+
     },
     {
       path: '/homet',

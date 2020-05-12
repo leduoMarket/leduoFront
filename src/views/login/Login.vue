@@ -45,6 +45,7 @@
       <el-form-item style="width: 100%">
         <el-button type="primary" style="width: 100%;background: #000066;border: none" v-on:click="login" >登录</el-button>
       </el-form-item>
+      <el-button type="text" style="width: 100%; margin-left: 50%" size="mini" v-on:click="register" >注册</el-button>
     </el-form>
     </body>
   </div>
@@ -151,6 +152,9 @@
                         offset: 100
                     });
                 })
+            },
+            register(){
+              this.$router.replace('/Register');
             },
             login () {
                 //前端测试代码
