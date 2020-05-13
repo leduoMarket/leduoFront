@@ -6,7 +6,7 @@
   </div>
 </template>
 <script>
-    import Menu from "./template/Menu";
+
     import TopBar from "./template/TopBar";
     import staff from "./template/staff";
     export default {

@@ -10,6 +10,7 @@ Vue.use(Select)
 Vue.use(Option)
 Vue.use(ElementUI)
 import axios from 'axios'
+
 Vue.prototype.$axios = axios
 axios.defaults.baseURL = 'http://localhost:8088/api'
 Vue.config.productionTip = false

@@ -1,3 +1,5 @@
+
+
 <template>
   <div class="Analysis">
     <el-card class="box-card">

@@ -25,6 +25,11 @@ export default {
         },
         logOut(){
 
+            //前端测试代码
+            sessionStorage.removeItem('user');
+            sessionStorage.removeItem('role');
+            this.$router.replace({path: '/'});
+
             this.$axios.get("/logout").then(successfulResponse=>{
                 if(successfulResponse.data.code==405){
                     sessionStorage.removeItem('user');
