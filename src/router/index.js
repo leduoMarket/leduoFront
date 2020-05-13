@@ -59,16 +59,161 @@ const router = new Router({
       component: HomeTreassure,
       meta:{
         requireAuth:true,
-        roles:[ '1','2','3']
+        roles:[ '1','2']
       },
       children:[
         {
           path: 'firstPage',
           meta:{
             requireAuth:true,
-            roles:[ '1','2','3']
+            roles:[ '1','2']
           },
           component: resolve => require(['../views/firstPage/FirstPage'], resolve)
+        },
+        {
+          path: 'stockOut',
+          name: 'StockOut',
+          meta: {
+            requireAuth: true,
+            roles: ['1','2','3'],
+          },
+          component: StockOut
+        },{
+          path: 'profitAnalysis',
+          name: 'profit',
+          meta: {
+            requireAuth: true,
+            roles: ['1','2'],
+          },
+          component: ProfitAnalysis
+        },{
+          path: 'log',
+          name: 'log',
+          meta: {
+            requireAuth: true,
+            roles: ['1','2','3'],
+          },
+          component: Log,
+        },{
+          path: 'stockIn',
+          name: 'StockIn',
+          meta: {
+            requireAuth: true,
+            roles: ['1','2','3'],
+          },
+          component: StockIn
+        },{
+          path: 'vender',
+          name: 'Vender',
+          meta: {
+            requireAuth: true,
+            roles: ['1','2','3'],
+          },
+          component: Vender,
+        },{
+          path: 'marketMsg',
+          name: 'marketMsg',
+          meta: {
+            requireAuth: true,
+            roles: ['1','2','3'],
+          },
+          component: MarketMsg,
+        },{
+          path: 'goodReturn',
+          name: 'goodReturn',
+          meta: {
+            requireAuth: true,
+            roles: ['1','2','3'],
+          },
+          component: GoodReturn,
+        },{
+          path: 'goodClass',
+          name: 'goodClass',
+          meta: {
+            requireAuth: true,
+            roles: ['1','2','3'],
+          },
+          component: GoodClass,
+        },{
+          path: 'goods',
+          name: 'goods',
+          meta: {
+            requireAuth: true,
+            roles: ['1','2','3'],
+          },
+          component: Goods,
+        },{
+          path: 'flowCount',
+          name: 'paymentOfFlowCount',
+          meta: {
+            requireAuth: true,
+            roles: ['1','2'],
+          },
+          component: PaymentOfFlowCount,
+        },{
+          path: 'inventory',
+          name: 'Inventory',
+          meta: {
+            requireAuth: true,
+            roles: ['1','2','3'],
+          },
+          component: Inventory,
+        },{
+          path: 'goodReturn',
+          name: 'goodReturn',
+          component: GoodReturn,
+          meta: {
+            requireAuth: true,
+            roles: ['1','2','3'],
+          },
+        },{
+          path: 'goodPrice',
+          name: 'goodPrice',
+          component: GoodPrice,
+          meta: {
+            requireAuth: true,
+            roles: ['1','2','3'],
+          },
+        },{
+          path: 'employee',
+          name: 'employee',
+          component: Employees,
+          meta: {
+            requireAuth: true,
+            roles: ['1'],
+          },
+        },{
+          path: 'debt',
+          name: 'Debt',
+          meta: {
+            requireAuth: true,
+            roles: ['1','2'],
+          },
+          component: Debt,
+        },{
+          path: 'user',
+          name: 'LoginUser',
+          meta: {
+            requireAuth: true,
+            roles: ['1','2','3'],
+          },
+          component: LoginUser,
+        },
+        {
+          path: 'error',
+          meta: {
+            requireAuth: true,
+            roles: ['1','2','3'],
+          },
+          component: resolve => require(['../views/failvue/Error'], resolve)
+        },
+        {
+          path: 'help',
+          meta: {
+            requireAuth: true,
+            roles: ['1','2','3'],
+          },
+          component: resolve => require(['../views/helps/Help'], resolve)
         }
       ]
     },
@@ -251,17 +396,129 @@ const router = new Router({
       //添加该字段，表示进入这个路由需要登录
       meta: {
         requireAuth: true,
-        roles:[1,2],
+        roles:['1','2','3'],
       },
       children:[
         {
           path: 'firstPage',
           meta: {
             requireAuth: true,
-            roles:[1,2],
+            roles:['1','2','3'],
           },
           component: resolve => require(['../views/firstPage/FirstPage'], resolve)
+        }, {
+          path: 'stockOut',
+          name: 'StockOut',
+          meta: {
+            requireAuth: true,
+            roles: ['1','2','3'],
+          },
+          component: StockOut
+        },{
+          path: 'log',
+          name: 'log',
+          meta: {
+            requireAuth: true,
+            roles: ['1','2','3'],
+          },
+          component: Log,
+        },{
+          path: 'stockIn',
+          name: 'StockIn',
+          meta: {
+            requireAuth: true,
+            roles: ['1','2','3'],
+          },
+          component: StockIn
+        },{
+          path: 'vender',
+          name: 'Vender',
+          meta: {
+            requireAuth: true,
+            roles: ['1','2','3'],
+          },
+          component: Vender,
+        },{
+          path: 'marketMsg',
+          name: 'marketMsg',
+          meta: {
+            requireAuth: true,
+            roles: ['1','2','3'],
+          },
+          component: MarketMsg,
+        },{
+          path: 'goodReturn',
+          name: 'goodReturn',
+          meta: {
+            requireAuth: true,
+            roles: ['1','2','3'],
+          },
+          component: GoodReturn,
+        },{
+          path: 'goodClass',
+          name: 'goodClass',
+          meta: {
+            requireAuth: true,
+            roles: ['1','2','3'],
+          },
+          component: GoodClass,
+        },{
+          path: 'goods',
+          name: 'goods',
+          meta: {
+            requireAuth: true,
+            roles: ['1','2','3'],
+          },
+          component: Goods,
+        },{
+          path: 'inventory',
+          name: 'Inventory',
+          meta: {
+            requireAuth: true,
+            roles: ['1','2','3'],
+          },
+          component: Inventory,
+        },{
+          path: 'goodReturn',
+          name: 'goodReturn',
+          component: GoodReturn,
+          meta: {
+            requireAuth: true,
+            roles: ['1','2','3'],
+          },
+        },{
+          path: 'goodPrice',
+          name: 'goodPrice',
+          component: GoodPrice,
+          meta: {
+            requireAuth: true,
+            roles: ['1','2','3'],
+          },
+        },{
+          path: 'user',
+          name: 'LoginUser',
+          meta: {
+            requireAuth: true,
+            roles: ['1','2','3'],
+          },
+          component: LoginUser,
         },
+        {
+          path: 'error',
+          meta: {
+            requireAuth: true,
+            roles: ['1','2','3'],
+          },
+          component: resolve => require(['../views/failvue/Error'], resolve)
+        },
+        {
+          path: 'help',
+          meta: {
+            requireAuth: true,
+            roles: ['1','2','3'],
+          },
+          component: resolve => require(['../views/helps/Help'], resolve)
+        }
 
       ]
     }
@@ -281,7 +538,7 @@ router.beforeEach((to, from, next) => {
         //1,2,3,分别代表什么权限？
         for (let i = 0; i < to.meta.roles.length; i++) {
           if (role==to.meta.roles[i]) {
-            console.log("相等")
+            console.log("相等");
             next();
             break;
           } else if (i == to.meta.roles.length - 1) {
