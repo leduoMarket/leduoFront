@@ -279,6 +279,12 @@
         // 创建的时候发送请求获取显示数据库所有员工的列表数据
         created() {
 
+            this.totalItems = this.tableData.length;
+            this.tableDataEnd=[];
+            this.tableData.forEach((value,index)=>{
+                this.tableDataEnd.push(value);
+            });
+
             this.$axios.get("/staff/stockIn").then(res => {
                 if (res.data) {
                     console.log(res);
@@ -464,7 +470,6 @@
 
             // 删除选中下标的一行数据，index由click处的scope.$index传过来的小标，delItem由scope.$row传过来的元素
             del(delItem, index){
-                console.log(delItem);
                 this.$confirm('你确定要删除这条记录吗？','提示',{
                     confirmButtonText:'确定',
                     cancelButtonText:'取消',

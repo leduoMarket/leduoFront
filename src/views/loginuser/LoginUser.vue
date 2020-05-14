@@ -92,7 +92,7 @@
                 this.form.erole='员工';
             };
             this.form.eid=eid;
-            this.$axios.post('/getUserInfo',{
+            this.$axios.put('/getUserInfo',{
                 uid:this.form.eid,
             }).then(res =>{
                 this.form.eid=res.data.uid;

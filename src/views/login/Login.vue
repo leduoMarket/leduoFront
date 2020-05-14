@@ -159,7 +159,6 @@
                     sessionStorage.setItem('user','3234567');
                     sessionStorage.setItem('role','3');
                     this.$router.replace({path:'/homes/firstPage'})
-
                 }
                 this.$refs.loginForm.validate()
                     .then(res => {
@@ -174,6 +173,7 @@
                                     //得到响应中的role值，1：系统管理员，2.财务人员，3.普通员工
                                     //获得从后端得到role的代码可能有误
                                     let role = successResponse.data.role;
+                                    //键值对，值：string，不能是json
                                     sessionStorage.setItem('user',successResponse.data.sessionId);
                                     sessionStorage.setItem('role',successResponse.data.role);
                                     console.log("role from dataBase:"+successResponse.data.role);
