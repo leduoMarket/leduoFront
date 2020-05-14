@@ -278,7 +278,11 @@
 
         // 创建的时候发送请求获取显示数据库所有员工的列表数据
         created() {
-
+            this.totalItems = this.tableData.length;
+            this.tableDataEnd=[];
+            this.tableData.forEach((value,index)=>{
+                this.tableDataEnd.push(value);
+            });
             this.$axios.get("/staff/stockIn").then(res => {
                 if (res.data) {
                     console.log(res);
@@ -313,21 +317,21 @@
                 var sortingType = column.order;
                 //如果字段名称为“创建时间”，将“创建时间”转换为时间戳，才能进行大小比较
                 if(fieldName=="idate"){
-                 this.tableData.map(item => {
+                 this.tableDataEnd.map(item => {
                      item.idate = this.$moment(item.idate).valueOf();
                  });
                 }
                 //按照降序排序
                 if(sortingType == "descending"){
-                    this.tableData = this.tableData.sort((a, b) => b[fieldName] - a[fieldName]);
+                    this.tableDataEnd = this.tableDataEnd.sort((a, b) => b[fieldName] - a[fieldName]);
                 }
                 //按照升序排序
                 else{
-                    this.tableData = this.tableData.sort((a, b) => a[fieldName] - b[fieldName]);
+                    this.tableDataEnd = this.tableDataEnd.sort((a, b) => a[fieldName] - b[fieldName]);
                     console.log(this.tableData)
                 }
                 if(fieldName=="idate"){
-                    this.tableData.map(item => {
+                    this.tableDataEnd.map(item => {
                         item.idate = this.$moment(item.idate).format(
                             "YYYY-MM-DD HH:mm:ss"
                         );

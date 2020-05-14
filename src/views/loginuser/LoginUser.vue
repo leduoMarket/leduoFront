@@ -29,17 +29,17 @@
           </div>
         </el-form-item>
         <div class="label2">
-        <el-form-item label="原始密码" :label-width="formLabelWidth" prop="epwd1" >
-          <el-input v-model="form.epwd1" style="width: 133%" placeholder="**********"></el-input>
+        <el-form-item label="原始密码"  :label-width="formLabelWidth" prop="epwd1" >
+          <el-input type="password" show-password v-model="form.epwd1" style="width: 133%"  placeholder="请输入原始密码"></el-input>
         </el-form-item>
         <el-form-item label="修改密码" :label-width="formLabelWidth" prop="epwd2">
-          <el-input v-model="form.epwd2" style="width: 133%"></el-input>
+          <el-input type="password" show-password v-model="form.epwd2" style="width: 133%"  placeholder="请输入新密码"></el-input>
         </el-form-item>
           <div class="button1">
           <el-button style="width: 120%" type="primary" plain @click="submit">修改密码</el-button>
           </div>
         </div>
-      </el-form>p
+      </el-form>
     </div>
   </el-card>
   </div>
@@ -90,7 +90,7 @@
                 this.form.erole='财务';
             }else{
                 this.form.erole='员工';
-            };
+            }
             this.form.eid=eid;
             this.$axios.post('/getUserInfo',{
                 uid:this.form.eid,

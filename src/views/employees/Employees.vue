@@ -8,12 +8,12 @@
         <el-table
           :data="tableDataEnd.slice((currentPage-1)*pagesize,currentPage*pagesize)"
           border
-          style="width: 100%">
+          style="width: 100%"  @sort-change="changeTableSort">
           <el-table-column
             prop="uid"
             label="员工编号"
             width="180"
-            sortable
+            sortable="custom"
           >
           </el-table-column>
           <el-table-column
@@ -81,15 +81,6 @@
                 dialogFormVisible: false,
                 //删除的元素是谁
                 delItem: [],
-                // 用于新增员工数据时候的绑定
-                userInfo: {
-                    uid: '',
-                    user_name: '',
-                    phone: '',
-                    role: '',
-                    satatus: ''
-
-                },
                 formLabelWidth: '120px',
                 pagesize:5,
                 currentPage:1, //初始页
@@ -97,7 +88,10 @@
                 //初始数据的长度
                 totalItems:0,
                 //最后在页面中显示的数据
-                tableDataEnd:[],
+                tableDataEnd:[{
+                    uid:'123456',
+                    user_name: '张三',
+                }],
                 //搜索框内的数据
                 searchInput:"",
                 filterTableDataEnd:[],
@@ -147,7 +141,7 @@
                 this.tableDataEnd=[];
                 this.filterTableDataEnd=[];
                 this.tableData.forEach((value,index)=>{
-                    if(selectTag=="uid"){
+                    if(selectTag === "uid"){
                         if(value.uid){
                             if(value.uid.search(this.searchInput)!==-1){
                                 this.filterTableDataEnd.push(value)
@@ -173,10 +167,7 @@
                 this.tableDataEnd=this.filterTableDataEnd;
                 this.filterTableDataEnd=[];
             },
-            /*doReset(){
-                this.searchInput="";
-                this.tableDataEnd = this.tableData;
-            },*/
+
             // 初始页currentPage、初始每页数据数pagesize和数据data
             handleSizeChange: function (size) {
                 this.pagesize = size;
@@ -186,67 +177,41 @@
                 this.currentPage = currentPage;
                 console.log(this.currentPage)
             },
-            // 执行新增员工操作
-            /*addEmployee() {
-                this.$refs.userInfo.validate()
-                    .then(res =>{
-                        this.$axios.post('/admin/addemp', {
-                            eid: this.userInfo.eid,
-                            ename: this.userInfo.ename,
-                            ephone: this.userInfo.ephone,
-                            erole: this.userInfo.erole,
-                            esalary: this.userInfo.esalary,
-                        }).then(successResponse => {
-                            if (successResponse.data.code == 200) {
-                                this.addSuccessful=true;
-                                this.$message({
-                                    message: '成功添加一条记录',
-                                    type: 'success',
-                                });
-                                //将信息刷新到表格中
-                                this.tableData.push(this.addform);
-                                this.tableDataEnd.push(this.addform);
-                                //清空填写单的信息放到请求体中，避免请求延迟已经被清空才刷新在信息到表格中
-                                this.userInfo = {
-                                    eid: '',
-                                    ename: '',
-                                    ephone: '',
-                                    erole: '',
-                                    esalary: ''
-                                };
-                                // console.log("userInfo"+this.userInfo.eid);
-                            }
-                        }).catch(failedResponse => {
-                            this.$message({
-                                message: '添加失败',
-                            });
-                        });
-                        // 将填写框置空，方便下次填写
-                        // 让表格消失
-                        this.userInfo = {
-                            eid: '',
-                            ename: '',
-                            ephone: '',
-                            erole: '',
-                            esalary: ''
-                        };
-                        // 让表格消失
-                        this.dialogFormVisible = false;
-                    }).catch(error =>{
-                    console.log("提交失败");
-                    this.$message({
-                        message: '无法提交，表单中数据有错误',
-                        type: 'error'
+
+            //分页排序整体表格数据
+            changeTableSort(column){
+                console.log(column);
+                //获取字段名称和排序类型
+                var fieldName = column.prop;
+                var sortingType = column.order;
+                //如果字段名称为“创建时间”，将“创建时间”转换为时间戳，才能进行大小比较
+                if(fieldName=="idate"){
+                    this.tableData.map(item => {
+                        item.idate = this.$moment(item.idate).valueOf();
                     });
-                });
+                }
+                //按照降序排序
+                if(sortingType == "descending"){
+                    this.tableData = this.tableData.sort((a, b) => b[fieldName] - a[fieldName]);
+                }
+                //按照升序排序
+                else{
+                    this.tableData = this.tableData.sort((a, b) => a[fieldName] - b[fieldName]);
+                    console.log(this.tableData)
+                }
+                if(fieldName=="idate"){
+                    this.tableData.map(item => {
+                        item.idate = this.$moment(item.idate).format(
+                            "YYYY-MM-DD HH:mm:ss"
+                        );
+                    });
+                }
 
-
-            },*/
+            },
 
             // 删除选中下标的一行数据，index由click处的scope.$index传过来的小标，delItem由scope.$row传过来的元素
             del(delItem, index){
                 console.log(delItem);
-
                 this.$message({
                     type: 'success',
                     message: '删除成功!'
@@ -277,7 +242,7 @@
                         //删除从数据源中tableData获得的数据
                         this.tableData.forEach((value,i)=>{
                             //通过主码快速过滤
-                            if(value.eid!=delItem.eid){
+                            if(value.eid!==delItem.eid){
                                 this.filterTableDataEnd.push(value);
                             }
                         });
