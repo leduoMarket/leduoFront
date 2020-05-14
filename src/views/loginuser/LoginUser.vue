@@ -33,7 +33,7 @@
           <el-input v-model="form.epwd1" style="width: 133%" placeholder="**********"></el-input>
         </el-form-item>
         <el-form-item label="修改密码" :label-width="formLabelWidth" prop="epwd2">
-          <el-input v-model="form.ewd2" style="width: 133%"></el-input>
+          <el-input v-model="form.epwd2" style="width: 133%"></el-input>
         </el-form-item>
           <div class="button1">
           <el-button style="width: 120%" type="primary" plain @click="submit">修改密码</el-button>
@@ -117,7 +117,7 @@
                             cancelButtonText: '取消',
                             type: 'warning'
                         }).then(() => {
-                            this.$axios.post('/user/changePwd',{
+                            this.$axios.post('/updatepwd',{
                                 uid:this.form.eid,
                                 pwd1:this.form.epwd1,
                                 pwd2:this.form.epwd2,
