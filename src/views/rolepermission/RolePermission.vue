@@ -80,7 +80,20 @@
             }
         },
         created(){
+            this.$axios.get("/home/role").then(res => {
+                if (res.data) {
+                    console.log(res);
+                    this.tableData = res.data;
+                    this.totalItems = this.tableData.length;
+                    this.tableDataEnd=[];
+                    this.tableData.forEach((value,index)=>{
+                        this.tableDataEnd.push(value);
+                    });
+                    console.log(this.tableData.length);
+                }
+            }).catch(failResponse => {
 
+            })
         },
 
         methods: {

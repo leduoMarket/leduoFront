@@ -5,8 +5,9 @@
     <div id="logo">
       <!--    <img src="../../assets/pic/logo.png" style="width: 100px; height: 100px" alt=""/>-->
     </div>
+    <div class="form">
     <el-form class="login-container" label-position="left"
-             label-width="0px"   :rules="rules" ref="loginForm" :model="loginForm">
+             label-width="0px"   :rules="rules" ref="loginForm" :model="loginForm" >
       <h3 class="login_title">系统登录</h3>
       <el-form-item prop="userName">
         <el-col :span="2"><i class="el-icon-s-custom"></i></el-col>
@@ -43,10 +44,12 @@
         </el-col>
       </el-form-item>
       <el-form-item style="width: 100%">
-        <el-button type="primary" style="width: 100%;background: #000066;border: none" v-on:click="login" >登录</el-button>
+        <el-button type="primary" style="width: 48%;background: #000066;border: none" v-on:click="login" >登录</el-button>
+        <el-button type="primary" style="width: 48%;background: #000066;border: none" v-on:click="register" >注册</el-button>
       </el-form-item>
-      <el-button type="text" style="width: 100%; margin-left: 50%" size="mini" v-on:click="register" >注册</el-button>
+     <!-- <el-button type="primary" style="width: 50%;background: #000066;border: none" v-on:click="register" >注册</el-button>-->
     </el-form>
+    </div>
     </body>
   </div>
 </template>
@@ -219,7 +222,7 @@
   .login-container {
     border-radius: 15px;
     background-clip: padding-box;
-    margin: 20px auto;
+    margin: 110px auto;
     width: 350px;
     padding: 35px 35px 15px 35px;
     background: #fff;
@@ -231,9 +234,15 @@
     text-align: center;
     color: #505458;
   }
+  .login {
+    text-align: center;
 
+  }
+  .form {
+    margin: 0 auto;
+  }
   #poster {
-    /*background:url("../../assets/pic/background.jpg") no-repeat;*/
+    background:url("../../assets/pic/background.jpg") no-repeat;
     height: 100%;
     width: 100%;
     background-size: 100% 120%;

@@ -284,6 +284,7 @@
                     console.log(res);
                     this.tableData = res.data;
                     this.totalItems = this.tableData.length;
+
                     this.tableData.forEach((value,index)=>{
                         this.tableDataEnd.push(value);
                     });

@@ -3,46 +3,8 @@
     <el-card class="box-card">
       <div slot="header" class="clearfix">
         <span>员工基本信息</span>
-        <!--        新增员工弹窗-->
-        <!--<el-button style="float: right; padding-right: 3px;" type="text" @click="dialogFormVisible = true">新增
-        </el-button>
-        <el-dialog title="员工基本信息" :visible.sync="dialogFormVisible">
-          <el-form :model="userInfo" :rules="employeesRules" ref="userInfo">
-            <el-form-item label="员工编号" :label-width="formLabelWidth" prop="eid">
-              <el-input v-model="userInfo.eid" autocomplete="off"></el-input>
-            </el-form-item>
-            <el-form-item label="员工姓名" :label-width="formLabelWidth" prop="ename">
-              <el-input v-model="userInfo.ename" autocomplete="off"></el-input>
-            </el-form-item>
-            <el-form-item label="电话" :label-width="formLabelWidth" prop="ephone">
-              <el-input v-model="userInfo.ephone" autocomplete="off"></el-input>
-            </el-form-item>
-            <el-form-item label="角色" :label-width="formLabelWidth" prop="erole">
-              <el-input v-model="userInfo.erole" autocomplete="off"></el-input>
-            </el-form-item>
-            <el-form-item label="工资" :label-width="formLabelWidth" prop="esalary">
-              <el-input v-model="userInfo.esalary" autocomplete="off"></el-input>
-            </el-form-item>
-          </el-form>
-          <div slot="footer" class="dialog-footer">
-            <el-button @click="dialogFormVisible = false">取 消</el-button>
-            <el-button type="primary" @click="addEmployee">确 定</el-button>
-          </div>
-        </el-dialog>-->
       </div>
       <div class="form">
-       <!-- <el-select v-model="selectTags" clearable size="medium"  placeholder="请选择" value="" >
-          <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
-          </el-option>
-        </el-select>
-        <el-input v-model="searchInput" placeholder="请输入信息"  size="medium" style="width:240px; margin-right:23% ;margin-bottom: 1.5%"></el-input>
-
-        <el-button type="primary" icon="el-icon-search" @click="doFilter"  size="medium" round  plain>搜索</el-button>
-        <el-button type="primary" icon="el-icon-refresh" @click="doReset" size="medium"  round  plain >重置</el-button>-->
         <el-table
           :data="tableDataEnd.slice((currentPage-1)*pagesize,currentPage*pagesize)"
           border
@@ -142,23 +104,6 @@
                 flag:false,
                 selectTags:"",
 
-                /*employeesRules:{
-                    eid:[
-                        {required:true ,validator: reg_eid,  trigger: 'blur'}
-                    ],
-                    ename:[
-                        {required:true ,validator: reg_ename,  trigger: 'blur'}
-                    ],
-                    ephone:[
-                        {required:true ,validator: reg_phone,  trigger: 'blur'}
-                    ],
-                    erole:[
-                        {required:true ,validator: reg_erole,  trigger: 'blur'}
-                    ],
-                    esalary:[
-                        {required:true ,validator: reg_money,  trigger: 'blur'}
-                    ]
-                },*/
                 //选择框的选项
                 options: [{
                     value: 'uid',
@@ -182,7 +127,10 @@
                     console.log(res);
                     this.tableData = res.data;
                     this.totalItems = this.tableData.length;
-                    this.tableDataEnd = this.tableData;
+                    this.tableDataEnd=[];
+                    this.tableData.forEach((value,index)=>{
+                        this.tableDataEnd.push(value);
+                    });
                     console.log(this.tableData.length);
                 }
             }).catch(failResponse => {
@@ -225,10 +173,10 @@
                 this.tableDataEnd=this.filterTableDataEnd;
                 this.filterTableDataEnd=[];
             },
-            doReset(){
+            /*doReset(){
                 this.searchInput="";
                 this.tableDataEnd = this.tableData;
-            },
+            },*/
             // 初始页currentPage、初始每页数据数pagesize和数据data
             handleSizeChange: function (size) {
                 this.pagesize = size;
@@ -295,39 +243,65 @@
 
             },*/
 
-            // 删除选中下标的一行数据，index由click处的scope.$index传过来的下标，delItem由scope.$row传过来的元素
-            del(delItem, index) {
-                this.$confirm('你确定要删这条记录？', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }).then(() => {
+            // 删除选中下标的一行数据，index由click处的scope.$index传过来的小标，delItem由scope.$row传过来的元素
+            del(delItem, index){
+                console.log(delItem);
+
+                this.$message({
+                    type: 'success',
+                    message: '删除成功!'
+                });
+
+                this.$confirm('你确定要删除这条记录吗？','提示',{
+                    confirmButtonText:'确定',
+                    cancelButtonText:'取消',
+                    type:'warning'
+                }).then(() =>{
                     //如果用户确实要删除，则用delete方式删除，并且传递要删除的记录的eid
-                    this.$axios.delete('/home/delemp', {
-                        params: {
+                    this.$axios.delete('/home/emp',{
+                        params:{
                             empId: delItem.eid
                         }
-                    }).then(successResponse => {
-                        //数据库删除成功在table表里进行删除,
-                        this.tableData.splice(index, 1);
-                        this.tableDataEnd.slice(index,1);
-                            this.$message({
-                                type: 'success',
-                                message: '删除成功!'
-                            });
-                    }).catch(failedResponse => {
+                    }).then(successResponse =>{
+
+                        this.filterTableDataEnd=[];
+                        //删除在表格中tableDataEnd显示的哪个数据
+                        this.tableDataEnd.forEach((value,i)=>{
+                            if(i !==index){
+                                this.filterTableDataEnd.push(value);
+                            }
+                        });
+                        this.tableDataEnd=this.filterTableDataEnd;
+                        this.filterTableDataEnd=[];
+
+                        //删除从数据源中tableData获得的数据
+                        this.tableData.forEach((value,i)=>{
+                            //通过主码快速过滤
+                            if(value.eid!=delItem.eid){
+                                this.filterTableDataEnd.push(value);
+                            }
+                        });
+                        this.tableData = this.filterTableDataEnd;
+                        this.filterTableDataEnd=[];
+
+                        this.$message({
+                            type: 'success',
+                            message: '删除成功!'
+                        });
+                    }).catch(failResponse =>{
                         //用户同意删除情况下数据库删除失败
                         this.$message({
                             type: 'info',
                             message: '删除失败'
                         });
                     })
-                }).catch(() => {
+                }).catch(() =>{
                     //用户取消了删除
                     this.$message({
                         type: 'info',
                         message: '已删除取消'
                     });
+
                 });
             },
         }
