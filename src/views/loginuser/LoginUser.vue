@@ -7,55 +7,61 @@
     </div>
     <div  class="text item">
 
-      <el-form :model="form" >
-        <el-form-item label="账号" :label-width="formLabelWidth">
+      <el-form :model="form" :rules="formRules" ref="form">
+        <el-form-item label="账号" :label-width="formLabelWidth"  >
           <div class="label1">
-          <el-input v-model="form.eid" autocomplete="off"></el-input>
+          <el-input v-model="form.eid" autocomplete="off" readonly style="width:100%"></el-input>
           </div>
         </el-form-item>
-        <el-form-item label="姓名" :label-width="formLabelWidth">
+        <el-form-item label="姓名" :label-width="formLabelWidth" >
           <div class="label1">
-          <el-input v-model="form.ename" autocomplete="off"></el-input>
+          <el-input v-model="form.ename" autocomplete="off" readonly style="width: 100%"></el-input>
           </div>
         </el-form-item>
-        <el-form-item label="电话" :label-width="formLabelWidth">
+        <el-form-item label="电话" :label-width="formLabelWidth" >
           <div class="label1">
-          <el-input v-model="form.ephone" autocomplete="off"></el-input>
+          <el-input v-model="form.ephone" autocomplete="off" readonly style="width: 100%"></el-input>
           </div>
         </el-form-item>
-        <el-form-item label="角色" :label-width="formLabelWidth">
+        <el-form-item label="角色" :label-width="formLabelWidth" >
           <div class="label1">
-          <el-input v-model="form.erole" autocomplete="off"></el-input>
+          <el-input v-model="form.erole" autocomplete="off" readonly style="width: 100%"></el-input>
           </div>
         </el-form-item>
         <div class="label2">
-        <el-form-item label="原始密码" :label-width="formLabelWidth" >
-          <el-input v-model="form.name" style="width: 125%" placeholder="**********"></el-input>
+        <el-form-item label="原始密码" :label-width="formLabelWidth" prop="epwd1" >
+          <el-input v-model="form.epwd1" style="width: 133%" placeholder="**********"></el-input>
         </el-form-item>
-        <el-form-item label="修改密码" :label-width="formLabelWidth">
-          <el-input v-model="form.name" style="width: 125%"></el-input>
+        <el-form-item label="修改密码" :label-width="formLabelWidth" prop="epwd2">
+          <el-input v-model="form.ewd2" style="width: 133%"></el-input>
         </el-form-item>
           <div class="button1">
-          <el-button style="width: 120%" type="primary" plain>修改密码</el-button>
+          <el-button style="width: 120%" type="primary" plain @click="submit">修改密码</el-button>
           </div>
         </div>
-      </el-form>
+      </el-form>p
     </div>
   </el-card>
   </div>
 </template>
 
 <script>
+  import {
+      reg_password
+  } from "../login/validator";
 
-    export default {
+  export default {
         name: 'LoginUser',
         data () {
             return {
+                readonly:true,
                 form: {
-                    eid: '2017110936',
+                    eid: '',
                     ename: '欧阳',
                     ephone: '15760232967',
-                    erole: '经理',
+                    erole: '',
+                    epwd1:'',
+                    epwd2:'',
                     date1: '',
                     date2: '',
                     delivery: false,
@@ -63,13 +69,86 @@
                     resource: '',
                     desc: ''
                 },
-                formLabelWidth: '120px'
+                formLabelWidth: '120px',
+                formRules:{
+                    epwd1:[{
+                        required:true ,validator: reg_password, trigger:'blur'
+                    }],
+                    epwd2:[{
+                        required:true ,validator: reg_password, trigger:'blur'
+                    }],
+
+                }
             }
+        },
+        created(){
+            var eid = sessionStorage.getItem('user');
+            var role =sessionStorage.getItem('role');
+            if(role == '1'){
+                this.form.erole='管理员';
+            }else if (role == '2'){
+                this.form.erole='财务';
+            }else{
+                this.form.erole='员工';
+            };
+            this.form.eid=eid;
+            this.$axios.post('/getUserInfo',{
+                uid:this.form.eid,
+            }).then(res =>{
+                this.form.eid=res.data.uid;
+                this.form.ename=res.data.user_name;
+                this.form.ephone=res.data.phone;
+                this.form.erole=res.data.role;
+
+            }).catch(failResponse =>{
+
+            });
+
         },
         methods:{
             goBack() {
                 this.$router.go(-1)
             },
+            submit(){
+                this.$refs.form.validate()
+                    .then(res =>{
+                        this.$confirm('此操作将修改你的密码, 是否继续?', '提示', {
+                            confirmButtonText: '确定',
+                            cancelButtonText: '取消',
+                            type: 'warning'
+                        }).then(() => {
+                            this.$axios.post('/user/changePwd',{
+                                uid:this.form.eid,
+                                pwd1:this.form.epwd1,
+                                pwd2:this.form.epwd2,
+                            }).then(successResponse =>{
+                                if(successResponse.data.code == 200){
+                                    this.$message({
+                                        type: 'success',
+                                        message: '修改成功!'
+                                    });
+                                }
+                            }).catch(failedResponse =>{
+                                this.$message({
+                                    type: 'success',
+                                    message: '修改失败，您的密码可能错误!'
+                                });
+
+
+                            } );
+
+                        }).catch(() => {
+                            this.$message({
+                                type: 'info',
+                                message: '已取消修改'
+                            });
+                        });
+                    }).catch(failResponse =>{
+
+                });
+
+
+            }
         }
        /* methods: {
             handleChange (val) {

@@ -152,4 +152,8 @@
     color: red;
     text-decoration: none;
   }
+  .el-menu-vertical-demo:not(.el-menu--collapse) {
+
+    min-height: 100%;
+  }
 </style>
