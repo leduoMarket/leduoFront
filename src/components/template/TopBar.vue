@@ -3,15 +3,10 @@
     <el-col :span="12" style="width: 100%">
       <div class="header-info">
         <el-button style="float: right; padding: 3px 8px" type="text"  @click="logOut">退出</el-button>
-        <a href="http://localhost:8080/home/user">
-        <el-button style="float: right; padding: 3px 8px;" type="text" >账户</el-button>
-        </a>
-        <a href="http://localhost:8080/home/help">
-          <el-button style="float: right; padding: 3px 8px" type="text" >帮助</el-button>
-        </a>
-        <a href="http://localhost:8080/home/marketmsg">
-          <el-button style="float: right; padding: 3px 8px" type="text" >超市</el-button>
-        </a>
+        <el-button style="float: right; padding: 3px 8px;" type="text" @click="gotoUserInfo" >账户</el-button>
+        <el-button style="float: right; padding: 3px 8px" type="text" @click="gotoHelp">帮助</el-button>
+        <el-button style="float: right; padding: 3px 8px" type="text" @click="gotoHome">超市</el-button>
+
       </div>
     </el-col>
   </el-container>
@@ -41,7 +36,45 @@ export default {
                     offset: 100
                 });
             })
-        }
+        },
+        gotoUserInfo(){
+            let role = sessionStorage.getItem("role");
+            if(role==='1'){
+                this.$router.replace({path:'/home/user'})
+            }
+            else if(role === '2'){
+                this.$router.replace({path:'/homet/user'})
+            }else {
+                this.$router.replace({path:'/homes/user'})
+            }
+
+        },
+        gotoHelp(){
+            let role = sessionStorage.getItem("role");
+            if(role==='1'){
+                this.$router.replace({path:'/home/help'})
+            }
+            else if(role === '2'){
+                this.$router.replace({path:'/homet/help'})
+            }else {
+                this.$router.replace({path:'/homes/help'})
+            }
+
+        },
+        gotoHome(){
+            let role = sessionStorage.getItem("role");
+            if(role==='1'){
+                this.$router.replace({path:'/home/marketmsg'})
+            }
+            else if(role === '2'){
+                this.$router.replace({path:'/homet/marketmsg'})
+            }else {
+                this.$router.replace({path:'/homes/marketmsg'})
+            }
+
+        },
+
+
     }
 }
 </script>

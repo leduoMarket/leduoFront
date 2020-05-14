@@ -14,6 +14,11 @@
       <p>联系人：某先生</p>
       <p>招商电话：66776677</p>
       <p>详细地址：龙泉驿大面街道1819号</p>
+      <el-switch
+        v-model="value"
+        active-color="#13ce66"
+        inactive-color="#ff4949">
+      </el-switch>
     </div>
   </el-card>
   </div>
@@ -23,6 +28,11 @@
 
     export default {
         name: "MarketMsg",
+        data() {
+            return {
+                value: true
+            }
+        },
         methods:{
             goBack() {
                 this.$router.go(-1)

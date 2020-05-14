@@ -7,34 +7,31 @@
       <div>
         <el-table
           :data="tableDataEnd"
-          border
-          style="width: 100%">
+          fixed="center"
+          style="width: 100%;margin-left: 50px">
           <el-table-column
-            prop="id"
-            label="序号"
-            width=50%>
+            prop="uid"
+            label="用户账号"
+            height="15"
+            width="120">
           </el-table-column>
           <el-table-column
-            prop="role"
-            label="权限角色"
-            width="100">
+            prop="uname"
+            label="用户名"
+            width="120">
           </el-table-column>
           <el-table-column
-            prop="ability"
-            label="描述"
-            width="335">
-          </el-table-column>
-          <el-table-column
-            prop="rmember"
-            label="成员"
-            width="">
+            prop="urole"
+            label="角色"
+            width="120">
           </el-table-column>
           <el-table-column
             prop="esalary"
-            label="操作">
-
+            fixed="right"
+            label="操作"  >
             <template slot-scope="scope">
-              <el-button style="float: left; padding-right: 3px;" type="text"><span style="color: red" @click="updateForm">修改</span></el-button>
+              <el-button style="float: left; padding-right: 3px;" type="text"><span style="color: red" @click="updateForm">编辑</span></el-button>
+              <el-button style="float: left; padding-right: 3px;" type="text"><span style="color: deepskyblue" @click="delForm">删除</span></el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -52,27 +49,23 @@
                 options: [],
                 //从数据中获得的数据
                 tableData: [{
-                    id:1,
-                    role:"经理",
-                    ability:"拥有访问超市任何信息的权限",
-                    rmember:"张三"
-                },{
-                    id:2,
-                    role:"财务员",
-                    ability:"拥有财务菜单栏下的所有权限",
-                    rmember:"王五"
+                    uid:"1234567",
+                    uname:"张三",
+                    urole:"经理",
+                    ustatus:0,
 
                 },{
-                    id:3,
-                    role:"销售员",
-                    ability:"拥有销售菜单栏、退货菜单栏下的所有权限",
-                    rmember:"李四"
+                    uid:"2234567",
+                    uname:"李芳",
+                    urole:"财务员",
+                    ustatus:1,
+
 
                 },{
-                    id:4,
-                    role:"库房管理员",
-                    ability:"拥有采购菜单栏、退货菜单栏、商品菜单栏下的所有权限",
-                    rmember:"刘兰"
+                    uid:"3234567",
+                    uname:"李四",
+                    urole:"销售员",
+                    ustatus:0,
 
                 }],
                 //最后显示在表单的内容
@@ -80,26 +73,21 @@
             }
         },
         created(){
-            this.$axios.get("/home/role").then(res => {
-                if (res.data) {
-                    console.log(res);
-                    this.tableData = res.data;
-                    this.totalItems = this.tableData.length;
-                    this.tableDataEnd=[];
-                    this.tableData.forEach((value,index)=>{
-                        this.tableDataEnd.push(value);
-                    });
-                    console.log(this.tableData.length);
-                }
-            }).catch(failResponse => {
+            this.tableDataEnd=[];
+            this.tableData.forEach((value,index) =>{
+                this.tableDataEnd.push(value);
+            });
 
-            })
         },
 
         methods: {
             updateForm(){
 
             },
+            change:function(index,row){
+                console.log(row.ustatus);
+            }
+
             // 初始页currentPage、初始每页数据数pagesize和数据data
             // handleSizeChange: function (size) {
             //     this.pagesize = size;
