@@ -281,7 +281,10 @@
                   console.log(res);
                   this.tableData = res.data;
                   this.totalItems = this.tableData.length;
-                  this.tableDataEnd = this.tableData;
+                  this.tableDataEnd=[];
+                  this.tableData.forEach((value,index)=>{
+                      this.tableDataEnd.push(value);
+                  });
                   console.log(this.tableData.length);
               }
           }).catch(failResponse=>{
@@ -379,7 +382,10 @@
             },
             doReset(){
                 this.searchInput="";
-                this.tableDataEnd = this.tableData;
+                this.tableDataEnd=[];
+                this.tableData.forEach((value,index)=>{
+                    this.tableDataEnd.push(value);
+                });
             },
 
             // 初始页currentPage、初始每页数据数pagesize和数据data
@@ -466,8 +472,25 @@
                         }
                     }).then(successResponse =>{
                         //数据库删除成功在table表里进行删除,
-                        this.tableData.splice(index, 1);
-                        this.tableDataEnd.slice(index,1);
+                        this.filterTableDataEnd=[];
+                        //删除在表格中tableDataEnd显示的哪个数据
+                        this.tableDataEnd.forEach((value,i)=>{
+                            if(i !==index){
+                                this.filterTableDataEnd.push(value);
+                            }
+                        });
+                        this.tableDataEnd=this.filterTableDataEnd;
+                        this.filterTableDataEnd=[];
+
+                        //删除从数据源中tableData获得的数据
+                        this.tableData.forEach((value,i)=>{
+                            //通过主码快速过滤
+                            if(value.vid!=delItem.vid){
+                                this.filterTableDataEnd.push(value);
+                            }
+                        });
+                        this.tableData = this.filterTableDataEnd;
+                        this.filterTableDataEnd=[];
                         this.$message({
                             type: 'success',
                             message: '删除成功!'

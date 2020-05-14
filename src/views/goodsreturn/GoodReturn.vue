@@ -182,13 +182,19 @@
         },
         // 创建的时候发送请求获取显示数据库所有退货单的列表数据
         created() {
+            this.tableDataEnd=[];
+            this.tableData.forEach((value,index)=>{
+                this.tableDataEnd.push(value);
+            });
             this.$axios.get("/home/goodsReturn").then(res=>{
                 if(res.data){
                     console.log(res);
                     this.tableData = res.data;
                     this.itemCount = res.data.length;
                     this.tableDataEnd=[];
-                    this.tableDataEnd = this.tableData;
+                    this.tableData.forEach((value,index)=>{
+                        this.tableDataEnd.push(value);
+                    });
                     console.log(this.itemCount);
                 }
             }).catch(failResponse=>{
@@ -311,7 +317,10 @@
             },
             doReset(){
                 this.searchInput="";
-                this.tableDataEnd = this.tableData;
+                this.tableDataEnd=[];
+                this.tableData.forEach((value,index)=>{
+                    this.tableDataEnd.push(value);
+                });
             },
             addGoodsReturn() {
                 this.$refs.dataInfo.validate()
@@ -325,6 +334,7 @@
                             if (successResponse.data.code === 200) {
                                 this.addSuccessful = true;
                                 this.tableData.push(this.dataInfo);
+                                this.tableDataEnd.push(this.dataInfo);
                                 this.$message({
                                     message: '成功添加一条记录',
                                     type: 'success'
@@ -370,7 +380,25 @@
                         }
                     }).then(successResponse => {
                         //数据库删除成功在table表里进行删除,
-                        this.tableData.splice(index, 1);
+                        this.filterTableDataEnd=[];
+                        //删除在表格中tableDataEnd显示的哪个数据
+                        this.tableDataEnd.forEach((value,i)=>{
+                            if(i !==index){
+                                this.filterTableDataEnd.push(value);
+                            }
+                        });
+                        this.tableDataEnd=this.filterTableDataEnd;
+                        this.filterTableDataEnd=[];
+
+                        //删除从数据源中tableData获得的数据
+                        this.tableData.forEach((value,i)=>{
+                            //通过主码快速过滤
+                            if(value.gid!=delItem.gid||value.rreason!=delItem.rreason||value.rdate!=delItem.rdate||value.rcount!=value.rcount){
+                                this.filterTableDataEnd.push(value);
+                            }
+                        });
+                        this.tableData = this.filterTableDataEnd;
+                        this.filterTableDataEnd=[];
                         this.$message({
                             type: 'success',
                             message: '删除成功!'

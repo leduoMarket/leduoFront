@@ -1,3 +1,5 @@
+
+
 <template>
   <div class="Analysis">
     <el-card class="box-card">
@@ -17,7 +19,7 @@
       </div>
       <div class="form">
         <el-table
-          :data="tableDataEnd"
+          :data="tableData"
           border
           style="width: 100%" @sort-change="changeTableSort">
           <el-table-column

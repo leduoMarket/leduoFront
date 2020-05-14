@@ -237,12 +237,14 @@
       // 创建的时候发送请求获取显示数据库所有员工的列表数据
       created() {
 
-          this.$axios.get("/home/stockOut").then(res => {
+          this.$axios.get("/staff/stockOut").then(res => {
               if (res.data) {
                   console.log(res);
                   this.tableData = res.data;
                   this.totalItems = this.tableData.length;
-                  this.tableDataEnd = this.tableData;
+                  this.tableData.forEach((value,index)=>{
+                      this.tableDataEnd.push(value);
+                  });
                   console.log(this.tableData.length);
               }
           }).catch(failResponse => {
@@ -282,7 +284,7 @@
             },
             //查询
             beginSearch(){
-                this.$axios.get('/home/querystockOut',{
+                this.$axios.get('/staff/querystockOut',{
                     params:{
                         onumber:this.searchInput,
                     }
@@ -386,13 +388,17 @@
             },
             doReset(){
                 this.searchInput="";
-                this.tableDataEnd = this.tableData;
+                this.tableDataEnd=[];
+                this.tableData.forEach((value,index)=>{
+                    this.tableDataEnd.push(value);
+                });
+
             },
             //新增出库单
             addStockOut() {
                 this.$refs.dataInfo.validate()
                     .then(res =>{
-                        this.$axios.post('/home/addstockOut', {
+                        this.$axios.post('/staff/addstockOut', {
                             gid: this.dataInfo.gid,
                             vname: this.dataInfo.vname,
                             onumber: this.dataInfo.onumber,
@@ -449,14 +455,30 @@
                     type:'warning'
                 }).then(() =>{
                     //如果用户确实要删除，则用delete方式删除，并且传递要删除的记录的eid
-                    this.$axios.delete('/home/delstockOut',{
+                    this.$axios.delete('/staff/delstockOut',{
                         params:{
                             stockOutId: delItem.onumber
                         }
                     }).then(successResponse =>{
-                        //数据库删除成功在table表里进行删除,
-                        this.tableData.splice(index, 1);
-                        this.tableDataEnd.slice(index,1);
+                        this.filterTableDataEnd=[];
+                        //删除在表格中tableDataEnd显示的哪个数据
+                        this.tableDataEnd.forEach((value,i)=>{
+                            if(i !==index){
+                                this.filterTableDataEnd.push(value);
+                            }
+                        });
+                        this.tableDataEnd=this.filterTableDataEnd;
+                        this.filterTableDataEnd=[];
+
+                        //删除从数据源中tableData获得的数据
+                        this.tableData.forEach((value,i)=>{
+                            //通过主码快速过滤
+                            if(value.onumber!=delItem.onumber){
+                                this.filterTableDataEnd.push(value);
+                            }
+                        });
+                        this.tableData = this.filterTableDataEnd;
+                        this.filterTableDataEnd=[];
                         this.$message({
                             type: 'success',
                             message: '删除成功!'

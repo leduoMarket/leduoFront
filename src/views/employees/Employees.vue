@@ -122,7 +122,7 @@
         // 创建的时候发送请求获取显示数据库所有员工的列表数据
         created() {
 
-            this.$axios.get("/home/emps").then(res => {
+            this.$axios.get("/admin/emps").then(res => {
                 if (res.data) {
                     console.log(res);
                     this.tableData = res.data;
@@ -190,7 +190,7 @@
             /*addEmployee() {
                 this.$refs.userInfo.validate()
                     .then(res =>{
-                        this.$axios.post('/home/addemp', {
+                        this.$axios.post('/admin/addemp', {
                             eid: this.userInfo.eid,
                             ename: this.userInfo.ename,
                             ephone: this.userInfo.ephone,

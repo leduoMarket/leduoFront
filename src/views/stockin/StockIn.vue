@@ -279,12 +279,12 @@
         // 创建的时候发送请求获取显示数据库所有员工的列表数据
         created() {
 
-            this.$axios.get("/home/stockIn").then(res => {
+            this.$axios.get("/staff/stockIn").then(res => {
                 if (res.data) {
                     console.log(res);
                     this.tableData = res.data;
                     this.totalItems = this.tableData.length;
-
+                    this.tableDataEnd=[];
                     this.tableData.forEach((value,index)=>{
                         this.tableDataEnd.push(value);
                     });
@@ -351,9 +351,6 @@
                 const property = column['property'];
 
                 return row[property].search(value) !== -1;
-
-
-                // return row[property] == value;
             },
             doFilter(){
                 var selectTag = this.selectTags;
@@ -441,7 +438,7 @@
             },
             //查询
             beginSearch(){
-                this.$axios.get('/home/queryStockIn',{
+                this.$axios.get('/staff/queryStockIn',{
                     params:{
                         inumber:this.searchInput,
                     }
@@ -468,12 +465,6 @@
             // 删除选中下标的一行数据，index由click处的scope.$index传过来的小标，delItem由scope.$row传过来的元素
             del(delItem, index){
                 console.log(delItem);
-
-                this.$message({
-                    type: 'success',
-                    message: '删除成功!'
-                });
-
                 this.$confirm('你确定要删除这条记录吗？','提示',{
                     confirmButtonText:'确定',
                     cancelButtonText:'取消',
