@@ -27,7 +27,15 @@
         },
         data() {
             return {
-                chart: null
+                chart: null,
+                //入库数据
+                inData:[122,1233,4333,2232,2330,3232,322,1231],
+                //出库数据
+                outData:[327, 1776, 507, 1200, 800, 482, 204, 1390, 1001, 951, 381, 220],
+                //利润
+                proData:[-1036, 3693, 2962, 3810, 2519, 1915,1748, 4675, 6209, 4323, 2865, 4298],
+                //日期
+                xData:["星期一","星期二","星期三","星期三","星期四","星期五","星期六","星期天"],
             }
         },
         mounted() {
@@ -37,19 +45,54 @@
             if (!this.chart) {
                 return
             }
-            this.chart.dispose()
+            this.chart.dispose();
             this.chart = null
         },
+
         methods: {
+            //构造图表
             initChart() {
-                this.chart = echarts.init(document.getElementById(this.id));
-                const xData = (function() {
-                    const data = [];
-                    for (let i = 1; i < 13; i++) {
-                        data.push(i + 'month')
+                this.inData=[2333,1000,233,2221,2323,123,2323];
+                console.log(this.inData);
+                //从后端获得数据的函数要写在这里,猪猪加油，有四个
+                this.$axios.get("/getIn").then(res =>{
+                    if(res.data){
+                        console.log(res.data);
+                        this.inData=res.data;
+
                     }
-                    return data
-                }())
+                }).catch(falseResponse =>{
+                    // this.$message.error("无数据");
+                });
+
+                this.$axios.get("/getOut").then(res =>{
+                    if(res.data){
+                        console.log(res.data);
+                        this.outData=res.data;
+                    }
+                }).catch(falseResponse =>{
+                   // this.$message.error("无数据");
+                });
+
+                this.$axios.get("/getDate").then(res =>{
+                    if(res.data){
+                        console.log(res.data);
+                        this.xData=res.data;
+                    }
+                }).catch(falseResponse =>{
+                    // this.$message.error("无数据");
+                });
+
+                this.$axios.get("/getPro").then(res =>{
+                    if(res.data){
+                        console.log(res.data);
+                        this.proData=res.data;
+                    }
+                }).catch(falseResponse =>{
+                    // this.$message.error("无数据");
+                });
+
+                this.chart = echarts.init(document.getElementById(this.id));
                 this.chart.setOption({
                     backgroundColor: 'white',
                     title: {
@@ -112,7 +155,7 @@
                             interval: 0
 
                         },
-                        data: xData
+                        data: this.xData
                     }],
                     yAxis: [{
                         type: 'value',
@@ -181,20 +224,7 @@
                                 }
                             }
                         },
-                        data: [
-                            709,
-                            1917,
-                            2455,
-                            2610,
-                            1719,
-                            1433,
-                            1544,
-                            3285,
-                            5208,
-                            3372,
-                            2484,
-                            4078
-                        ]
+                        data: this.inData
                     },
 
                         {
@@ -214,20 +244,7 @@
                                     }
                                 }
                             },
-                            data: [
-                                327,
-                                1776,
-                                507,
-                                1200,
-                                800,
-                                482,
-                                204,
-                                1390,
-                                1001,
-                                951,
-                                381,
-                                220
-                            ]
+                            data: this.outData
                         }, {
                             name: '总计',
                             type: 'line',
@@ -247,20 +264,7 @@
                                     }
                                 }
                             },
-                            data: [
-                                1036,
-                                3693,
-                                2962,
-                                3810,
-                                2519,
-                                1915,
-                                1748,
-                                4675,
-                                6209,
-                                4323,
-                                2865,
-                                4298
-                            ]
+                            data: this.proData
                         }
                     ]
                 })
