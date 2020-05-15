@@ -1,12 +1,10 @@
-
-
 <template>
   <div class="Analysis">
     <el-card class="box-card">
       <div slot="header" class="clearfix">
         <span>盈亏分析</span>
       </div>
-      <div class="text item">
+      <!--<div class="text item">
         <el-select v-model="value" placeholder="请选择"  value="">
           <el-option
             v-for="item in options"
@@ -25,32 +23,40 @@
           <el-table-column
             prop="sale"
             label="销售总额"
-            width="180"
+            width="240"
             sortable="custom"
           >
           </el-table-column>
           <el-table-column
             prop="principal"
             label="本金总额"
-            width="180"
+            width="240"
             sortable="custom"
           >
           </el-table-column>
           <el-table-column
             prop="profit"
             label="利润总额"
+            width="240"
             sortable="custom"
           >
           </el-table-column>
         </el-table>
+      </div>-->
+
+      <div class="chart-container">
+        <chart height="90%" width="95%" />
       </div>
     </el-card>
   </div>
 </template>
 
+
 <script>
+    import Chart from '@/components/Charts/MixChart'
     export default {
         name: "ProfitAnalysis",
+        components: { Chart },
         data() {
             return {
                 options: [],
@@ -112,6 +118,11 @@
   .header-info span{
     margin-right: 25px;
     vertical-align: middle;
+  }
+  .chart-container{
+    position: relative;
+    width: 100%;
+    height: calc(100vh - 84px);
   }
 </style>
 
