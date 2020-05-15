@@ -54,6 +54,10 @@
         layout="total, sizes, prev, pager, next, jumper"
         :total="tableDataEnd.length">
       </el-pagination>
+
+      <el-button type="text"  @click="getMore"  size="medium" style="margin-left: 95%">更多</el-button>
+
+
     </div>
   </el-card>
   </div>
@@ -164,6 +168,28 @@
                 this.currentPage = currentPage;
                 console.log(this.currentPage)
             },
+            getMore(){
+                this.$axios.get('/admin/log',{
+                    params:{
+                        id:this.tableData.length,
+                    }
+                }).then(res => {
+                    if (res.data) {
+                        console.log(res);
+                        res.data.forEach(value =>{
+                            this.tableData.push(value);
+                        });
+                        this.totalItems = this.tableData.length;
+                        this.tableDataEnd=[];
+                        this.tableData.forEach((value,index)=>{
+                            this.tableDataEnd.push(value);
+                        });
+                        console.log(this.tableData.length);
+                    }
+                }).catch(failResponse => {
+
+                })
+            }
 
         }
     }
