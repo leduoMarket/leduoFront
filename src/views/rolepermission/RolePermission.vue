@@ -1,7 +1,7 @@
 <template>
   <div class="RolePermission">
     <el-card class="box-card">
-      <div slot="header" class="clearfix">
+      <div slot="header" class="clearFix">
         <span>权限管理</span>
       </div>
       <div>
@@ -13,30 +13,62 @@
             prop="uid"
             label="用户账号"
             height="15"
+            align="center"
             width="120">
           </el-table-column>
           <el-table-column
-            prop="uname"
+            prop="uName"
             label="用户名"
+            align="center"
             width="120">
           </el-table-column>
           <el-table-column
-            prop="urole"
+            prop="uRole"
             label="角色"
-            width="120">
-          </el-table-column>
-
-          <el-table-column
-            prop="esalary"
-            fixed="right"
-            label="操作"  >
-            <template slot-scope="scope">
-              <el-button style="float: left; padding-right: 3px;" type="text"><span style="color: red" @click="updateForm">编辑</span></el-button>
-              <el-button style="float: left; padding-right: 3px;" type="text"><span style="color: deepskyblue" @click="delForm">删除</span></el-button>
+            align="center"
+            width="150" >
+            <template slot-scope="scope1">
+              <el-select v-model="scope1.row.uRole" placeholder="请选择" value="" size="mini" style="width:100px;margin-left: 35px"  @change="changeRole(scope1.row,scope1.$index)">
+                <el-option
+                  v-for="item in options"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                >
+                </el-option>
+              </el-select>
             </template>
-
+          </el-table-column>
+          <el-table-column
+            prop="uStatus"
+            label="是否允许登录"
+            width="150"
+            align="center"
+            style="margin-left: 10px"
+          >
+            <template slot-scope="scope">
+              <el-switch
+                v-model="scope.row.uStatus"
+                active-color="#13ce66"
+                inactive-color="#ff4949"
+                active-value="1"
+                inactive-value="0"
+                @change="changeStatus(scope.row)"
+              >
+              </el-switch>
+            </template>
           </el-table-column>
         </el-table>
+        <el-pagination
+          style="margin-top: 20px"
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="currentPage"
+          :page-sizes="[3,5, 10, 20]"
+          :page-size="pageSize"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="tableDataEnd.length">
+        </el-pagination>
       </div>
     </el-card>
 
@@ -48,57 +80,165 @@
         name: "RolePermission",
         data() {
             return {
-                options: [],
+                options: [{
+                    value:"经理",
+                    label:"经理"
+                },{
+                    value: "财务",
+                    label: "财务"
+                },{
+                    value:"员工",
+                    label:"员工"
+                }
+                ],
                 //从数据中获得的数据
                 tableData: [{
                     uid:"1234567",
-                    uname:"张三",
-                    urole:"经理",
-                    ustatus:0,
+                    userName:"张三",
+                    password:"1234567",
+                    phone:"1231231231",
+                    role:"经理",
+                    satatus:"0",
 
                 },{
                     uid:"2234567",
-                    uname:"李芳",
-                    urole:"财务员",
-                    ustatus:1,
+                    userName:"张三",
+                    password:"1234567",
+                    phone:"1231231231",
+                    role:"财务",
+                    satatus:"1",
 
 
                 },{
                     uid:"3234567",
-                    uname:"李四",
-                    urole:"销售员",
-                    ustatus:0,
+                    userName:"张三",
+                    password:"1234567",
+                    phone:"1231231231",
+                    role:"员工",
+                    satatus:"0",
 
                 }],
                 //最后显示在表单的内容
                 tableDataEnd:[],
+                pageSize:5,
+                currentPage:1,
             }
         },
         created(){
+            //前端测试部分
             this.tableDataEnd=[];
-            this.tableData.forEach((value,index) =>{
-                this.tableDataEnd.push(value);
+            let item={
+                uid:'',
+                uName:'',
+                uStatus:'',
+                uRole:'',
+            };
+
+            this.tableData.forEach((value) =>{
+                item.uid=value.uid;
+                item.uName=value.userName;
+                item.uRole=value.role;
+                item.uStatus=value.satatus;
+                console.log(item);
+                this.tableDataEnd.push(item);
+                item={
+                    uid:'',
+                    uName:'',
+                    uStatus:'',
+                    uRole:'',
+                };
+
+            });
+            //从后端获得数据
+            this.$axios.get("/admin/emps").then(res =>{
+                if(res.code ===200){
+                    this.tableData=res.data.data;
+                    this.tableDataEnd=[];
+                    let item={
+                        uid:'',
+                        uName:'',
+                        uStatus:'',
+                        uRole:'',
+                    };
+
+                    this.tableData.forEach((value) =>{
+                        item.uid=value.uid;
+                        item.uName=value.userName;
+                        item.uRole=value.role;
+                        item.uStatus=value.satatus;
+                        console.log(item);
+                        this.tableDataEnd.push(item);
+                        item={
+                            uid:'',
+                            uName:'',
+                            uStatus:'',
+                            uRole:'',
+                        };
+
+                    });
+                }
+            }).catch(fail =>{
+                this.$message.warning(fail.message);
             });
 
         },
 
         methods: {
-            updateForm(){
+            changeRole(item){
+                console.log(item.uid);
+                console.log(item.uRole);
+                console.log(item.uStatus);
+
+                    this.$axios.put('/changeRole',{
+                        params:{
+                            uid:item.uid,
+                            uRole:item.uRole,
+                            uStatus:item.uStatus
+                        }
+                    }).then(()=>{
+                        this.$message({
+                            type: 'info',
+                            message: '修改成功'
+                        });
+                    }).catch(() =>{
+                        this.$message({
+                            type: 'info',
+                            message: '修改失败'
+                        });
+                    })
 
             },
-            change:function(index,row){
-                console.log(row.ustatus);
-            }
+            changeStatus(item){
+                console.log(item);
+                this.$axios.put('/changeRole',{
+                    params:{
+                        uid:item.uid,
+                        uRole:item.uRole,
+                        uStatus:item.uStatus
+                    }
+                }).then(() =>{
+                    this.$message({
+                        type: 'info',
+                        message: '修改成功'
+                    });
+                }).catch(() =>{
+                    this.$message({
+                        type: 'info',
+                        message: '修改失败'
+                    });
+                });
 
-            // 初始页currentPage、初始每页数据数pagesize和数据data
-            // handleSizeChange: function (size) {
-            //     this.pagesize = size;
-            //     console.log(this.pagesize)
-            // },
-            // handleCurrentChange: function (currentPage) {
-            //     this.currentPage = currentPage;
-            //     console.log(this.currentPage)
-            // },
+            },
+
+            //初始页currentPage、初始每页数据数pageSize和数据data
+            handleSizeChange: function (size) {
+                this.pageSize = size;
+                console.log(this.pageSize)
+            },
+            handleCurrentChange: function (currentPage) {
+                this.currentPage = currentPage;
+                console.log(this.currentPage)
+            },
         }
 
 
@@ -110,11 +250,7 @@
     margin-bottom: 10px;
 
   }
-  .header-info{
-    text-align: right;
-    background-color: #F7F7FB;
-    height: 30px;
-  }
+
   .box-card{
     width: 75%;
   }
@@ -122,7 +258,5 @@
     /*margin-right: 25px;*/
     vertical-align: middle;
   }
-  .form {
-    height: 100%;
-  }
+
 </style>
