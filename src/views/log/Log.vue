@@ -5,42 +5,44 @@
       <span>日志查询</span>
     <!--  <el-button style="float: right; padding-right: 3px;" type="text">新建</el-button>-->
     </div>
-    <div class="text item">
-      <div class="text item">
-        <el-input style="width: 300px"
-                  placeholder="请输入员工编号"
-                  v-model="input"
-                  clearable>
-        </el-input>
-        <el-button round @click="beginSearch">查询</el-button>
-      </div>
-    </div>
+
     <div class="form">
+      <el-select v-model="selectTags" clearable size="medium"  placeholder="请选择" value="" >
+        <el-option
+          v-for="item in options"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value">
+        </el-option>
+      </el-select>
+      <el-input v-model="searchInput" placeholder="请输入信息"  size="medium" style="width:240px; margin-right:23% ;margin-bottom: 1.5%"></el-input>
+
+      <el-button type="primary" icon="el-icon-search" @click="doFilter"  size="medium" round  plain>搜索</el-button>
+      <el-button type="primary" icon="el-icon-refresh" @click="doReset" size="medium"  round  plain >重置</el-button>
       <el-table
-        :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)"
+        :data="tableDataEnd.slice((currentPage-1)*pagesize,currentPage*pagesize)"
         border
         style="width: 100%">
         <el-table-column
-          prop="ldate"
-          label="操作日期"
+          prop="id"
+          label="序号"
           width="180"
-          sortable
+
         >
         </el-table-column>
         <el-table-column
-          prop="lid"
-          label="操作人员编号"
-          width="180"
-          sortable
+          prop="message"
+          label="日志信息"
+          width="300"
         >
         </el-table-column>
         <el-table-column
-          prop="lposition"
-          label="职位">
+          prop="level_string"
+          label="级别">
         </el-table-column>
         <el-table-column
-          prop="levent"
-          label="操作事件">
+          prop="create_time"
+          label="创建时间">
         </el-table-column>
       </el-table>
       <el-pagination
@@ -50,7 +52,7 @@
         :page-sizes="[3,5, 10, 20]"
         :page-size="pagesize"
         layout="total, sizes, prev, pager, next, jumper"
-        :total="tableData.length">
+        :total="tableDataEnd.length">
       </el-pagination>
     </div>
   </el-card>
@@ -62,13 +64,97 @@
         name: "Log",
         data() {
             return {
-                options: [],
+                options: [{
+                    value:'id',
+                    label:'序号',
+                },{
+                    value:'message',
+                    label:'日志信息',
+                },{
+                    value:'level_string',
+                    label:'级别',
+                },{
+                    value:'create_time',
+                    label:'创建时间',
+                }],
+                value: '',
                 tableData: [],
+                tableDataEnd:[],
                 pagesize:5,  //分页数量
-                currentPage:1 //初始页
+                currentPage:1, //初始页
+
+                //搜索框内的数据
+                searchInput:"",
+                filterTableDataEnd:[],
+                flag:false,
+                selectTags:"",
             }
         },
+        // 创建的时候发送请求获取显示数据库所有的列表数据
+        created() {
+
+            this.$axios.get("/admin/log").then(res => {
+                if (res.data) {
+                    console.log(res);
+                    this.tableData = res.data;
+                    this.totalItems = this.tableData.length;
+                    this.tableDataEnd=[];
+                    this.tableData.forEach((value,index)=>{
+                        this.tableDataEnd.push(value);
+                    });
+                    console.log(this.tableData.length);
+                }
+            }).catch(failResponse => {
+
+            })
+        },
         methods: {
+
+            //数据重置
+            doReset(){
+                this.searchInput="";
+                this.tableDataEnd=[];
+                this.tableData.forEach((value,index)=>{
+                    this.tableDataEnd.push(value);
+                });
+            },
+            //数据搜索
+            doFilter(){
+                var selectTag = this.selectTags;
+                if(this.searchInput == ""){
+                    this.$message.warning("查询信息不能为空！！！");
+                    return;
+                }
+                this.tableDataEnd=[];
+                this.filterTableDataEnd=[];
+                this.tableData.forEach((value,index)=>{
+                    if(selectTag === "id"){
+                        if(value.id){
+                            if(value.id.search(this.searchInput)!==-1){
+                                this.filterTableDataEnd.push(value)
+                            }
+                        }
+                    }
+                    if(selectTag=="message"){
+                        if(value.message){
+                            if(value.message.search(this.searchInput)!==-1){
+                                this.filterTableDataEnd.push(value)
+                            }
+                        }
+                    }
+                    if(selectTag=="level_string"){
+                        if(value.level_string){
+                            if(value.level_string.search(this.searchInput)!==-1){
+                                this.filterTableDataEnd.push(value)
+                            }
+                        }
+                    }
+                    console.log(index);
+                });
+                this.tableDataEnd=this.filterTableDataEnd;
+                this.filterTableDataEnd=[];
+            },
+
             // 初始页currentPage、初始每页数据数pagesize和数据data
             handleSizeChange: function (size) {
                 this.pagesize = size;
@@ -78,34 +164,12 @@
                 this.currentPage = currentPage;
                 console.log(this.currentPage)
             },
-            //查询
-            beginSearch(){
-                this.$axios.get('/home/queryStockIn',{
-                    params:{
-                        lid:this.searchInput,
-                    }
-                }).then(successfulResponse=>{
-                    console.log('this.tableData'+successfulResponse.data);
-                    this.tableData=[];
-                    this.tableData.push(successfulResponse.data);
-                    this.$message({
-                        message: '成功找到记录',
-                        type: 'success'
-                    });
-                }).catch(failedResponse=>{
-                    this.$message('没有找到记录哦');
-                })
-            },
+
         }
     }
 </script>
 <style scoped>
-  .text {
-    font-size: 14px;
-  }
-  .item {
-    margin-bottom: 50px;
-  }
+
   .box-card {
     width: 75%;
   }

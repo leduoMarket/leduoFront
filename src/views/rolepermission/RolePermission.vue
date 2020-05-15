@@ -4,7 +4,7 @@
       <div slot="header" class="clearfix">
         <span>权限管理</span>
       </div>
-      <div>
+      <div >
         <el-table
           :data="tableDataEnd"
           fixed="center"
@@ -46,6 +46,8 @@
         name: "RolePermission",
         data() {
             return {
+                //switch状态
+               value: true,
                 options: [],
                 //从数据中获得的数据
                 tableData: [{

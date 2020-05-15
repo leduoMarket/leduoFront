@@ -5,6 +5,18 @@
         <span>员工基本信息</span>
       </div>
       <div class="form">
+        <el-select v-model="selectTags" clearable size="medium"  placeholder="请选择" value="" >
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+        <el-input v-model="searchInput" placeholder="请输入信息"  size="medium" style="width:240px; margin-right:23% ;margin-bottom: 1.5%"></el-input>
+
+        <el-button type="primary" icon="el-icon-search" @click="doFilter"  size="medium" round  plain>搜索</el-button>
+        <el-button type="primary" icon="el-icon-refresh" @click="doReset" size="medium"  round  plain >重置</el-button>
         <el-table
           :data="tableDataEnd.slice((currentPage-1)*pagesize,currentPage*pagesize)"
           border
@@ -34,13 +46,14 @@
             label="角色">
           </el-table-column>
           <el-table-column
-            prop="satatus"
+            prop="status"
             label="帐号状态">
           </el-table-column>
           <el-table-column
             prop="ehandle"
             label="操作">
             <template slot-scope="scope">
+              <el-button style="float: left; padding-right: 3px;" type="text"><span style="color: blue" @click="upd">编辑</span></el-button>
               <el-button style="float: left; padding-right: 3px;" type="text"><span style="color: red" @click="del(scope.row,scope.$index)">删除</span>
               </el-button>
             </template>
@@ -81,6 +94,8 @@
                 dialogFormVisible: false,
                 //删除的元素是谁
                 delItem: [],
+                updItem:[],
+                //
                 formLabelWidth: '120px',
                 pagesize:5,
                 currentPage:1, //初始页
@@ -132,6 +147,15 @@
             })
         },
         methods: {
+            //数据重置
+            doReset(){
+                this.searchInput="";
+                this.tableDataEnd=[];
+                this.tableData.forEach((value,index)=>{
+                    this.tableDataEnd.push(value);
+                });
+            },
+            //数据搜索
             doFilter(){
                 var selectTag = this.selectTags;
                 if(this.searchInput == ""){
@@ -186,27 +210,54 @@
                 var sortingType = column.order;
                 //如果字段名称为“创建时间”，将“创建时间”转换为时间戳，才能进行大小比较
                 if(fieldName=="idate"){
-                    this.tableData.map(item => {
+                    this.tableDataEnd.map(item => {
                         item.idate = this.$moment(item.idate).valueOf();
                     });
                 }
                 //按照降序排序
                 if(sortingType == "descending"){
-                    this.tableData = this.tableData.sort((a, b) => b[fieldName] - a[fieldName]);
+                    this.tableDataEnd = this.tableData.sort((a, b) => b[fieldName] - a[fieldName]);
                 }
                 //按照升序排序
                 else{
-                    this.tableData = this.tableData.sort((a, b) => a[fieldName] - b[fieldName]);
-                    console.log(this.tableData)
+                    this.tableDataEnd = this.tableData.sort((a, b) => a[fieldName] - b[fieldName]);
+                    console.log(this.tableDataEnd)
                 }
                 if(fieldName=="idate"){
-                    this.tableData.map(item => {
+                    this.tableDataEnd.map(item => {
                         item.idate = this.$moment(item.idate).format(
                             "YYYY-MM-DD HH:mm:ss"
                         );
                     });
                 }
 
+            },
+            //更新数据
+            upd(updItem,index){
+                this.$axios.put('/update',{
+                    uid:this.form.eid,
+                    usr_name:this.form.user_naem,
+                    password:this.form.password,
+                    phone:this.form.phone,
+                    role:this.form.role,
+                    status:this.form.status,
+                }).then(successResponse =>{
+                    if(successResponse.data.code == 200){
+                        this.$message({
+                            type: 'success',
+                            message: '修改成功!'
+                        });
+                    }
+                }).catch(failedResponse =>{
+                    this.$message({
+                        type: 'success',
+                        message: '修改失败，您的密码可能错误!'
+                    });
+
+
+                } );
+
+            }
             },
 
             // 删除选中下标的一行数据，index由click处的scope.$index传过来的小标，delItem由scope.$row传过来的元素
@@ -269,7 +320,6 @@
 
                 });
             },
-        }
     }
 </script>
 <style scoped>
