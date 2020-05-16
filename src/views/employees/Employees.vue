@@ -86,7 +86,26 @@
                 addSuccessful:false,
                 // delSuccessful: false,
                 // 在基础表格中展示的数据
-                tableData: [],
+                tableData: [{
+                    uid:'1234567',
+                    user_name:'张三',
+                    phone:"13389891212",
+                    role:"经理",
+                    status:'1'
+                },{
+                    uid:'2234567',
+                    user_name:'李四',
+                    phone:"13389891212",
+                    role:"财务",
+                    status:'1'
+                },{
+                    uid:'1234567',
+                    user_name:'李芳',
+                    phone:"13389891212",
+                    role:"员工",
+                    status:'1'
+                }
+                ],
                 // 控制员工新增页面的form表单可见性
                 dialogFormVisible: false,
                 //删除的元素是谁
@@ -124,6 +143,10 @@
         },
         // 创建的时候发送请求获取显示数据库所有员工的列表数据
         created() {
+            this.tableDataEnd=[];
+            this.tableData.forEach((value)=>{
+                this.tableDataEnd.push(value);
+            });
             this.$axios.get("/admin/getAllemployees").then(res => {
                 if (res.data.code === 200) {
                     let item = {
@@ -138,7 +161,7 @@
                         item.user_name=value.userName;
                         item.phone=value.phone;
                         item.role=value.role;
-                        item.status=value.status;
+                        item.status=""+value.status;
                         this.tableData.push(item);
                         item = {
                             uid:"",
@@ -272,6 +295,30 @@
             // 删除选中下标的一行数据，index由click处的scope.$index传过来的小标，delItem由scope.$row传过来的元素
             delEmployee(delItem, index){
                 console.log(delItem);
+                this.filterTableDataEnd=[];
+                //删除在表格中tableDataEnd显示的哪个数据
+                this.tableDataEnd.forEach((value,i)=>{
+                    if(i !==index){
+                        this.filterTableDataEnd.push(value);
+                    }
+                });
+                this.tableDataEnd=this.filterTableDataEnd;
+                this.filterTableDataEnd=[];
+
+                //删除从数据源中tableData获得的数据
+                this.tableData.forEach((value)=>{
+                    //通过主码快速过滤
+                    if(value.uid!==delItem.uid){
+                        this.filterTableDataEnd.push(value);
+                    }
+                });
+                this.tableData = this.filterTableDataEnd;
+                this.filterTableDataEnd=[];
+
+                this.$message({
+                    type: 'success',
+                    message: '删除成功!'
+                });
                 this.$confirm('你确定要删除这条记录吗？','提示',{
                     confirmButtonText:'确定',
                     cancelButtonText:'取消',
