@@ -54,8 +54,8 @@
             initChart() {
 
                 //帮助理解的测试部分，要注释掉
-                this.inData=[2333,1000,233,2221,2323,123,2323];
-                console.log(this.inData);
+                /*this.inData=[2333,1000,233,2221,2323,123,2323];
+                console.log(this.inData);*/
 
 
                 //从后端获得数据的函数要写在这里,猪猪加油，有四个
