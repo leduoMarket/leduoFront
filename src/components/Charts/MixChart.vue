@@ -143,8 +143,7 @@
                 let dateArr = [];
                 let i = 0;
                 while (!(date1.getFullYear() == date2.getFullYear()
-                    && date1.getMonth() == date2.getMonth() && date1.getDate() == date2
-                        .getDate())) {
+                    && date1.getMonth() == date2.getMonth() && date1.getDate() == date2.getDate())) {
                     let dayStr =date1.getDate().toString();
                     if(dayStr.length ==1){
                         dayStr="0"+dayStr;
