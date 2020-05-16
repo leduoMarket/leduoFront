@@ -28,15 +28,46 @@
         data() {
             return {
                 chart: null,
+                iData:[
+                    {
+                        "idate":"2020-04-25",
+                        "sumin":250.00,
+                    },{
+                        "idate":"2020-04-26",
+                        "sumin":3200.00,
+                    },{
+                        "idate":"2020-04-27",
+                        "sumin":900.00,
+                    },{
+                        "idate":"2020-04-28",
+                        "sumin":200.00,
+                    },{
+                        "idate":"2020-04-29",
+                        "sumin":400.00,
+                    }
+                ],
+                oData:[
+                    {
+                        "sumout":300.00,
+                        "odate":"2020-04-25"
+                    },
+                    {
+                        "sumout":600.00,
+                        "odate":"2020-04-26"
+                    },
+                    {
+                        "sumout":880.00,
+                        "odate":"2020-04-27"
+                    },
+                    {
+                        "sumout":810.00,
+                        "odate":"2020-04-28"
+                    },{
+                        "sumout":200.00,
+                        "odate":"2020-05-29"
+                    },
+                ],
 
-                //入库数据
-                inData:[122,1233,4333,2232,2330,3232,322,1231],
-                //出库数据
-                outData:[327, 1776, 507, 1200, 800, 482, 204, 1390, 1001, 951, 381, 220],
-                //利润
-                proData:[-1036, 3693, 2962, 3810, 2519, 1915,1748, 4675, 6209, 4323, 2865, 4298],
-                //日期
-                xData:["星期一","星期二","星期三","星期三","星期四","星期五","星期六","星期天"],
             }
         },
         mounted() {
@@ -55,47 +86,107 @@
             initChart() {
 
                 //帮助理解的测试部分，要注释掉
-                this.inData=[2333,1000,233,2221,2323,123,2323];
-                console.log(this.inData);
-
-
+                this.dateArr=[];
+                this.inData=[];
+                this.outData=[];
+                this.proData=[];
                 //从后端获得数据的函数要写在这里,猪猪加油，有四个
-                this.$axios.get("/getIn").then(res =>{
-                    if(res.data){
-                        console.log(res.data);
-                        this.inData=res.data;
 
-                    }
-                }).catch(falseResponse =>{
-                    // this.$message.error("无数据");
-                });
 
-                this.$axios.get("/getOut").then(res =>{
-                    if(res.data){
-                        console.log(res.data);
-                        this.outData=res.data;
-                    }
-                }).catch(falseResponse =>{
-                   // this.$message.error("无数据");
-                });
 
-                this.$axios.get("/getDate").then(res =>{
-                    if(res.data){
-                        console.log(res.data);
-                        this.xData=res.data;
-                    }
-                }).catch(falseResponse =>{
-                    // this.$message.error("无数据");
-                });
 
-                this.$axios.get("/getPro").then(res =>{
-                    if(res.data){
-                        console.log(res.data);
-                        this.proData=res.data;
+                //数据处理函数
+                let dayMin = this.iData[0].idate;
+                let dayMax = this.iData[this.iData.length-1].idate;
+                let day = "";
+                let length1 = this.iData.length;
+                let length2 = this.oData.length;
+                //找到最大日期和最小日期
+                for(let i=1; i<length1-1; i++){
+                    day = this.iData[i].idate;
+                    if(day<dayMin){
+                        dayMin=day;
                     }
-                }).catch(falseResponse =>{
-                    // this.$message.error("无数据");
-                });
+                    if(day>dayMax){
+                        dayMax=day;
+                    }
+                    day = "";
+                }
+                for(let i=1; i<length2; i++){
+                    day = this.oData[i].odate;
+                    if(day<dayMin){
+                        dayMin=day;
+                    }
+                    if(day>dayMax){
+                        dayMax=day;
+                    }
+                }
+                console.log("最小日期",dayMin);
+                console.log("最大日期",dayMax);
+                let day1 = dayMin;
+                let day2 = dayMax;
+                let getDate = function(str) {
+                    let tempDate = new Date();
+                    let list = str.split("-");
+                    tempDate.setFullYear(list[0]);
+                    tempDate.setMonth(list[1] - 1);
+                    tempDate.setDate(list[2]);
+                    return tempDate;
+                };
+                let date1 = getDate(day1);
+                let date2 = getDate(day2);
+                if (date1 > date2) {
+                    let tempDate = date1;
+                    date1 = date2;
+                    date2 = tempDate;
+                }
+                date1.setDate(date1.getDate() + 1);
+                let dateArr = [];
+                let i = 0;
+                while (!(date1.getFullYear() == date2.getFullYear()
+                    && date1.getMonth() == date2.getMonth() && date1.getDate() == date2
+                        .getDate())) {
+                    let dayStr =date1.getDate().toString();
+                    if(dayStr.length ==1){
+                        dayStr="0"+dayStr;
+                    }
+                    let month = '' + (date1.getMonth() + 1);
+                    if(month.length<2){
+                        month = '0'+month;
+                    }
+                    dateArr[i] = date1.getFullYear() + "-" + month + "-"
+                        + dayStr;
+                    i++;
+                    date1.setDate(date1.getDate() + 1);
+                }
+                dateArr.splice(0,0,day1);
+                dateArr.push(day2);
+                console.log(dateArr);
+
+                let inData = [];
+                let outData = [];
+                let proData = [];
+
+                let length = dateArr.length;
+                for(let i=0 ;i<length ;i++){
+                    inData.push(0);
+                    outData.push(0);
+                    day = dateArr[i];
+                    for(let j=0;j<length1;j++){
+                        if(day==this.iData[j].idate){
+                            inData[i]=this.iData[j].sumin;
+                        }
+                    }
+                    for(let j=0;j<length2;j++){
+                        if(day==this.oData[j].odate){
+                            outData[i]=this.oData[j].sumout;
+                        }
+                    }
+                }
+                for(let i=0;i<length;i++){
+                    proData.push(inData[i]-outData[i]);
+                }
+
 
                 this.chart = echarts.init(document.getElementById(this.id));
                 this.chart.setOption({
@@ -160,7 +251,7 @@
                             interval: 0
 
                         },
-                        data: this.xData
+                        data: dateArr
                     }],
                     yAxis: [{
                         type: 'value',
@@ -229,7 +320,7 @@
                                 }
                             }
                         },
-                        data: this.inData
+                        data: inData
                     },
 
                         {
@@ -249,7 +340,7 @@
                                     }
                                 }
                             },
-                            data: this.outData
+                            data: outData
                         }, {
                             name: '总计',
                             type: 'line',
@@ -269,7 +360,7 @@
                                     }
                                 }
                             },
-                            data: this.proData
+                            data: proData
                         }
                     ]
                 })
