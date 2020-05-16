@@ -313,21 +313,21 @@
                 var sortingType = column.order;
                 //如果字段名称为“创建时间”，将“创建时间”转换为时间戳，才能进行大小比较
                 if(fieldName=="idate"){
-                 this.tableData.map(item => {
+                 this.tableDataEnd.map(item => {
                      item.idate = this.$moment(item.idate).valueOf();
                  });
                 }
                 //按照降序排序
                 if(sortingType == "descending"){
-                    this.tableData = this.tableData.sort((a, b) => b[fieldName] - a[fieldName]);
+                    this.tableDataEnd = this.tableData.sort((a, b) => b[fieldName] - a[fieldName]);
                 }
                 //按照升序排序
                 else{
-                    this.tableData = this.tableData.sort((a, b) => a[fieldName] - b[fieldName]);
-                    console.log(this.tableData)
+                    this.tableDataEnd = this.tableData.sort((a, b) => a[fieldName] - b[fieldName]);
+                    console.log(this.tableDataEnd)
                 }
                 if(fieldName=="idate"){
-                    this.tableData.map(item => {
+                    this.tableDataEnd.map(item => {
                         item.idate = this.$moment(item.idate).format(
                             "YYYY-MM-DD HH:mm:ss"
                         );

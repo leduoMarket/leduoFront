@@ -156,7 +156,6 @@
                 }, {
                     value: 'rdate',
                     label: '退货日期'
-
                 }, {
                     value: 'rcount',
                     label: '退货数量'
@@ -182,6 +181,10 @@
         },
         // 创建的时候发送请求获取显示数据库所有退货单的列表数据
         created() {
+            this.tableDataEnd=[];
+            this.tableData.forEach((value,index)=>{
+                this.tableDataEnd.push(value);
+            });
             this.$axios.get("/home/goodsReturn").then(res=>{
                 if(res.data){
                     console.log(res);

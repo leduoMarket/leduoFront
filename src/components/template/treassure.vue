@@ -17,10 +17,10 @@
         </template>
         <el-menu-item-group>
           <el-menu-item index="1-1" >
-            <router-link to="/home/stockIn">入库单</router-link>
+            <router-link to="/homet/stockIn">入库单</router-link>
           </el-menu-item>
           <el-menu-item index="1-2">
-            <router-link to="/home/vender">供应商表</router-link>
+            <router-link to="/homet/vender">供应商表</router-link>
           </el-menu-item>
         </el-menu-item-group>
       </el-submenu>
@@ -31,10 +31,10 @@
         </template>
         <el-menu-item-group>
           <el-menu-item index="2-1">
-            <router-link to="/home/stockOut">出库单</router-link>
+            <router-link to="/homet/stockOut">出库单</router-link>
           </el-menu-item>
           <el-menu-item index="2-2">
-            <router-link to="/home/goodPrice">商品定价</router-link>
+            <router-link to="/homet/goodPrice">商品定价</router-link>
           </el-menu-item>
         </el-menu-item-group>
       </el-submenu>
@@ -45,7 +45,7 @@
         </template>
         <el-menu-item-group>
           <el-menu-item index="3-1">
-            <router-link to="/home/goodReturn">退货单</router-link>
+            <router-link to="/homet/goodReturn">退货单</router-link>
           </el-menu-item>
         </el-menu-item-group>
       </el-submenu>
@@ -56,13 +56,13 @@
         </template>
         <el-menu-item-group>
           <el-menu-item index="4-1">
-            <router-link to="/home/goods">商品表</router-link>
+            <router-link to="/homet/goods">商品表</router-link>
           </el-menu-item>
           <!--<el-menu-item index="4-1">
             <router-link to="/home/goodClass">商品分类</router-link>
           </el-menu-item>-->
           <el-menu-item index="4-2">
-            <router-link to="/home/inventory">库存账</router-link>
+            <router-link to="/homet/inventory">库存账</router-link>
           </el-menu-item>
         </el-menu-item-group>
       </el-submenu>
@@ -73,13 +73,13 @@
         </template>
         <el-menu-item-group>
           <el-menu-item index="5-1">
-            <router-link to="/home/debt">欠款单</router-link>
+            <router-link to="/homet/debt">欠款单</router-link>
           </el-menu-item>
           <el-menu-item index="5-2">
-            <router-link to="/home/flowCount">支付流水账</router-link>
+            <router-link to="/homet/flowCount">支付流水账</router-link>
           </el-menu-item>
           <el-menu-item index="5-3">
-            <router-link to="/home/profitAnalysis">盈亏分析</router-link>
+            <router-link to="/homet/profitAnalysis">盈亏分析</router-link>
           </el-menu-item>
         </el-menu-item-group>
       </el-submenu>
@@ -91,13 +91,13 @@
         </template>
         <el-menu-item-group>
           <el-menu-item index="7-1">
-            <router-link to="/home/user">登录账号</router-link>
+            <router-link to="/homet/user">登录账号</router-link>
           </el-menu-item>
           <el-menu-item index="7-2">
-            <router-link to="/home/marketMsg">我家超市</router-link>
+            <router-link to="/homet/marketMsg">我家超市</router-link>
           </el-menu-item>
           <el-menu-item index="7-3">
-            <router-link to="/home/log">日志查询</router-link>
+            <router-link to="/homet/log">日志查询</router-link>
           </el-menu-item>
         </el-menu-item-group>
       </el-submenu>

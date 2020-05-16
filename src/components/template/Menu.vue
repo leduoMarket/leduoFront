@@ -58,9 +58,6 @@
           <el-menu-item index="4-1">
             <router-link to="/home/goods">商品表</router-link>
           </el-menu-item>
-          <!--<el-menu-item index="4-1">
-            <router-link to="/home/goodClass">商品分类</router-link>
-          </el-menu-item>-->
           <el-menu-item index="4-2">
             <router-link to="/home/inventory">库存账</router-link>
           </el-menu-item>
@@ -103,12 +100,6 @@
           <span style="font-size: 18px;font-weight: bold">系统</span>
         </template>
         <el-menu-item-group>
-          <el-menu-item index="7-1">
-            <router-link to="/home/user">登录账号</router-link>
-          </el-menu-item>
-          <el-menu-item index="7-2">
-            <router-link to="/home/marketMsg">我家超市</router-link>
-          </el-menu-item>
           <el-menu-item index="7-3">
             <router-link to="/home/log">日志查询</router-link>
           </el-menu-item>
@@ -151,5 +142,9 @@
   a:hover {
     color: red;
     text-decoration: none;
+  }
+  .el-menu-vertical-demo:not(.el-menu--collapse) {
+
+    min-height: 100%;
   }
 </style>

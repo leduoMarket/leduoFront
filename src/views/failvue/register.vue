@@ -25,7 +25,7 @@
       </el-form-item>
       <el-form-item >
         <el-col :span="2"><i class="el-icon-s-check"></i></el-col>
-        <el-col :span="22"><el-select v-model="registerForm.userRole" placeholder="用户角色">
+        <el-col :span="22"><el-select v-model="registerForm.userRole" placeholder="用户角色" value="">
           <el-option label="经理" value="管理员"></el-option>
           <el-option label="财务" value="财务"></el-option>
           <el-option label="员工" value="员工"></el-option>
