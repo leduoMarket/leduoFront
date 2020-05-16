@@ -125,28 +125,28 @@
         },
         created(){
             // 前端测试部分
-            // this.tableDataEnd=[];
-            // let item={
-            //     uid:'',
-            //     uName:'',
-            //     uStatus:'',
-            //     uRole:'',
-            // };
-            //
-            // this.tableData.forEach((value) =>{
-            //     item.uid=value.uid;
-            //     item.uName=value.userName;
-            //     item.uRole=value.role;
-            //     item.uStatus=value.satatus;
-            //     console.log(item);
-            //     this.tableDataEnd.push(item);
-            //     item={
-            //         uid:'',
-            //         uName:'',
-            //         uStatus:'',
-            //         uRole:'',
-            //     };
-            // });
+            this.tableDataEnd=[];
+            let item={
+                uid:'',
+                uName:'',
+                uStatus:'',
+                uRole:'',
+            };
+
+            this.tableData.forEach((value) =>{
+                item.uid=value.uid;
+                item.uName=value.userName;
+                item.uRole=value.role;
+                item.uStatus=value.satatus;
+                console.log(item);
+                this.tableDataEnd.push(item);
+                item={
+                    uid:'',
+                    uName:'',
+                    uStatus:'',
+                    uRole:'',
+                };
+            });
             this.tableData = [];
             // 从后端获得数据
             this.$axios.get("/admin/getAllemployees").then(res =>{

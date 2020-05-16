@@ -16,7 +16,6 @@
           <el-form-item label="供应商名称" :label-width="formLabelWidth" prop="vname">
             <el-input v-model="dataInfo.vname" autocomplete="off"></el-input>
           </el-form-item>
-
           <el-form-item label="出库日期" :label-width="formLabelWidth" prop="odate">
             <el-input v-model="dataInfo.odate" autocomplete="off"></el-input>
           </el-form-item>
@@ -63,7 +62,6 @@
         <el-table-column
           prop="onumber"
           label="出库单号"
-          sortable
         >
         </el-table-column>
         <el-table-column
@@ -280,7 +278,6 @@
             },
             openAddPage() {
                 this.dialogFormVisible = true;
-
             },
             //查询
             beginSearch(){
