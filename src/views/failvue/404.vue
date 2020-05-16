@@ -16,12 +16,16 @@
         name: "404.vue",
         data () {
             return {
+                dateStart:"",
+                dateEnd:"",
+
             }
         },
         methods:{
             goBack() {
                 this.$router.go(-1)
-            }
+            },
+
         }
 
     }
