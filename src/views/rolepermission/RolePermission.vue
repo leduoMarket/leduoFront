@@ -82,7 +82,7 @@
         data() {
             return {
                 options: [{
-                    value:"经理",
+                    value:"管理员",
                     label:"经理"
                 },{
                     value: "财务",
@@ -98,7 +98,7 @@
                     userName:"张三",
                     password:"1234567",
                     phone:"1231231231",
-                    role:"经理",
+                    role:"管理员",
                     satatus:"0",
 
                 },{
@@ -125,30 +125,30 @@
         },
         created(){
             //前端测试部分
-            this.tableDataEnd=[];
-            let item={
-                uid:'',
-                uName:'',
-                uStatus:'',
-                uRole:'',
-            };
-
-            this.tableData.forEach((value) =>{
-                item.uid=value.uid;
-                item.uName=value.userName;
-                item.uRole=value.role;
-                item.uStatus=value.satatus;
-                console.log(item);
-                this.tableDataEnd.push(item);
-                item={
-                    uid:'',
-                    uName:'',
-                    uStatus:'',
-                    uRole:'',
-                };
-            });
+            // this.tableDataEnd=[];
+            // let item={
+            //     uid:'',
+            //     uName:'',
+            //     uStatus:'',
+            //     uRole:'',
+            // };
+            //
+            // this.tableData.forEach((value) =>{
+            //     item.uid=value.uid;
+            //     item.uName=value.userName;
+            //     item.uRole=value.role;
+            //     item.uStatus=value.satatus;
+            //     console.log(item);
+            //     this.tableDataEnd.push(item);
+            //     item={
+            //         uid:'',
+            //         uName:'',
+            //         uStatus:'',
+            //         uRole:'',
+            //     };
+            // });
             //从后端获得数据
-            this.$axios.get("/admin/emps").then(res =>{
+            this.$axios.get("/admin/getAllemployees").then(res =>{
                 if(res.code ===200){
                     this.tableData=res.data;
                     this.tableDataEnd=[];
