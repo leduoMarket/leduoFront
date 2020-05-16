@@ -56,7 +56,7 @@
         reg_phone,
 
     } from "../login/validator";
-
+    import md5 from 'js-md5';
     export default {
         name:'Register.vue',
         data() {
@@ -116,18 +116,18 @@
             addRegister() {
                 this.$refs.registerForm.validate()
                     .then(res => {
-                        this.$axios.post('/add404', {
-                            user_name: this.registerForm.userName,
+                        this.$axios.post('/register', {
                             uid: this.registerForm.userId,
+                            userName: this.registerForm.userName,
                             phone: this.registerForm.userPhone,
                             role: this.registerForm.userRole,
-                            password: this.registerForm.userpassword,
+                            password: md5(this.registerForm.userpassword),
                             satatus: 0,
                         }).then(successResponse => {
                             if (successResponse.data.code == 200) {
                                 this.addSuccessful = true;
                                 this.$message({
-                                    message: '注册成功',
+                                    message: successResponse.data.message,
                                     type: 'success',
                                 });
                                 //将信息刷新到表格中
@@ -142,7 +142,7 @@
                             }
                         }).catch(failedResponse => {
                             this.addSuccessful = false;
-                            this.$message.warning('提交失败');
+                            this.$message.warning(failedResponse.data.message);
                         });
 
                     }).catch(error => {

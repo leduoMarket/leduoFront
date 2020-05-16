@@ -50,7 +50,6 @@
     </body>
   </div>
 </template>
-
 <script>
     import {
         reg_userName,
@@ -175,16 +174,25 @@
                                     let role = successResponse.data.role;
                                     //键值对，值：string，不能是json
                                     sessionStorage.setItem('user',successResponse.data.sessionId);
-                                    sessionStorage.setItem('role',successResponse.data.role);
+
                                     console.log("role from dataBase:"+successResponse.data.role);
-                                    if(successResponse.data.role === '1'){
+                                    if(successResponse.data.role == 1){
+                                        // sessionStorage.setItem('role',successResponse.data.role);
+                                        sessionStorage.setItem('role','1');
+                                        console.log("管理员");
                                         this.$router.replace({path: '/home/firstPage'})
                                     }else if(successResponse.data.role == 2){
+                                        sessionStorage.setItem('role','2');
+                                    //     sessionStorage.setItem('role',successResponse.data.role);
+                                        console.log("财务");
                                         this.$router.replace({path:'/homet/firstPage'})
                                     }else if(successResponse.data.role == 3){
+                                        sessionStorage.setItem('role','3');
+                                        // sessionStorage.setItem('role',successResponse.data.role);
+                                        console.log("员工");
                                         this.$router.replace({path:'/homes/firstPage'})
                                     }
-                                    this.$router.replace({path: '/homes/firstPage'})
+                                    // this.$router.replace({path: '/homes/firstPage'})
                                 }
                             })
                             .catch(failResponse => {
