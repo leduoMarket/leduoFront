@@ -50,8 +50,8 @@
             prop="ehandle"
             label="操作">
             <template slot-scope="scope">
-              <el-button style="float: left; padding-right: 3px;" type="text" @click="upd"><span style="color: blue">编辑</span></el-button>
-              <el-button style="float: left; padding-right: 3px;" type="text" @click="delEmployee(scope.row,scope.$index)"><span style="color: red">删除</span>
+              <el-button style="float: left; padding-right: 3px;" type="text" @click="upd"><span style="color: blue" @click="upd(scope.row,scope.$index)">编辑</span></el-button>
+              <el-button style="float: left; padding-right: 3px;" type="text" ><span style="color: red" @click="delEmployee(scope.row,scope.$index)">删除</span>
               </el-button>
             </template>
           </el-table-column>
@@ -163,7 +163,7 @@
             doReset(){
                 this.searchInput="";
                 this.tableDataEnd=[];
-                this.tableData.forEach((value,index)=>{
+                this.tableData.forEach((value)=>{
                     this.tableDataEnd.push(value);
                 });
             },
@@ -268,17 +268,10 @@
 
                 } );
 
-            }
             },
-
             // 删除选中下标的一行数据，index由click处的scope.$index传过来的小标，delItem由scope.$row传过来的元素
             delEmployee(delItem, index){
                 console.log(delItem);
-                this.$message({
-                    type: 'success',
-                    message: '删除成功!'
-                });
-
                 this.$confirm('你确定要删除这条记录吗？','提示',{
                     confirmButtonText:'确定',
                     cancelButtonText:'取消',
@@ -287,10 +280,9 @@
                     //如果用户确实要删除，则用delete方式删除，并且传递要删除的记录的eid
                     this.$axios.delete('/home/emp',{
                         params:{
-                            empId: delItem.eid
+                            uid: delItem.uid
                         }
                     }).then(successResponse =>{
-
                         this.filterTableDataEnd=[];
                         //删除在表格中tableDataEnd显示的哪个数据
                         this.tableDataEnd.forEach((value,i)=>{
@@ -302,9 +294,9 @@
                         this.filterTableDataEnd=[];
 
                         //删除从数据源中tableData获得的数据
-                        this.tableData.forEach((value,i)=>{
+                        this.tableData.forEach((value)=>{
                             //通过主码快速过滤
-                            if(value.eid!==delItem.eid){
+                            if(value.uid!==delItem.uid){
                                 this.filterTableDataEnd.push(value);
                             }
                         });
@@ -331,6 +323,10 @@
 
                 });
             },
+
+            },
+
+
     }
 </script>
 <style scoped>
