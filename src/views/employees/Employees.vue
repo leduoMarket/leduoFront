@@ -362,10 +362,6 @@
 
                 });
             },
-
-            },
-
-
     }
 </script>
 <style scoped>
