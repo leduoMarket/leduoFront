@@ -223,9 +223,7 @@
                         message: '修改失败'
                     });
                 });
-
             },
-
             //初始页currentPage、初始每页数据数pageSize和数据data
             handleSizeChange: function (size) {
                 this.pageSize = size;
