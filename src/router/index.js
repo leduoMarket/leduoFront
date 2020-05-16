@@ -543,7 +543,6 @@ router.beforeEach((to, from, next) => {
             break;
           } else if (i == to.meta.roles.length - 1) {
             next({
-
               path: '/404'
             })
           }
