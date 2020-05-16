@@ -142,23 +142,23 @@
             },
             login () {
                 //前端测试代码
-                if(this.loginForm.uid == this.user1.username){
-                    console.log(this.user1.role);
-                    sessionStorage.setItem('user','1234567');
-                    sessionStorage.setItem('role','1');
-                    this.$router.replace({path: '/home/firstPage'});
-                }else if(this.loginForm.uid == this.user2.username){
-                    console.log(this.user2.role);
-                    sessionStorage.setItem('user','2234567');
-                    sessionStorage.setItem('role','2');
-                    this.$router.replace({path:'/homet/firstPage'})
-
-                }else if(this.loginForm.uid == this.user3.username){
-                    console.log(this.user3.role);
-                    sessionStorage.setItem('user','3234567');
-                    sessionStorage.setItem('role','3');
-                    this.$router.replace({path:'/homes/firstPage'})
-                }
+                // if(this.loginForm.uid == this.user1.username){
+                //     console.log(this.user1.role);
+                //     sessionStorage.setItem('user','1234567');
+                //     sessionStorage.setItem('role','1');
+                //     this.$router.replace({path: '/home/firstPage'});
+                // }else if(this.loginForm.uid == this.user2.username){
+                //     console.log(this.user2.role);
+                //     sessionStorage.setItem('user','2234567');
+                //     sessionStorage.setItem('role','2');
+                //     this.$router.replace({path:'/homet/firstPage'})
+                //
+                // }else if(this.loginForm.uid == this.user3.username){
+                //     console.log(this.user3.role);
+                //     sessionStorage.setItem('user','3234567');
+                //     sessionStorage.setItem('role','3');
+                //     this.$router.replace({path:'/homes/firstPage'})
+                // }
                 this.$refs.loginForm.validate()
                     .then(res => {
                         this.loadingBtn = false;
@@ -171,22 +171,22 @@
                                 if (successResponse.data.code === 200) {
                                     //得到响应中的role值，1：系统管理员，2.财务人员，3.普通员工
                                     //获得从后端得到role的代码可能有误
-                                    let role = successResponse.data.role;
+                                    let role = successResponse.data.data.role;
                                     //键值对，值：string，不能是json
-                                    sessionStorage.setItem('user',successResponse.data.sessionId);
+                                    sessionStorage.setItem('user',successResponse.data.data.sessionId);
 
-                                    console.log("role from dataBase:"+successResponse.data.role);
-                                    if(successResponse.data.role == 1){
+                                    console.log("role from dataBase:"+successResponse.data.data.role);
+                                    if(successResponse.data.data.role == 1){
                                         // sessionStorage.setItem('role',successResponse.data.role);
                                         sessionStorage.setItem('role','1');
                                         console.log("管理员");
                                         this.$router.replace({path: '/home/firstPage'})
-                                    }else if(successResponse.data.role == 2){
+                                    }else if(successResponse.data.data.role == 2){
                                         sessionStorage.setItem('role','2');
                                     //     sessionStorage.setItem('role',successResponse.data.role);
                                         console.log("财务");
                                         this.$router.replace({path:'/homet/firstPage'})
-                                    }else if(successResponse.data.role == 3){
+                                    }else if(successResponse.data.data.role == 3){
                                         sessionStorage.setItem('role','3');
                                         // sessionStorage.setItem('role',successResponse.data.role);
                                         console.log("员工");
@@ -197,6 +197,10 @@
                             })
                             .catch(failResponse => {
                                 // this.$router.replace({path: '/404'})
+                                this.$message({
+                                    message: failResponse.data.message,
+                                    type: 'error'
+                                });
                             })
 
                    }).catch(error =>{

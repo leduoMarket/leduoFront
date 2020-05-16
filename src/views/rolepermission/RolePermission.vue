@@ -124,7 +124,7 @@
             }
         },
         created(){
-            //前端测试部分
+            // 前端测试部分
             // this.tableDataEnd=[];
             // let item={
             //     uid:'',
@@ -147,10 +147,12 @@
             //         uRole:'',
             //     };
             // });
-            //从后端获得数据
+            this.tableData = [];
+            // 从后端获得数据
             this.$axios.get("/admin/getAllemployees").then(res =>{
-                if(res.code ===200){
-                    this.tableData=res.data;
+                if(res.data.code ===200){
+                    console.log(res.data.data);
+                    this.tableData=res.data.data;
                     this.tableDataEnd=[];
                     let item={
                         uid:'',
@@ -162,7 +164,7 @@
                         item.uid=value.uid;
                         item.uName=value.userName;
                         item.uRole=value.role;
-                        item.uStatus=value.satatus;
+                        item.uStatus=""+value.satatus;
                         console.log(item);
                         this.tableDataEnd.push(item);
                         item={
@@ -173,6 +175,7 @@
                         };
 
                     });
+                    console.log(this.tableDataEnd);
                 }
             }).catch(fail =>{
                 this.$message.warning(fail.message);
@@ -185,11 +188,11 @@
                 console.log(item.uid);
                 console.log(item.uRole);
                 console.log(item.uStatus);
-                    this.$axios.put('/changeRole',{
+                    this.$axios.post('/admin/changeStatus',{
                         params:{
                             uid:item.uid,
-                            uRole:item.uRole,
-                            uStatus:item.uStatus
+                            role:item.uRole,
+                            status:item.uStatus
                         }
                     }).then(()=>{
                         this.$message({
@@ -206,16 +209,16 @@
             },
             changeStatus(item){
                 console.log(item);
-                this.$axios.put('/changeRole',{
+                this.$axios.post('/admin/changeStatus',{
                     params:{
                         uid:item.uid,
-                        uRole:item.uRole,
-                        uStatus:item.uStatus
+                        role:item.uRole,
+                        status:item.uStatus
                     }
-                }).then(() =>{
+                }).then(res =>{
                     this.$message({
                         type: 'info',
-                        message: '修改成功'
+                        message: res.data.message
                     });
                 }).catch(() =>{
                     this.$message({

@@ -140,7 +140,6 @@
                 addSuccessful: false,
                 //显示页面的表单数据
                 tableData: [
-
                     {
                         inumber:'I2020040101',
                         gid:'1234567890123',
@@ -278,7 +277,6 @@
 
         // 创建的时候发送请求获取显示数据库所有员工的列表数据
         created() {
-
             this.$axios.get("/staff/stockInList").then(res => {
                 if (res.data) {
                     console.log(res);
