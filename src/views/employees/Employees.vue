@@ -50,8 +50,8 @@
             prop="ehandle"
             label="操作">
             <template slot-scope="scope">
-              <el-button style="float: left; padding-right: 3px;" type="text"><span style="color: blue" @click="upd">编辑</span></el-button>
-              <el-button style="float: left; padding-right: 3px;" type="text"><span style="color: red" @click="del(scope.row,scope.$index)">删除</span>
+              <el-button style="float: left; padding-right: 3px;" type="text" @click="upd"><span style="color: blue">编辑</span></el-button>
+              <el-button style="float: left; padding-right: 3px;" type="text" @click="delEmployee(scope.row,scope.$index)"><span style="color: red">删除</span>
               </el-button>
             </template>
           </el-table-column>
@@ -125,7 +125,7 @@
         // 创建的时候发送请求获取显示数据库所有员工的列表数据
         created() {
             this.$axios.get("/admin/getAllemployees").then(res => {
-                if (res.code === 200) {
+                if (res.data.code === 200) {
                     let item = {
                         uid:"",
                         user_name:"",
@@ -272,7 +272,7 @@
             },
 
             // 删除选中下标的一行数据，index由click处的scope.$index传过来的小标，delItem由scope.$row传过来的元素
-            del(delItem, index){
+            delEmployee(delItem, index){
                 console.log(delItem);
                 this.$message({
                     type: 'success',
