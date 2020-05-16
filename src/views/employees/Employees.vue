@@ -199,7 +199,6 @@
                 this.currentPage = currentPage;
                 console.log(this.currentPage)
             },
-
             //分页排序整体表格数据
             changeTableSort(column){
                 console.log(column);

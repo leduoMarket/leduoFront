@@ -19,11 +19,11 @@ export default {
             this.$router.go(-1);
         },
         logOut(){
-            sessionStorage.removeItem('user');
-            sessionStorage.removeItem('role');
-            this.$router.replace({path: '/'});
+            // sessionStorage.removeItem('user');
+            // sessionStorage.removeItem('role');
+            // this.$router.replace({path: '/'});
 
-            this.$axios.get("/logout").then(successfulResponse=>{
+            this.$axios.get("/staff/logout").then(successfulResponse=>{
                 if(successfulResponse.data.code==405){
                     sessionStorage.removeItem('user');
                     sessionStorage.removeItem('role');
