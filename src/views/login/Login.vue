@@ -50,7 +50,6 @@
     </body>
   </div>
 </template>
-
 <script>
     import {
         reg_userName,
