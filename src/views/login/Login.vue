@@ -142,23 +142,23 @@
             },
             login () {
                 //前端测试代码
-                // if(this.loginForm.uid == this.user1.username){
-                //     console.log(this.user1.role);
-                //     sessionStorage.setItem('user','1234567');
-                //     sessionStorage.setItem('role','1');
-                //     this.$router.replace({path: '/home/firstPage'});
-                // }else if(this.loginForm.uid == this.user2.username){
-                //     console.log(this.user2.role);
-                //     sessionStorage.setItem('user','2234567');
-                //     sessionStorage.setItem('role','2');
-                //     this.$router.replace({path:'/homet/firstPage'})
-                //
-                // }else if(this.loginForm.uid == this.user3.username){
-                //     console.log(this.user3.role);
-                //     sessionStorage.setItem('user','3234567');
-                //     sessionStorage.setItem('role','3');
-                //     this.$router.replace({path:'/homes/firstPage'})
-                // }
+                if(this.loginForm.uid == this.user1.username){
+                    console.log(this.user1.role);
+                    sessionStorage.setItem('user','1234567');
+                    sessionStorage.setItem('role','1');
+                    this.$router.replace({path: '/home/firstPage'});
+                }else if(this.loginForm.uid == this.user2.username){
+                    console.log(this.user2.role);
+                    sessionStorage.setItem('user','2234567');
+                    sessionStorage.setItem('role','2');
+                    this.$router.replace({path:'/homet/firstPage'})
+
+                }else if(this.loginForm.uid == this.user3.username){
+                    console.log(this.user3.role);
+                    sessionStorage.setItem('user','3234567');
+                    sessionStorage.setItem('role','3');
+                    this.$router.replace({path:'/homes/firstPage'})
+                }
                 this.$refs.loginForm.validate()
                     .then(res => {
                         this.loadingBtn = false;

@@ -82,7 +82,7 @@
         data() {
             return {
                 options: [{
-                    value:"经理",
+                    value:"管理员",
                     label:"经理"
                 },{
                     value: "财务",
@@ -98,7 +98,7 @@
                     userName:"张三",
                     password:"1234567",
                     phone:"1231231231",
-                    role:"经理",
+                    role:"管理员",
                     satatus:"0",
 
                 },{
@@ -148,7 +148,7 @@
             //     };
             // });
             //从后端获得数据
-            this.$axios.get("/admin/emps").then(res =>{
+            this.$axios.get("/admin/getAllemployees").then(res =>{
                 if(res.code ===200){
                     this.tableData=res.data;
                     this.tableDataEnd=[];

@@ -4,6 +4,7 @@
       <div slot="header" class="clearfix">
         <span>员工基本信息</span>
       </div>
+
       <div class="form">
         <el-select v-model="selectTags" clearable size="medium"  placeholder="请选择" value="" >
           <el-option
@@ -34,16 +35,12 @@
             width="180">
           </el-table-column>
           <el-table-column
-            prop="password"
-            label="密码">
-          </el-table-column>
-          <el-table-column
             prop="phone"
             label="手机号">
           </el-table-column>
           <el-table-column
             prop="role"
-            label="角色">
+            label="部门">
           </el-table-column>
           <el-table-column
             prop="status"
@@ -130,18 +127,38 @@
         },
         // 创建的时候发送请求获取显示数据库所有员工的列表数据
         created() {
-            this.$axios.get("/admin/emps").then(res => {
-                if (res.data) {
-                    console.log(res);
-                    this.tableData = res.data.data;
+            this.$axios.get("/admin/getAllemployees").then(res => {
+                if (res.code === 200) {
+                    let item = {
+                        uid:"",
+                        user_name:"",
+                        phone:"",
+                        role:"",
+                        status: "",
+                    };
+                    res.data.data.forEach(value=>{
+                        item.uid=value.uid;
+                        item.user_name=value.userName;
+                        item.phone=value.phone;
+                        item.role=value.role;
+                        item.status=value.status;
+                        this.tableData.push(item);
+                        item = {
+                            uid:"",
+                            user_name:"",
+                            phone:"",
+                            role:"",
+                            status: "",
+                        };
+                    });
                     this.totalItems = this.tableData.length;
                     this.tableDataEnd=[];
-                    this.tableData.forEach((value,index)=>{
+                    this.tableData.forEach((value)=>{
                         this.tableDataEnd.push(value);
                     });
-                    console.log(this.tableData.length);
                 }
             }).catch(failResponse => {
+                this.$message.error(failResponse.message);
             })
         },
         methods: {
