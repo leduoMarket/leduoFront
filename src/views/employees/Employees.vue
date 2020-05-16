@@ -100,10 +100,7 @@
                 //初始数据的长度
                 totalItems:0,
                 //最后在页面中显示的数据
-                tableDataEnd:[{
-                    uid:'123456',
-                    user_name: '张三',
-                }],
+                tableDataEnd:[],
                 //搜索框内的数据
                 searchInput:"",
                 filterTableDataEnd:[],
