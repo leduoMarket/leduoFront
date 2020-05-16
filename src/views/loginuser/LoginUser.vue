@@ -117,7 +117,7 @@
                             cancelButtonText: '取消',
                             type: 'warning'
                         }).then(() => {
-                            this.$axios.post('/updatepwd',{
+                            this.$axios.post('/staff/changePassWd',{
                                 uid:this.form.eid,
                                 pwd1:this.form.epwd1,
                                 pwd2:this.form.epwd2,
@@ -125,12 +125,12 @@
                                 if(successResponse.data.code == 200){
                                     this.$message({
                                         type: 'success',
-                                        message: '修改成功!'
+                                        message: successResponse.data.message
                                     });
                                 }
                             }).catch(failedResponse =>{
                                 this.$message({
-                                    type: 'success',
+                                    type: 'info',
                                     message: '修改失败，您的密码可能错误!'
                                 });
 
