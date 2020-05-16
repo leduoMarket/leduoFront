@@ -40,7 +40,7 @@
           </el-table-column>
           <el-table-column
             prop="role"
-            label="部门">
+            label="职位">
           </el-table-column>
           <el-table-column
             prop="status"
@@ -50,7 +50,27 @@
             prop="ehandle"
             label="操作">
             <template slot-scope="scope">
-              <el-button style="float: left; padding-right: 3px;" type="text"><span style="color: blue" @click="upd">编辑</span></el-button>
+              <el-button style="float: left; padding-right: 3px;" type="text"><span style="color: blue" @click="edit">编辑</span></el-button>
+              <el-dialog title="员工信息" :visible.sync="dialogFormVisible">
+                <el-form :model="form" :rules="empRules" ref="dataInfo">
+                  <el-form-item label="员工编号" :label-width="formLabelWidth" prop="eid">
+                    <el-input v-model="form.eid" readonly autocomplete="off"></el-input>
+                  </el-form-item>
+                  <el-form-item label="用户名" :label-width="formLabelWidth" prop="user_name">
+                    <el-input v-model="form.user_name" autocomplete="off"></el-input>
+                  </el-form-item>
+                  <el-form-item label="手机号" :label-width="formLabelWidth" prop="phone">
+                    <el-input v-model="form.phone" autocomplete="off"></el-input>
+                  </el-form-item>
+                  <el-form-item label="职位" :label-width="formLabelWidth" prop="role">
+                    <el-input v-model="form.role" readonly autocomplete="off"></el-input>
+                  </el-form-item>
+                </el-form>
+                <div slot="footer" class="dialog-footer">
+                  <el-button @click="dialogFormVisible = false">取 消</el-button>
+                  <el-button type="primary" @click="upd"  >确 定</el-button>
+                </div>
+              </el-dialog>
               <el-button style="float: left; padding-right: 3px;" type="text"><span style="color: red" @click="del(scope.row,scope.$index)">删除</span>
               </el-button>
             </template>
@@ -72,13 +92,10 @@
 </template>
 <!--javaScript代码-->
 <script>
-  import {
-      reg_eid,
-      reg_ename,
-      reg_erole,
-      reg_money,
-      reg_phone
-  } from "../login/validator";
+    import {
+        reg_phone,
+        reg_userName
+    } from "../login/validator";
   export default {
         name: "Employees",
         data() {
@@ -86,7 +103,14 @@
                 addSuccessful:false,
                 // delSuccessful: false,
                 // 在基础表格中展示的数据
-                tableData: [],
+                tableData: [{
+                    uid:'123456',
+                    user_name: '张三',
+                    phone:'13548721974',
+                    role:'经理',
+                    status:'1',
+                }
+                ],
                 // 控制员工新增页面的form表单可见性
                 dialogFormVisible: false,
                 //删除的元素是谁
@@ -100,10 +124,7 @@
                 //初始数据的长度
                 totalItems:0,
                 //最后在页面中显示的数据
-                tableDataEnd:[{
-                    uid:'123456',
-                    user_name: '张三',
-                }],
+                tableDataEnd:[],
                 //搜索框内的数据
                 searchInput:"",
                 filterTableDataEnd:[],
@@ -122,11 +143,26 @@
                     label: '角色'
                 }
                 ],
-                value: ''
+                value: '',
+
+                empRules:{
+                    user_name:[{
+                        required:true ,validator: reg_userName,  trigger: 'blur'
+                    }],
+                    phone:[{
+                        required:true ,validator: reg_phone,  trigger: 'blur'
+                    }]
+                }
                 }
         },
         // 创建的时候发送请求获取显示数据库所有员工的列表数据
         created() {
+            //前端测试数据使用
+            this.tableDataEnd=[];
+            this.totalItems = this.tableData.length;
+            this.tableData.forEach((value,index)=>{
+                this.tableDataEnd.push(value);
+            });
             this.$axios.get("/admin/getAllemployees").then(res => {
                 if (res.code === 200) {
                     let item = {
@@ -247,11 +283,11 @@
 
             },
             //更新数据
-            upd(updItem,index){
+            upd(){
                 this.$axios.put('/update',{
                     uid:this.form.eid,
-                    usr_name:this.form.user_naem,
-                    password:this.form.password,
+                    usr_name:this.form.user_name,
+                    /*password:this.form.password,*/
                     phone:this.form.phone,
                     role:this.form.role,
                     status:this.form.status,
@@ -267,14 +303,17 @@
                         type: 'success',
                         message: '修改失败，您的密码可能错误!'
                     });
-
-
                 } );
-
             }
             },
 
-            // 删除选中下标的一行数据，index由click处的scope.$index传过来的小标，delItem由scope.$row传过来的元素
+            //编辑数据
+           edit(){
+            dialogFormVisible = true;
+
+           },
+
+        // 删除选中下标的一行数据，index由click处的scope.$index传过来的小标，delItem由scope.$row传过来的元素
             del(delItem, index){
                 console.log(delItem);
                 this.$message({
