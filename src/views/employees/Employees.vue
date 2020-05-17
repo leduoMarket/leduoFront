@@ -53,8 +53,8 @@
               <el-button style="float: left; padding-right: 3px;" type="text"><span style="color: blue" @click="edit">编辑</span></el-button>
               <el-dialog title="员工信息" :visible.sync="dialogFormVisible">
                 <el-form :model="form" :rules="empRules" ref="dataInfo">
-                  <el-form-item label="员工编号" :label-width="formLabelWidth" prop="eid">
-                    <el-input v-model="form.eid" readonly autocomplete="off"></el-input>
+                  <el-form-item label="员工编号" :label-width="formLabelWidth" prop="uid">
+                    <el-input v-model="form.uid" readonly autocomplete="off"></el-input>
                   </el-form-item>
                   <el-form-item label="用户名" :label-width="formLabelWidth" prop="user_name">
                     <el-input v-model="form.user_name" autocomplete="off"></el-input>
@@ -111,6 +111,13 @@
                     status:'1',
                 }
                 ],
+
+                form:{
+                    uid:'',
+                    user_name:'',
+                    phone:'',
+                    role:'',
+                },
                 // 控制员工新增页面的form表单可见性
                 dialogFormVisible: false,
                 //删除的元素是谁
@@ -157,6 +164,11 @@
         },
         // 创建的时候发送请求获取显示数据库所有员工的列表数据
         created() {
+            this.totalItems = this.tableData.length;
+            this.tableDataEnd=[];
+            this.tableData.forEach((value,index)=>{
+                this.tableDataEnd.push(value);
+            });
             this.$axios.get("/admin/getAllemployees").then(res => {
                 if (res.data.code === 200) {
                     let item = {
@@ -298,15 +310,7 @@
                         message: '修改失败，您的密码可能错误!'
                     });
                 } );
-            }
             },
-
-            //编辑数据
-           edit(){
-            dialogFormVisible = true;
-
-           },
-
 
             // 删除选中下标的一行数据，index由click处的scope.$index传过来的小标，delItem由scope.$row传过来的元素
             delEmployee(delItem, index){
@@ -362,6 +366,14 @@
 
                 });
             },
+            },
+
+            //编辑数据
+           edit(){
+               dialogFormVisible = true;
+               this.form.uid = this.tableData.uid;
+
+           },
     }
 </script>
 <style scoped>
