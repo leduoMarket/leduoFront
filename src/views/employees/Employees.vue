@@ -225,7 +225,11 @@
             },
             //数据搜索
             doFilter(){
-                var selectTag = this.selectTags;
+                let selectTag = this.selectTags;
+                if(selectTag == ""){
+                    this.$message.warning("查询条件不能为空！！！");
+                    return;
+                }
                 if(this.searchInput == ""){
                     this.$message.warning("查询信息不能为空！！！");
                     return;

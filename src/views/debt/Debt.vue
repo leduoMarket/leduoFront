@@ -4,40 +4,7 @@
     <div slot="header" class="clearfix">
       <span>欠款单</span>
       <!--<el-button style="float: right; padding: 3px 0" type="text" @click="dialogFormVisible = true">新建</el-button>-->
-      <el-dialog title="欠款单" :visible.sync="dialogFormVisible">
-        <el-form :model="dataInfo" :rules="debtRules" ref="dataInfo">
-          <el-form-item label="欠款单号" :label-width="formLabelWidth" prop="dnumber">
-            <el-input v-model="dataInfo.dnumber" autocomplete="off"></el-input>
-          </el-form-item>
-          <el-form-item label="商品代码" :label-width="formLabelWidth" prop="gid">
-            <el-input v-model="dataInfo.gid" autocomplete="off"></el-input>
-          </el-form-item>
-          <el-form-item label="供应商名称" :label-width="formLabelWidth" prop="vnanme">
-            <el-input v-model="dataInfo.vname" autocomplete="off"></el-input>
-          </el-form-item>
-          <el-form-item label="日期" :label-width="formLabelWidth" prop="ddate">
-            <el-input v-model="dataInfo.ddate" autocomplete="off"></el-input>
-          </el-form-item>
-          <el-form-item label="欠款金额" :label-width="formLabelWidth" prop="ddebt">
-            <el-input v-model="dataInfo.ddebt" autocomplete="off"></el-input>
-          </el-form-item>
-        </el-form>
-        <div slot="footer" class="dialog-footer">
-          <el-button @click="dialogFormVisible = false">取 消</el-button>
-          <el-button type="primary" @click="addDebt">确 定</el-button>
-        </div>
-      </el-dialog>
     </div>
-    <!--<div class="text item">
-      <div class="text item">
-        <el-input style="width: 300px"
-                  placeholder="请输入欠款单号"
-                  v-model="searchInput"
-                  clearable>
-        </el-input>
-        <el-button round @click="beginSearch">查询</el-button>
-      </div>
-    </div>-->
     <div class="form">
       <el-select v-model="selectTags" clearable size="medium"  placeholder="请选择" value="" >
         <el-option
@@ -336,51 +303,6 @@
                 this.dialogFormVisible = true;
 
             },
-            /*addDebt() {
-                this.$refs.dataInfo.validate()
-                    .then(res =>{
-                        this.$axios.post('/home/addDebt', {
-                            dnumber:this.dataInfo.dnumber,
-                            gid: this.dataInfo.gid,
-                            vname: this.dataInfo.vname,
-                            ddate: this.dataInfo.ddate,
-                            ddebt: this.dataInfo.ddebt,
-                        }).then(successResponse => {
-                            if (successResponse.data.code === 200) {
-                                this.addSuccessful = true;
-                            }
-                        }).catch(failedResponse => {
-                            this.addSuccessful = false;
-                        });
-                        if (!this.addSuccessful) {
-                            this.$message.error('插入数据失败');
-                        } else {
-                            this.tableData.push(this.dataInfo);
-                            this.$message({
-                                message: '成功添加一条记录',
-                                type: 'success'
-                            });
-                        }
-                        // 将填写框置空，方便下次填写
-                        this.dataInfo = {
-                            dnumber: '',
-                            gid: '',
-                            vname: '',
-                            ddate: '',
-                            ddebt: ''
-                        };
-                        // 让表格消失
-                        this.dialogFormVisible = false;
-                    }).catch(error =>{
-                    console.log("提交失败");
-                    this.$message({
-                        message: '无法提交，表单中数据有错误',
-                        type: 'error'
-                    });
-                });
-
-            },*/
-
             // 删除选中下标的一行数据，index由click处的scope.$index传过来的下标，delItem由scope.$row传过来的元素
             del(delItem, index) {
                 console.log(delItem);

@@ -4,9 +4,8 @@
     <div slot="header" class="clearfix">
       <span>商品表</span>
            <!-- 新建页面-->
-      <a href="http://localhost:8080/goodClass">
-        <el-button style="float: right; padding: 3px 0" type="text">分类规则</el-button>
-      </a>
+        <el-button style="float: right; padding: 3px 0" type="text"  @click="goToClass">分类规则</el-button>
+
       <el-button style="float: right; padding: 3px 10px" type="text" @click="dialogFormVisible = true">新建</el-button>
       <el-dialog title="商品表" :visible.sync="dialogFormVisible">
         <el-form :model="dataInfo" :rules="goodsRules" ref="dataInfo">
@@ -363,6 +362,18 @@
                     });
 
                 });
+            },
+            //去商品分类
+            goToClass(){
+              let role = sessionStorage.getItem("role");
+              if(role == "1"){
+                  this.$router.replace("/home/goodClass");
+              }else if(role =="2") {
+                  this.$router.replace("/homet/goodClass");
+
+              }else if(role == "3"){
+                  this.$router.replace("/homes/goodClass");
+              }
             },
             //新增表单操作
             addGoods(){

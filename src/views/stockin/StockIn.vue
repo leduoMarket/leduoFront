@@ -350,7 +350,7 @@
                 return row[property].search(value) !== -1;
             },
             doFilter(){
-                var selectTag = this.selectTags;
+                let selectTag = this.selectTags;
                 if(this.searchInput == ""){
                     this.$message.warning("查询信息不能为空！！！");
                     return;

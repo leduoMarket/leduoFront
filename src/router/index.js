@@ -26,6 +26,7 @@ const HomeStaff =()=>import("../components/HomeStaff")
 const Register =()=>import("../views/failvue/register")
 
 
+
 Vue.use(Router)
 const router = new Router({
   mode:'history',
@@ -51,7 +52,6 @@ const router = new Router({
       meta:{
         requireAuth:false
       }
-
     },
     {
       path: '/homet',
