@@ -49,7 +49,7 @@
   import {
       reg_password
   } from "../login/validator";
-
+  import md5 from 'js-md5';
   export default {
         name: 'LoginUser',
         data () {
@@ -82,8 +82,8 @@
             }
         },
         created(){
-            var eid = sessionStorage.getItem('user');
-            var role =sessionStorage.getItem('role');
+            let eid = JSON.parse(sessionStorage.getItem('uid'));
+            let role =sessionStorage.getItem('role');
             if(role == '1'){
                 this.form.erole='管理员';
             }else if (role == '2'){
@@ -92,13 +92,15 @@
                 this.form.erole='员工';
             }
             this.form.eid=eid;
-            this.$axios.put('/getUserInfo',{
-                uid:this.form.eid,
+            this.$axios.get('/staff/getCurrentUserMessage',{
+                params:{
+                    uid:this.form.eid,
+                }
             }).then(res =>{
-                this.form.eid=res.data.uid;
-                this.form.ename=res.data.user_name;
-                this.form.ephone=res.data.phone;
-                this.form.erole=res.data.role;
+                this.form.eid=res.data.data.uid;
+                this.form.ename=res.data.data.userName;
+                this.form.ephone=res.data.data.phone;
+                this.form.erole=res.data.data.role;
 
             }).catch(failResponse =>{
 
@@ -117,10 +119,12 @@
                             cancelButtonText: '取消',
                             type: 'warning'
                         }).then(() => {
-                            this.$axios.post('/staff/changePassWd',{
-                                uid:this.form.eid,
-                                pwd1:this.form.epwd1,
-                                pwd2:this.form.epwd2,
+                            this.$axios.get('/staff/changePassWd',{
+                                params:{
+                                    uid:this.form.eid,
+                                    pwd1:md5(this.form.epwd1),
+                                    pwd2:md5(this.form.epwd2),
+                                }
                             }).then(successResponse =>{
                                 if(successResponse.data.code == 200){
                                     this.$message({

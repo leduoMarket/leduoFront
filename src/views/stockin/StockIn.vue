@@ -274,14 +274,12 @@
             }
         },
         //过滤器
-
         // 创建的时候发送请求获取显示数据库所有员工的列表数据
         created() {
-
             this.$axios.get("/staff/stockInList").then(res => {
-                if (res.data) {
+                if (res.data.code==200) {
                     console.log(res);
-                    this.tableData = res.data;
+                    this.tableData = res.data.data;
                     this.totalItems = this.tableData.length;
                     this.tableDataEnd=[];
                     this.tableData.forEach((value,index)=>{
@@ -470,12 +468,7 @@
                     type:'warning'
                 }).then(() =>{
                     //如果用户确实要删除，则用delete方式删除，并且传递要删除的记录的eid
-                    this.$axios.delete('/delstockIn',{
-                        params:{
-                            stockInId: delItem.inumber
-                        }
-                    }).then(successResponse =>{
-
+                    this.$axios.delete('/staff/delstockIn?stockInId='+delItem.inumber).then(successResponse =>{
                         this.filterTableDataEnd=[];
                         //删除在表格中tableDataEnd显示的哪个数据
                         this.tableDataEnd.forEach((value,i)=>{
@@ -525,7 +518,7 @@
                         if(this.addLastForm===this.addform){
                             this.$message.warning('您已经提交过，请勿重复提交');
                         }
-                        this.$axios.post('/home/addstockIn',{
+                        this.$axios.post('/staff/stockInAdd',{
                             inumber:this.addform.inumber,
                             gid:this.addform.gid,
                             vname:this.addform.vname,

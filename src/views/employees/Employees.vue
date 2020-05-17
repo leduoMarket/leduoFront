@@ -173,44 +173,45 @@
         },
         // 创建的时候发送请求获取显示数据库所有员工的列表数据
         created() {
-            this.tableDataEnd=[];
-            console.log(this.tableData);
-            this.tableData.forEach((value)=>{
-                this.tableDataEnd.push(value);
-            });
-            // this.$axios.get("/admin/getAllemployees").then(res => {
-            //     if (res.data.code === 200) {
-            //         let item = {
-            //             uid:"",
-            //             user_name:"",
-            //             phone:"",
-            //             role:"",
-            //             status: "",
-            //         };
-            //         res.data.data.forEach(value=>{
-            //             item.uid=value.uid;
-            //             item.user_name=value.userName;
-            //             item.phone=value.phone;
-            //             item.role=value.role;
-            //             item.status=""+value.status;
-            //             this.tableData.push(item);
-            //             item = {
-            //                 uid:"",
-            //                 user_name:"",
-            //                 phone:"",
-            //                 role:"",
-            //                 status: "",
-            //             };
-            //         });
-            //         this.totalItems = this.tableData.length;
-            //         this.tableDataEnd=[];
-            //         this.tableData.forEach((value)=>{
-            //             this.tableDataEnd.push(value);
-            //         });
-            //     }
-            // }).catch(failResponse => {
-            //     this.$message.error(failResponse.message);
-            // })
+            // this.tableDataEnd=[];
+            // console.log(this.tableData);
+            // this.tableData.forEach((value)=>{
+            //     this.tableDataEnd.push(value);
+            // });
+            this.tableData=[];
+            this.$axios.get("/admin/getAllemployees").then(res => {
+                if (res.data.code === 200) {
+                    let item = {
+                        uid:"",
+                        user_name:"",
+                        phone:"",
+                        role:"",
+                        status: "",
+                    };
+                    res.data.data.forEach(value=>{
+                        item.uid=value.uid;
+                        item.user_name=value.userName;
+                        item.phone=value.phone;
+                        item.role=value.role;
+                        item.status=""+value.status;
+                        this.tableData.push(item);
+                        item = {
+                            uid:"",
+                            user_name:"",
+                            phone:"",
+                            role:"",
+                            status: "",
+                        };
+                    });
+                    this.totalItems = this.tableData.length;
+                    this.tableDataEnd=[];
+                    this.tableData.forEach((value)=>{
+                        this.tableDataEnd.push(value);
+                    });
+                }
+            }).catch(failResponse => {
+                this.$message.error(failResponse.message);
+            })
         },
         methods: {
             //数据重置
@@ -295,18 +296,15 @@
                         );
                     });
                 }
-
             },
             //更新数据
             upd(){
-
-                this.$axios.put('/update',{
+                this.$axios.put('/admin/updatePhoneOrName',{
                     uid:this.dataInfo.uid,
-                    usr_name:this.dataInfo.user_name,
+                    userName:this.dataInfo.user_name,
                     phone:this.dataInfo.phone,
                 }).then(successResponse =>{
                     if(successResponse.data.code == 200){
-
                         this.tableDataEnd[this.index]=this.dataInfo;
                         this.tableData.forEach(value => {
                             if(value.uid === this.dataInfo.uid){
@@ -357,22 +355,15 @@
                 // });
                 // this.tableData = this.filterTableDataEnd;
                 // this.filterTableDataEnd=[];
-
-                this.$message({
-                    type: 'success',
-                    message: '删除成功!'
-                });
                 this.$confirm('你确定要删除这条记录吗？','提示',{
                     confirmButtonText:'确定',
                     cancelButtonText:'取消',
                     type:'warning'
                 }).then(() =>{
+                    console.log("被删除的id为："+delItem.uid);
                     //如果用户确实要删除，则用delete方式删除，并且传递要删除的记录的eid
-                    this.$axios.delete('/home/emp',{
-                        params:{
-                            uid: delItem.uid
-                        }
-                    }).then(successResponse =>{
+                    this.$axios.delete('/admin/delemp?empId='+delItem.uid)
+                        .then(successResponse =>{
                         this.filterTableDataEnd=[];
                         //删除在表格中tableDataEnd显示的哪个数据
                         this.tableDataEnd.forEach((value,i)=>{
@@ -382,7 +373,6 @@
                         });
                         this.tableDataEnd=this.filterTableDataEnd;
                         this.filterTableDataEnd=[];
-
                         //删除从数据源中tableData获得的数据
                         this.tableData.forEach((value)=>{
                             //通过主码快速过滤
@@ -416,10 +406,6 @@
 
 
             },
-
-
-
-
 
     }
 </script>

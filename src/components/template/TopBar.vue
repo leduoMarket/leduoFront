@@ -21,18 +21,20 @@ export default {
         logOut(){
             // sessionStorage.removeItem('user');
             // sessionStorage.removeItem('role');
+            // sessionStorage.removeItem('uid');
             // this.$router.replace({path: '/'});
 
             this.$axios.get("/staff/logout").then(successfulResponse=>{
                 if(successfulResponse.data.code==405){
                     sessionStorage.removeItem('user');
                     sessionStorage.removeItem('role');
+                    sessionStorage.removeItem('uid');
                     this.$router.replace({path: '/'});
                 }
             }).catch(failedResponse=>{
                 this.$notify({
                     title: '对不起',
-                    message: '服务器开小差了',
+                    message: '中断服务器连接了',
                     offset: 100
                 });
             })
