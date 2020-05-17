@@ -300,7 +300,6 @@
             },
             //更新数据
             upd(){
-
                 this.$axios.put('/update',{
                     uid:this.dataInfo.uid,
                     usr_name:this.dataInfo.user_name,
@@ -359,21 +358,14 @@
                 // this.tableData = this.filterTableDataEnd;
                 // this.filterTableDataEnd=[];
 
-                this.$message({
-                    type: 'success',
-                    message: '删除成功!'
-                });
                 this.$confirm('你确定要删除这条记录吗？','提示',{
                     confirmButtonText:'确定',
                     cancelButtonText:'取消',
                     type:'warning'
                 }).then(() =>{
                     //如果用户确实要删除，则用delete方式删除，并且传递要删除的记录的eid
-                    this.$axios.delete('/home/emp',{
-                        params:{
-                            uid: delItem.uid
-                        }
-                    }).then(successResponse =>{
+                    this.$axios.delete('/admin/delepm?empId='+delItem.uid)
+                        .then(successResponse =>{
                         this.filterTableDataEnd=[];
                         //删除在表格中tableDataEnd显示的哪个数据
                         this.tableDataEnd.forEach((value,i)=>{
@@ -383,7 +375,6 @@
                         });
                         this.tableDataEnd=this.filterTableDataEnd;
                         this.filterTableDataEnd=[];
-
                         //删除从数据源中tableData获得的数据
                         this.tableData.forEach((value)=>{
                             //通过主码快速过滤

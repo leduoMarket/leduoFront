@@ -45,7 +45,7 @@
       <el-form-item style="width: 100%">
         <el-button type="primary" style="width: 100%;background: #000066;border: none" v-on:click="login" >登录</el-button>
       </el-form-item>
-      <el-button type="text" style="width: 100%; margin-left: 50%" size="mini" v-on:click="gotoRegister" >注册</el-button>
+      <el-button type="text" style="width: 100%; margin-left: 46%" size="mini" v-on:click="gotoRegister" >注册</el-button>
     </el-form>
     </body>
   </div>
@@ -146,17 +146,20 @@
                     console.log(this.user1.role);
                     sessionStorage.setItem('user','1234567');
                     sessionStorage.setItem('role','1');
+                    sessionStorage.setItem('uid',JSON.stringify(this.loginForm.uid));
                     this.$router.replace({path: '/home/firstPage'});
                 }else if(this.loginForm.uid == this.user2.username){
                     console.log(this.user2.role);
                     sessionStorage.setItem('user','2234567');
                     sessionStorage.setItem('role','2');
+                    sessionStorage.setItem('uid',JSON.stringify(this.loginForm.uid));
                     this.$router.replace({path:'/homet/firstPage'})
 
                 }else if(this.loginForm.uid == this.user3.username){
                     console.log(this.user3.role);
                     sessionStorage.setItem('user','3234567');
                     sessionStorage.setItem('role','3');
+                    sessionStorage.setItem('uid',JSON.stringify(this.loginForm.uid));
                     this.$router.replace({path:'/homes/firstPage'})
                 }
                 this.$refs.loginForm.validate()
@@ -174,6 +177,7 @@
                                     let role = successResponse.data.data.role;
                                     //键值对，值：string，不能是json
                                     sessionStorage.setItem('user',successResponse.data.data.sessionId);
+                                    // sessionStorage.setItem('uid',this.loginForm.uid);
 
                                     console.log("role from dataBase:"+successResponse.data.data.role);
                                     if(successResponse.data.data.role == 1){
@@ -183,6 +187,7 @@
                                         this.$router.replace({path: '/home/firstPage'})
                                     }else if(successResponse.data.data.role == 2){
                                         sessionStorage.setItem('role','2');
+                                        sessionStorage.setItem('uid',JSON.stringify(this.loginForm.uid));
                                     //     sessionStorage.setItem('role',successResponse.data.role);
                                         console.log("财务");
                                         this.$router.replace({path:'/homet/firstPage'})
