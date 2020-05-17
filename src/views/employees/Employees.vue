@@ -174,44 +174,44 @@
         },
         // 创建的时候发送请求获取显示数据库所有员工的列表数据
         created() {
-            this.tableDataEnd=[];
-            console.log(this.tableData);
-            this.tableData.forEach((value)=>{
-                this.tableDataEnd.push(value);
-            });
-            // this.$axios.get("/admin/getAllemployees").then(res => {
-            //     if (res.data.code === 200) {
-            //         let item = {
-            //             uid:"",
-            //             user_name:"",
-            //             phone:"",
-            //             role:"",
-            //             status: "",
-            //         };
-            //         res.data.data.forEach(value=>{
-            //             item.uid=value.uid;
-            //             item.user_name=value.userName;
-            //             item.phone=value.phone;
-            //             item.role=value.role;
-            //             item.status=""+value.status;
-            //             this.tableData.push(item);
-            //             item = {
-            //                 uid:"",
-            //                 user_name:"",
-            //                 phone:"",
-            //                 role:"",
-            //                 status: "",
-            //             };
-            //         });
-            //         this.totalItems = this.tableData.length;
-            //         this.tableDataEnd=[];
-            //         this.tableData.forEach((value)=>{
-            //             this.tableDataEnd.push(value);
-            //         });
-            //     }
-            // }).catch(failResponse => {
-            //     this.$message.error(failResponse.message);
-            // })
+            // this.tableDataEnd=[];
+            // console.log(this.tableData);
+            // this.tableData.forEach((value)=>{
+            //     this.tableDataEnd.push(value);
+            // });
+            this.$axios.get("/admin/getAllemployees").then(res => {
+                if (res.data.code === 200) {
+                    let item = {
+                        uid:"",
+                        user_name:"",
+                        phone:"",
+                        role:"",
+                        status: "",
+                    };
+                    res.data.data.forEach(value=>{
+                        item.uid=value.uid;
+                        item.user_name=value.userName;
+                        item.phone=value.phone;
+                        item.role=value.role;
+                        item.status=""+value.status;
+                        this.tableData.push(item);
+                        item = {
+                            uid:"",
+                            user_name:"",
+                            phone:"",
+                            role:"",
+                            status: "",
+                        };
+                    });
+                    this.totalItems = this.tableData.length;
+                    this.tableDataEnd=[];
+                    this.tableData.forEach((value)=>{
+                        this.tableDataEnd.push(value);
+                    });
+                }
+            }).catch(failResponse => {
+                this.$message.error(failResponse.message);
+            })
         },
         methods: {
             //数据重置

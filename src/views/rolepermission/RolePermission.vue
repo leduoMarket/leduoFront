@@ -189,11 +189,9 @@
                 console.log(item.uRole);
                 console.log(item.uStatus);
                     this.$axios.post('/admin/changeStatus',{
-                        params:{
-                            uid:item.uid,
-                            role:item.uRole,
-                            status:item.uStatus
-                        }
+                        uid:item.uid,
+                        role:item.uRole,
+                        status:item.uStatus
                     }).then(()=>{
                         this.$message({
                             type: 'info',
@@ -210,11 +208,9 @@
             changeStatus(item){
                 console.log(item);
                 this.$axios.post('/admin/changeStatus',{
-                    params:{
-                        uid:item.uid,
-                        role:item.uRole,
-                        status:item.uStatus
-                    }
+                    uid:item.uid,
+                    role:item.uRole,
+                    status:item.uStatus
                 }).then(res =>{
                     this.$message({
                         type: 'info',
