@@ -165,6 +165,8 @@
                 this.$refs.loginForm.validate()
                     .then(res => {
                         this.loadingBtn = false;
+
+                        //这里是验证码的地方
                         this.$axios
                             .post('/login', {
                                 uid:this.loginForm.uid,
