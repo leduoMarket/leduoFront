@@ -45,7 +45,7 @@
       <el-form-item style="width: 100%">
         <el-button type="primary" style="width: 100%;background: #000066;border: none" v-on:click="login" >登录</el-button>
       </el-form-item>
-      <el-button type="text" style="width: 100%; margin-left: 46%" size="mini" v-on:click="gotoRegister" >注册</el-button>
+      <el-button type="text" style="width: 100%; margin-left: 50%" size="mini" v-on:click="gotoRegister" >注册</el-button>
     </el-form>
     </body>
   </div>
@@ -62,7 +62,7 @@
         components:{RandomCode},
         data () {
             // 自定义验证规则：验证码验证规则
-            const verifycode = (rule, value, callback) => {
+            const validateVerifycode = (rule, value, callback) => {
                 if (value === '') {
                     callback(new Error('请输入验证码'))
                 } else if (value !== this.identifyCode) {
@@ -71,14 +71,16 @@
                 } else {
                     callback()
                 }
-            }
+            };
             return {
                 identifyCodes: '1234567890',
                 identifyCode: '',
                 loadingBtn: false,
                 loginForm: {
                     uid: '',
-                    password: ''
+                    password: '',
+                    verifycode: '',
+                    verifycode1:'',
                 },
                 user1:{
                   username:"1234567",
@@ -108,9 +110,9 @@
                                  validator: reg_password,
                                    trigger: 'blur'
                     }],
-                        /*verifycode: [
+                        verifycode: [
                             { required: true, trigger: 'blur', validator: validateVerifycode },
-                        ]}*/
+                        ],
                     }
                 }
         },
@@ -142,26 +144,27 @@
             },
             login () {
                 //前端测试代码
-                if(this.loginForm.uid == this.user1.username){
-                    console.log(this.user1.role);
-                    sessionStorage.setItem('user','1234567');
-                    sessionStorage.setItem('role','1');
-                    sessionStorage.setItem('uid',JSON.stringify(this.loginForm.uid));
-                    this.$router.replace({path: '/home/firstPage'});
-                }else if(this.loginForm.uid == this.user2.username){
-                    console.log(this.user2.role);
-                    sessionStorage.setItem('user','2234567');
-                    sessionStorage.setItem('role','2');
-                    sessionStorage.setItem('uid',JSON.stringify(this.loginForm.uid));
-                    this.$router.replace({path:'/homet/firstPage'})
-
-                }else if(this.loginForm.uid == this.user3.username){
-                    console.log(this.user3.role);
-                    sessionStorage.setItem('user','3234567');
-                    sessionStorage.setItem('role','3');
-                    sessionStorage.setItem('uid',JSON.stringify(this.loginForm.uid));
-                    this.$router.replace({path:'/homes/firstPage'})
-                }
+                // if(this.loginForm.uid == this.user1.username){
+                //     console.log(this.user1.role);
+                //     sessionStorage.setItem('user','1234567');
+                //     sessionStorage.setItem('role','1');
+                //     sessionStorage.setItem('uid',JSON.stringify(this.loginForm.uid));
+                //     this.$router.replace({path: '/home/firstPage'});
+                // }else if(this.loginForm.uid == this.user2.username){
+                //     console.log(this.user2.role);
+                //     sessionStorage.setItem('user','2234567');
+                //     sessionStorage.setItem('role','2');
+                //
+                //     sessionStorage.setItem('uid',JSON.stringify(this.loginForm.uid));
+                //     this.$router.replace({path:'/homet/firstPage'});
+                //
+                // }else if(this.loginForm.uid == this.user3.username){
+                //     console.log(this.user3.role);
+                //     sessionStorage.setItem('user','3234567');
+                //     sessionStorage.setItem('role','3');
+                //     sessionStorage.setItem('uid',JSON.stringify(this.loginForm.uid));
+                //     this.$router.replace({path:'/homes/firstPage'})
+                // }
                 this.$refs.loginForm.validate()
                     .then(res => {
                         this.loadingBtn = false;
@@ -169,7 +172,7 @@
                         this.$axios
                             .post('/login', {
                                 uid:this.loginForm.uid,
-                                password: md5(this.loginForm.password)
+                                password: md5(this.loginForm.password),
                             })
                             .then(successResponse => {
                                 if (successResponse.data.code === 200) {
@@ -256,7 +259,7 @@
   #logo{
     text-align: center;
   }
-  /*.randomcodeuse{
+ /* .randomcodeuse{
     width: 60%;
     margin: auto;
     display: flex;

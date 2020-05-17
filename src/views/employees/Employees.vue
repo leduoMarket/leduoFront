@@ -132,7 +132,6 @@
                 pagesize:5,
                 currentPage:1, //初始页
 
-
                 //初始数据的长度
                 totalItems:0,
                 //最后在页面中显示的数据
