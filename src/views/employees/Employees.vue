@@ -271,10 +271,7 @@
 
                 } );
 
-            }
             },
-
-            // 删除选中下标的一行数据，index由click处的scope.$index传过来的小标，delItem由scope.$row传过来的元素
             delEmployee(delItem, index){
                 console.log(delItem);
                 this.$message({
@@ -287,13 +284,9 @@
                     cancelButtonText:'取消',
                     type:'warning'
                 }).then(() =>{
+                    console.log("被删除的id为："+delItem.uid);
                     //如果用户确实要删除，则用delete方式删除，并且传递要删除的记录的eid
-                    this.$axios.delete('/home/emp',{
-                        params:{
-                            empId: delItem.eid
-                        }
-                    }).then(successResponse =>{
-
+                    this.$axios.delete('/admin/delemp?empId='+delItem.uid).then(successResponse =>{
                         this.filterTableDataEnd=[];
                         //删除在表格中tableDataEnd显示的哪个数据
                         this.tableDataEnd.forEach((value,i)=>{
@@ -334,6 +327,10 @@
 
                 });
             },
+        }
+
+            // 删除选中下标的一行数据，index由click处的scope.$index传过来的小标，delItem由scope.$row传过来的元素
+
     }
 </script>
 <style scoped>

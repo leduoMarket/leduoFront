@@ -99,7 +99,7 @@
                     password:"1234567",
                     phone:"1231231231",
                     role:"管理员",
-                    satatus:"0",
+                    status:"0",
 
                 },{
                     uid:"2234567",
@@ -107,14 +107,14 @@
                     password:"1234567",
                     phone:"1231231231",
                     role:"财务",
-                    satatus:"1",
+                    status:"1",
                 },{
                     uid:"3234567",
                     userName:"张三",
                     password:"1234567",
                     phone:"1231231231",
                     role:"员工",
-                    satatus:"0",
+                    status:"0",
 
                 }],
                 //最后显示在表单的内容
@@ -137,7 +137,7 @@
             //     item.uid=value.uid;
             //     item.uName=value.userName;
             //     item.uRole=value.role;
-            //     item.uStatus=value.satatus;
+            //     item.uStatus=value.status;
             //     console.log(item);
             //     this.tableDataEnd.push(item);
             //     item={
@@ -164,7 +164,7 @@
                         item.uid=value.uid;
                         item.uName=value.userName;
                         item.uRole=value.role;
-                        item.uStatus=""+value.satatus;
+                        item.uStatus=""+value.status;
                         console.log(item);
                         this.tableDataEnd.push(item);
                         item={
@@ -188,12 +188,10 @@
                 console.log(item.uid);
                 console.log(item.uRole);
                 console.log(item.uStatus);
-                    this.$axios.post('/admin/changeStatus',{
-                        params:{
+                    this.$axios.put('/admin/changeStatus',{
                             uid:item.uid,
                             role:item.uRole,
-                            status:item.uStatus
-                        }
+                            status:this.status
                     }).then(()=>{
                         this.$message({
                             type: 'info',
@@ -208,13 +206,15 @@
 
             },
             changeStatus(item){
+                var status = 0;
+                if(item.uStatus=="0"){
+                    status = 0;
+                }
                 console.log(item);
                 this.$axios.post('/admin/changeStatus',{
-                    params:{
                         uid:item.uid,
                         role:item.uRole,
-                        status:item.uStatus
-                    }
+                        status:status
                 }).then(res =>{
                     this.$message({
                         type: 'info',
