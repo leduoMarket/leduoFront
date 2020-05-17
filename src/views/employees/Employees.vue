@@ -4,7 +4,26 @@
       <div slot="header" class="clearfix">
         <span>员工基本信息</span>
       </div>
-
+      <el-dialog title="员工信息" :visible.sync="dialogFormVisible">
+        <el-form :model="dataInfo" :rules="empRules" ref="dataInfo">
+          <el-form-item label="员工编号" :label-width="formLabelWidth" prop="uid">
+            <el-input v-model="dataInfo.uid" readonly autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="用户名" :label-width="formLabelWidth" prop="user_name">
+            <el-input v-model="dataInfo.user_name" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="手机号" :label-width="formLabelWidth" prop="phone">
+            <el-input v-model="dataInfo.phone" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="职位" :label-width="formLabelWidth" prop="role">
+            <el-input v-model="dataInfo.role" readonly autocomplete="off"></el-input>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="dialogFormVisible = false">取 消</el-button>
+          <el-button type="primary" @click="upd"  >确 定</el-button>
+        </div>
+      </el-dialog>
       <div class="form">
         <el-select v-model="selectTags" clearable size="medium"  placeholder="请选择" value="" >
           <el-option
@@ -50,27 +69,7 @@
             prop="ehandle"
             label="操作">
             <template slot-scope="scope">
-              <el-button style="float: left; padding-right: 3px;" type="text"><span style="color: blue" @click="edit">编辑</span></el-button>
-              <el-dialog title="员工信息" :visible.sync="dialogFormVisible">
-                <el-form :model="form" :rules="empRules" ref="dataInfo">
-                  <el-form-item label="员工编号" :label-width="formLabelWidth" prop="uid">
-                    <el-input v-model="form.uid" readonly autocomplete="off"></el-input>
-                  </el-form-item>
-                  <el-form-item label="用户名" :label-width="formLabelWidth" prop="user_name">
-                    <el-input v-model="form.user_name" autocomplete="off"></el-input>
-                  </el-form-item>
-                  <el-form-item label="手机号" :label-width="formLabelWidth" prop="phone">
-                    <el-input v-model="form.phone" autocomplete="off"></el-input>
-                  </el-form-item>
-                  <el-form-item label="职位" :label-width="formLabelWidth" prop="role">
-                    <el-input v-model="form.role" readonly autocomplete="off"></el-input>
-                  </el-form-item>
-                </el-form>
-                <div slot="footer" class="dialog-footer">
-                  <el-button @click="dialogFormVisible = false">取 消</el-button>
-                  <el-button type="primary" @click="upd"  >确 定</el-button>
-                </div>
-              </el-dialog>
+              <el-button style="float: left; padding-right: 3px;" type="text"><span style="color: blue" @click="edit(scope.row,scope.$index)">编辑</span></el-button>
               <el-button style="float: left; padding-right: 3px;" type="text"><span style="color: red" @click="delEmployee(scope.row,scope.$index)">删除</span>
               </el-button>
             </template>
@@ -94,7 +93,7 @@
 <script>
     import {
         reg_phone,
-        reg_userName
+        reg_ename,
     } from "../login/validator";
   export default {
         name: "Employees",
@@ -104,20 +103,25 @@
                 // delSuccessful: false,
                 // 在基础表格中展示的数据
                 tableData: [{
-                    uid:'123456',
-                    user_name: '张三',
-                    phone:'13548721974',
-                    role:'经理',
-                    status:'1',
+                    uid:'1234567',
+                    user_name:'张三',
+                    phone:"13389891212",
+                    role:"经理",
+                    status:'1'
+                },{
+                    uid:'2234567',
+                    user_name:'李四',
+                    phone:"13389891212",
+                    role:"财务",
+                    status:'1'
+                },{
+                    uid:'1234567',
+                    user_name:'李芳',
+                    phone:"13389891212",
+                    role:"员工",
+                    status:'1'
                 }
                 ],
-
-                form:{
-                    uid:'',
-                    user_name:'',
-                    phone:'',
-                    role:'',
-                },
                 // 控制员工新增页面的form表单可见性
                 dialogFormVisible: false,
                 //删除的元素是谁
@@ -151,57 +155,62 @@
                 }
                 ],
                 value: '',
-
+                dataInfo:'',
+                index:'',
                 empRules:{
                     user_name:[{
-                        required:true ,validator: reg_userName,  trigger: 'blur'
+                        required:true,
+                        validator:reg_ename,
+                        trigger:'blur',
                     }],
                     phone:[{
-                        required:true ,validator: reg_phone,  trigger: 'blur'
-                    }]
+                        required:true,
+                        validator: reg_phone,
+                        trigger: 'blur'
+                    }],
                 }
-                }
+            }
         },
         // 创建的时候发送请求获取显示数据库所有员工的列表数据
         created() {
-            this.totalItems = this.tableData.length;
             this.tableDataEnd=[];
-            this.tableData.forEach((value,index)=>{
+            console.log(this.tableData);
+            this.tableData.forEach((value)=>{
                 this.tableDataEnd.push(value);
             });
-            this.$axios.get("/admin/getAllemployees").then(res => {
-                if (res.data.code === 200) {
-                    let item = {
-                        uid:"",
-                        user_name:"",
-                        phone:"",
-                        role:"",
-                        status: "",
-                    };
-                    res.data.data.forEach(value=>{
-                        item.uid=value.uid;
-                        item.user_name=value.userName;
-                        item.phone=value.phone;
-                        item.role=value.role;
-                        item.status=value.status;
-                        this.tableData.push(item);
-                        item = {
-                            uid:"",
-                            user_name:"",
-                            phone:"",
-                            role:"",
-                            status: "",
-                        };
-                    });
-                    this.totalItems = this.tableData.length;
-                    this.tableDataEnd=[];
-                    this.tableData.forEach((value)=>{
-                        this.tableDataEnd.push(value);
-                    });
-                }
-            }).catch(failResponse => {
-                this.$message.error(failResponse.message);
-            })
+            // this.$axios.get("/admin/getAllemployees").then(res => {
+            //     if (res.data.code === 200) {
+            //         let item = {
+            //             uid:"",
+            //             user_name:"",
+            //             phone:"",
+            //             role:"",
+            //             status: "",
+            //         };
+            //         res.data.data.forEach(value=>{
+            //             item.uid=value.uid;
+            //             item.user_name=value.userName;
+            //             item.phone=value.phone;
+            //             item.role=value.role;
+            //             item.status=""+value.status;
+            //             this.tableData.push(item);
+            //             item = {
+            //                 uid:"",
+            //                 user_name:"",
+            //                 phone:"",
+            //                 role:"",
+            //                 status: "",
+            //             };
+            //         });
+            //         this.totalItems = this.tableData.length;
+            //         this.tableDataEnd=[];
+            //         this.tableData.forEach((value)=>{
+            //             this.tableDataEnd.push(value);
+            //         });
+            //     }
+            // }).catch(failResponse => {
+            //     this.$message.error(failResponse.message);
+            // })
         },
         methods: {
             //数据重置
@@ -289,16 +298,23 @@
 
             },
             //更新数据
-            upd(updItem,index){
+            upd(){
+
                 this.$axios.put('/update',{
-                    uid:this.form.eid,
-                    usr_name:this.form.user_naem,
-                    password:this.form.password,
-                    phone:this.form.phone,
-                    role:this.form.role,
-                    status:this.form.status,
+                    uid:this.dataInfo.uid,
+                    usr_name:this.dataInfo.user_name,
+                    phone:this.dataInfo.phone,
                 }).then(successResponse =>{
                     if(successResponse.data.code == 200){
+
+                        this.tableDataEnd[this.index]=this.dataInfo;
+                        this.tableData.forEach(value => {
+                            if(value.uid === this.dataInfo.uid){
+                                value=this.dataInfo;
+                            }
+                        });
+                        this.dialogFormVisible=false;
+
                         this.$message({
                             type: 'success',
                             message: '修改成功!'
@@ -306,15 +322,46 @@
                     }
                 }).catch(failedResponse =>{
                     this.$message({
-                        type: 'success',
-                        message: '修改失败，您的密码可能错误!'
+                        type: 'error',
+                        message: '修改失败'
                     });
                 } );
             },
+            //编辑数据框的可以显示
+            edit(item,index){
+                console.log(item);
+                this.dialogFormVisible = true;
+                this.dataInfo=item;
+                this.index=index;
 
-            // 删除选中下标的一行数据，index由click处的scope.$index传过来的小标，delItem由scope.$row传过来的元素
+            }, // 删除选中下标的一行数据，index由click处的scope.$index传过来的小标，delItem由scope.$row传过来的元素
             delEmployee(delItem, index){
-                console.log(delItem);
+                //前端测试部分
+                // console.log(delItem);
+                // this.filterTableDataEnd=[];
+                // //删除在表格中tableDataEnd显示的哪个数据
+                // this.tableDataEnd.forEach((value,i)=>{
+                //     if(i !==index){
+                //         this.filterTableDataEnd.push(value);
+                //     }
+                // });
+                // this.tableDataEnd=this.filterTableDataEnd;
+                // this.filterTableDataEnd=[];
+                //
+                // //删除从数据源中tableData获得的数据
+                // this.tableData.forEach((value)=>{
+                //     //通过主码快速过滤
+                //     if(value.uid!==delItem.uid){
+                //         this.filterTableDataEnd.push(value);
+                //     }
+                // });
+                // this.tableData = this.filterTableDataEnd;
+                // this.filterTableDataEnd=[];
+
+                this.$message({
+                    type: 'success',
+                    message: '删除成功!'
+                });
                 this.$confirm('你确定要删除这条记录吗？','提示',{
                     confirmButtonText:'确定',
                     cancelButtonText:'取消',
@@ -366,14 +413,14 @@
 
                 });
             },
+
+
             },
 
-            //编辑数据
-           edit(){
-               dialogFormVisible = true;
-               this.form.uid = this.tableData.uid;
 
-           },
+
+
+
     }
 </script>
 <style scoped>
