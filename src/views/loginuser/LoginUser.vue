@@ -82,8 +82,8 @@
             }
         },
         created(){
-            var eid = sessionStorage.getItem('user');
-            var role =sessionStorage.getItem('role');
+            let eid = JSON.parse(sessionStorage.getItem('uid'));
+            let role =sessionStorage.getItem('role');
             if(role == '1'){
                 this.form.erole='管理员';
             }else if (role == '2'){

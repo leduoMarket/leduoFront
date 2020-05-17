@@ -90,8 +90,7 @@
                 this.inData=[];
                 this.outData=[];
                 this.proData=[];
-                //从后端获得数据的函数要写在这里,猪猪加油，有四个
-
+                //从后端获得数据的函数要写在这里
 
 
 
@@ -144,8 +143,7 @@
                 let dateArr = [];
                 let i = 0;
                 while (!(date1.getFullYear() == date2.getFullYear()
-                    && date1.getMonth() == date2.getMonth() && date1.getDate() == date2
-                        .getDate())) {
+                    && date1.getMonth() == date2.getMonth() && date1.getDate() == date2.getDate())) {
                     let dayStr =date1.getDate().toString();
                     if(dayStr.length ==1){
                         dayStr="0"+dayStr;
