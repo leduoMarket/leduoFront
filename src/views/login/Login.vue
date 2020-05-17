@@ -62,7 +62,7 @@
         components:{RandomCode},
         data () {
             // 自定义验证规则：验证码验证规则
-            const verifycode = (rule, value, callback) => {
+            const validateVerifycode = (rule, value, callback) => {
                 if (value === '') {
                     callback(new Error('请输入验证码'))
                 } else if (value !== this.identifyCode) {
@@ -71,14 +71,16 @@
                 } else {
                     callback()
                 }
-            }
+            };
             return {
                 identifyCodes: '1234567890',
                 identifyCode: '',
                 loadingBtn: false,
                 loginForm: {
                     uid: '',
-                    password: ''
+                    password: '',
+                    verifycode: '',
+                    verifycode1:'',
                 },
                 user1:{
                   username:"1234567",
@@ -108,9 +110,9 @@
                                  validator: reg_password,
                                    trigger: 'blur'
                     }],
-                        /*verifycode: [
+                        verifycode: [
                             { required: true, trigger: 'blur', validator: validateVerifycode },
-                        ]}*/
+                        ],
                     }
                 }
         },
@@ -146,13 +148,12 @@
                     console.log(this.user1.role);
                     sessionStorage.setItem('user','1234567');
                     sessionStorage.setItem('role','1');
-                    this.$router.replace({path: '/home/firstPage'});
+                    this.$router.replace({path: '/home/firstPage'})
                 }else if(this.loginForm.uid == this.user2.username){
                     console.log(this.user2.role);
                     sessionStorage.setItem('user','2234567');
                     sessionStorage.setItem('role','2');
                     this.$router.replace({path:'/homet/firstPage'})
-
                 }else if(this.loginForm.uid == this.user3.username){
                     console.log(this.user3.role);
                     sessionStorage.setItem('user','3234567');
@@ -165,7 +166,7 @@
                         this.$axios
                             .post('/login', {
                                 uid:this.loginForm.uid,
-                                password: md5(this.loginForm.password)
+                                password: md5(this.loginForm.password),
                             })
                             .then(successResponse => {
                                 if (successResponse.data.code === 200) {
@@ -246,7 +247,7 @@
   #logo{
     text-align: center;
   }
-  /*.randomcodeuse{
+ /* .randomcodeuse{
     width: 60%;
     margin: auto;
     display: flex;

@@ -233,12 +233,12 @@
                 var sortingType = column.order;
                 //按照降序排序
                 if(sortingType == "descending"){
-                    this.tableData = this.tableData.sort((a, b) => b[fieldName] - a[fieldName]);
+                    this.tableDataEnd = this.tableData.sort((a, b) => b[fieldName] - a[fieldName]);
                 }
                 //按照升序排序
                 else{
-                    this.tableData = this.tableData.sort((a, b) => a[fieldName] - b[fieldName]);
-                    console.log(this.tableData)
+                    this.tableDataEnd = this.tableData.sort((a, b) => a[fieldName] - b[fieldName]);
+                    console.log(this.tableDataEnd)
                 }
             },
 
