@@ -179,6 +179,7 @@
             // this.tableData.forEach((value)=>{
             //     this.tableDataEnd.push(value);
             // });
+            this.tableData=[];
             this.$axios.get("/admin/getAllemployees").then(res => {
                 if (res.data.code === 200) {
                     let item = {
@@ -296,17 +297,15 @@
                         );
                     });
                 }
-
             },
             //更新数据
             upd(){
-                this.$axios.put('/update',{
+                this.$axios.put('/admin/updatePhoneOrName',{
                     uid:this.dataInfo.uid,
-                    usr_name:this.dataInfo.user_name,
+                    userName:this.dataInfo.user_name,
                     phone:this.dataInfo.phone,
                 }).then(successResponse =>{
                     if(successResponse.data.code == 200){
-
                         this.tableDataEnd[this.index]=this.dataInfo;
                         this.tableData.forEach(value => {
                             if(value.uid === this.dataInfo.uid){
@@ -357,14 +356,14 @@
                 // });
                 // this.tableData = this.filterTableDataEnd;
                 // this.filterTableDataEnd=[];
-
                 this.$confirm('你确定要删除这条记录吗？','提示',{
                     confirmButtonText:'确定',
                     cancelButtonText:'取消',
                     type:'warning'
                 }).then(() =>{
+                    console.log("被删除的id为："+delItem.uid);
                     //如果用户确实要删除，则用delete方式删除，并且传递要删除的记录的eid
-                    this.$axios.delete('/admin/delepm?empId='+delItem.uid)
+                    this.$axios.delete('/admin/delemp?empId='+delItem.uid)
                         .then(successResponse =>{
                         this.filterTableDataEnd=[];
                         //删除在表格中tableDataEnd显示的哪个数据
@@ -408,10 +407,6 @@
 
 
             },
-
-
-
-
 
     }
 </script>

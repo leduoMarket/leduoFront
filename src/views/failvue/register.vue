@@ -122,7 +122,7 @@
                             phone: this.registerForm.userPhone,
                             role: this.registerForm.userRole,
                             password: md5(this.registerForm.userpassword),
-                            satatus: 0,
+                            status: 0,
                         }).then(successResponse => {
                             if (successResponse.data.code == 200) {
                                 this.addSuccessful = true;
