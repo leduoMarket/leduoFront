@@ -4,16 +4,6 @@
     <div slot="header" class="clearfix">
       <span>库存账</span>
     </div>
-    <!--<div class="text item">
-      <div class="text item">
-        <el-input style="width: 300px"
-                  placeholder="请输入商品编号"
-                  v-model="searchInput"
-                  clearable>
-        </el-input>
-        <el-button round @click="beginSearch">查询</el-button>
-      </div>
-    </div>-->
     <div class="form">
       <el-select v-model="selectTags" clearable size="medium"  placeholder="请选择" value="" >
         <el-option
@@ -35,7 +25,6 @@
           prop="gid"
           label="商品代码"
           width="180"
-          sortable="custom"
         >
         </el-table-column>
         <el-table-column
@@ -69,15 +58,31 @@
 </template>
 
 <script>
+    import moment from 'moment'
     export default {
         name: "Inventory",
         data() {
             return {
-                options: [],
-                tableData: [],
+                tableData: [{
+                    gid:'24518',
+                    gname:'苹果',
+                    counts:14,
+                },{
+                    gid:'201',
+                    gname:'饮料',
+                    counts:51,
+                },{
+                    gid:'134',
+                    gname:'面包',
+                    counts:14,
+                },{
+                    gid:'309',
+                    gname:'薯片',
+                    counts:14,
+                }],
                 pagesize:5,  //分页数量
                 currentPage:1, //初始页
-                searchInput:'',
+
 
                 // 控制员工新增页面的form表单可见性
                 dialogTableVisible: false,
@@ -89,7 +94,7 @@
                 //最后在页面中显示的数据
                 tableDataEnd:[],
                 //搜索框内的数据
-                searchInput:"",
+                searchInput:'',
                 filterTableDataEnd:[],
                 flag:false,
                 selectTags:"",
@@ -112,14 +117,18 @@
         },
         // 创建的时候发送请求获取显示数据库列表数据
         created() {
-            this.totalItems = this.tableData.length;
-            this.tableDataEnd = this.tableData;
+            this.tableData.forEach((value,index)=>{
+                this.tableDataEnd.push(value);
+            });
             this.$axios.get("/home/inventory").then(res => {
-                if (res.data) {
+                if (res.data.code===200) {
                     console.log(res);
                     this.tableData = res.data;
                     this.totalItems = this.tableData.length;
-                    this.tableDataEnd = this.tableData;
+                    this.tableDataEnd=[];
+                    this.tableData.forEach((value,index)=>{
+                        this.tableDataEnd.push(value);
+                    });
                     console.log(this.tableData.length);
                 }
             }).catch(failResponse => {
@@ -145,31 +154,39 @@
             },
 
             doFilter(){
-                var selectTag = this.selectTags;
-                if(this.searchInput == ""){
+                let selectTag = this.selectTags;
+                if(this.searchInput === ""){
                     this.$message.warning("查询信息不能为空！！！");
                     return;
                 }
+                if(selectTag === ""){
+                    this.$message.warning("查询条件不能为空！！！");
+                    return;
+                }
+                this.searchInput=this.searchInput.trim();
                 this.tableDataEnd=[];
                 this.filterTableDataEnd=[];
                 this.tableData.forEach((value,index)=>{
-                    if(selectTag=="gid"){
+                    if(selectTag==="gid"){
                         if(value.gid){
-                            if(value.gid.search(this.searchInput)!==-1){
+                            let gid = ""+value.gid;
+                            if(gid.search(this.searchInput)!==-1){
                                 this.filterTableDataEnd.push(value)
                             }
                         }
                     }
-                    if(selectTag=="gname"){
+                    if(selectTag==="gname"){
                         if(value.gname){
-                            if(value.gname.search(this.searchInput)!==-1){
+                            let gname = ""+value.gname;
+                            if(gname.search(this.searchInput)!==-1){
                                 this.filterTableDataEnd.push(value)
                             }
                         }
                     }
-                    if(selectTag=="counts"){
+                    if(selectTag==="counts"){
                         if(value.counts){
-                            if(value.counts.search(this.searchInput)!==-1){
+                            let counts = ""+value.counts;
+                            if(counts.search(this.searchInput)!==-1){
                                 this.filterTableDataEnd.push(value)
                             }
                         }
@@ -177,12 +194,18 @@
 
                     console.log(index);
                 });
+                this.tableDataEnd=[];
                 this.tableDataEnd=this.filterTableDataEnd;
                 this.filterTableDataEnd=[];
             },
             doReset(){
+                /*this.searchInput="";
+                this.tableDataEnd = this.tableData;*/
                 this.searchInput="";
-                this.tableDataEnd = this.tableData;
+                this.tableDataEnd=[];
+                this.tableData.forEach((value)=>{
+                    this.tableDataEnd.push(value);
+                });
             },
 
             // 初始页currentPage、初始每页数据数pagesize和数据data
@@ -193,24 +216,6 @@
             handleCurrentChange: function (currentPage) {
                 this.currentPage = currentPage;
                 console.log(this.currentPage)
-            },
-            //查询
-            beginSearch(){
-                this.$axios.get('/home/queryInventory',{
-                    params:{
-                        gid:this.searchInput,
-                    }
-                }).then(successfulResponse=>{
-                    console.log('this.tableData'+successfulResponse.data);
-                    this.tableData=[];
-                    this.tableData.push(successfulResponse.data);
-                    this.$message({
-                        message: '成功找到记录',
-                        type: 'success'
-                    });
-                }).catch(failedResponse=>{
-                    this.$message('没有找到记录哦');
-                })
             },
         },
     }

@@ -32,17 +32,8 @@
         </div>
       </el-dialog>
     </div>
-<!--    <div class="text item">
-      <div class="text item">
-        <el-input style="width: 300px"
-                  placeholder="请输入交易单号"
-                  v-model="searchInput"
-                  clearable>
-        </el-input>
-        <el-button round @click="beginSearch">查询</el-button>
-      </div>
-    </div>-->
     <div class="form">
+      <!--查找框-->
       <el-select v-model="selectTags" clearable size="medium"  placeholder="请选择" value="" >
         <el-option
           v-for="item in options"
@@ -63,7 +54,6 @@
           prop="pnumber"
           label="交易号"
           width="180"
-          sortable
         >
         </el-table-column>
         <el-table-column
@@ -71,9 +61,6 @@
           prop="pdate"
           label="交易时间"
           width="180">
-          <!--column-key="date"
-          :filters="[{text: '今年', value: '2020-'}, {text: '去年', value: '2019-'}, {text: '本月', value: '2020-05'}, {text: '上月', value: '2020-04'}]"
-          :filter-method="filterHandler"-->
         </el-table-column>
         <el-table-column
           prop="pcategory"
@@ -127,11 +114,60 @@
       reg_source_shop,
       reg_money
   } from "../login/validator";
+  import moment from 'moment'
   export default {
         name: "PaymentOfFlowCount",
         data() {
             return {
-                tableData: [],
+                // 标记删除或者添加是否成功
+                addSuccessful: false,
+                //显示页面的表单数据
+                tableData: [
+                    {
+                        pnumber: 'P2020040101',
+                        pdate: '2020-04-01T00:00:00.0000000',
+                        pcategory: '入库',
+                        psource_shop: '天猫',
+                        ptrading_amount: 180,
+                        premainning_amount: 23
+                    },
+                    {
+                        pnumber: 'P2020040102',
+                        pdate: '2020-04-01T00:00:00.0000000',
+                        pcategory: '出库',
+                        psource_shop: '京东',
+                        ptrading_amount: 129,
+                        premainning_amount: 172
+                    },
+                    {
+                        pnumber: 'P2020040103',
+                        pdate: '2020-04-01T00:00:00.0000000',
+                        pcategory: '入库',
+                        psource_shop: '淘宝',
+                        ptrading_amount: 21,
+                        premainning_amount: 210
+                    },
+                    {
+                        pnumber: 'P2020040104',
+                        pdate: '2020-04-02T00:00:00.0000000',
+                        pcategory: '出库',
+                        psource_shop: '天猫',
+                        ptrading_amount: 80,
+                        premainning_amount:19
+                    },
+                    {
+                        pnumber: 'P2020040105',
+                        pdate: '2020-04-03T00:00:00.0000000',
+                        pcategory: '入库',
+                        psource_shop: '拼多多',
+                        ptrading_amount: 180,
+                        premainning_amount: 510
+                    },
+                ],
+
+                nowDate:"",   //当前日期
+
+
                 gridData: [],
                 dialogTableVisible: false,
                 dialogFormVisible: false,
@@ -156,9 +192,6 @@
                 filterTableDataEnd:[],
                 flag:false,
                 selectTags:"",
-
-
-                searchInput:'',
                 //提交按钮是否可用
                 submitBtn:false,
                 paymentOfFlowCountRules:{
@@ -194,26 +227,47 @@
                 }, {
                     value: 'psource_shop',
                     label: '来源店铺'
+                },{
+                    value:'ptrading_amount',
+                    label:'交易金额'
+                },{
+                    value:'premainning_amount',
+                    label:'现余额'
                 }
                 ],
-                value: ''
+                value: '',
+                addLastForm:'',
             }
         },
       created(){
-
+          this.tableDataEnd=[];
+          this.tableData.forEach((value,index)=>{
+              this.tableDataEnd.push(value);
+          });
+          console.log('tableData'+this.tableData);
+          console.log('tableDataEnd'+this.tableDataEnd);
+          /*this.tableData =  [];*/
           this.$axios.get("/home/payments").then(res =>{
-              if(res.data){
+              if(res.data.code === 200){
                   console.log(res);
-                  this.tableData = res.data;
+                  this.tableData = res.data.data;
                   this.itemCount = res.data.length;
                   this.tableDataEnd=[];
                   this.tableData.forEach((value,index)=>{
                       this.tableDataEnd.push(value);
                   });
-                  console.log(this.itemCount);
+                  console.log(this.tableData.length);
+              }else{
+                  this.$masssage({
+                      type:'info',
+                      massage:this.res.data.message
+                  })
               }
         }).catch(failReasponse =>{
-
+              this.$masssage({
+                  type:'info',
+                  massage:this.res.data.message
+              })
         });
 
       },
@@ -241,39 +295,49 @@
                     this.$message.warning("查询信息不能为空！！！");
                     return;
                 }
+                if(selectTag === ""){
+                    this.$message.warning("查询条件不能为空！！！");
+                    return;
+                }
+                this.searchInput=this.searchInput.trim();
                 this.tableDataEnd=[];
                 this.filterTableDataEnd=[];
                 this.tableData.forEach((value,index)=>{
                     if(selectTag=="pnumber"){
                         if(value.pnumber){
-                            if(value.pnumber.search(this.searchInput)!==-1){
+                            let pnumber = ""+value.pnumber;
+                            if(pnumber.search(this.searchInput)!==-1){
                                 this.filterTableDataEnd.push(value)
                             }
                         }
                     }
                     if(selectTag=="pdate"){
                         if(value.pdate){
-                            if(value.pdate.search(this.searchInput)!==-1){
+                            let pdate = ""+value.pdate;
+                            if(pdate.search(this.searchInput)!==-1){
                                 this.filterTableDataEnd.push(value)
                             }
                         }
                     }
                     if(selectTag=="pcategory"){
                         if(value.pcategory){
-                            if(value.pcategory.search(this.searchInput)!==-1){
+                            let pcategory = value.pcategory;
+                            if(pcategory.search(this.searchInput)!==-1){
                                 this.filterTableDataEnd.push(value)
                             }
                         }
                     }
                     if(selectTag=="psource_shop"){
                         if(value.psource_shop){
-                            if(value.psource_shop.search(this.searchInput)!==-1){
+                            let psource_shop =""+value.psource_shop;
+                            if(psource_shop.search(this.searchInput)!==-1){
                                 this.filterTableDataEnd.push(value)
                             }
                         }
                     }
                     console.log(index);
                 });
+                this.tableDataEnd=[];
                 this.tableDataEnd=this.filterTableDataEnd;
                 this.filterTableDataEnd=[];
             },
@@ -309,50 +373,43 @@
 
                 return row[property].search(value) !== -1;
             },
-            //查询
-            beginSearch(){
-                this.$axios.get('/home/queryPaymentOfFlowCount',{
-                    params:{
-                        pnumber:this.searchInput,
-                    }
-                }).then(successfulResponse=>{
-                    console.log('this.tableData'+successfulResponse.data);
-                    this.tableData=[];
-                    this.tableData.push(successfulResponse.data);
-                    this.$message({
-                        message: '成功找到记录',
-                        type: 'success'
-                    });
-                }).catch(failedResponse=>{
-                    this.$message('没有找到记录哦');
-                })
-            },
+
             //新增
-            addpayment(){
-                this.submitBtn=true;
+            addpayment() {
+                this.submitBtn = true;
+                //前端测试代码
+               /* this.tableDataEnd.unshift(this.form);
+                this.tableData.unshift(this.tableDataEnd);
+                //清空填写单的信息放到请求体中，避免请求延迟已经被清空才刷新在信息到表格中
+                this.form = {
+                    pnumber: '',
+                    pdate: '',
+                    pcategory: '',
+                    psource_shop: '',
+                    ptrading_amount: '',
+                    premainning_amount: ''
+                };
+                this.dialogFormVisible = false;*/
                 this.$refs.form.validate()
-                    .then(res =>{
-                        this.submitBtn=false;
-                        console.log("提交成功");
-                        this.$axios.post('/home/addpayment',{
-                            pnumber:this.form.pnumber,
-                            pdate:this.form.pdate,
-                            pcategory:this.form.pcategory,
-                            psourceShop:this.form.psource_shop,
-                            ptradingAmount:this.ptrading_amount,
-                            premainningAmount:this.premainning_amount,
-                        }).then(successResponse =>{
-                            if(successResponse.data.code == 200){
-                                this.addSuccessful = true;
-                                this.$message({
-                                    message: '成功添加一条记录',
-                                    type: 'success',
-                                });
-                                //将信息刷新到表格中
-                                this.tableData.push(this.addform);
-                                this.tableDataEnd.push(this.addform);
+                    .then(res => {
+                        console.log("正则成功");
+                        // if(this.addLastForm===this.form){
+                        //     this.$message.warning('您已经提交过，请勿重复提交');
+                        // }
+                        this.$axios.post('/home/addpayment', {
+                            pnumber: this.form.pnumber,
+                            pdate: this.form.pdate,
+                            pcategory: this.form.pcategory,
+                            psourceShop: this.form.psource_shop,
+                            ptradingAmount: this.ptrading_amount,
+                            premainningAmount: this.premainning_amount,
+                        }).then(successResponse => {
+                            if (successResponse.data.code === 200) {
+                                this.dialogFormVisible = false;
+                                this.tableDataEnd.unshift(this.form);
+                                this.tableData.unshift(this.tableDataEnd);
                                 //清空填写单的信息放到请求体中，避免请求延迟已经被清空才刷新在信息到表格中
-                                this.form={
+                                this.form = {
                                     pnumber: '',
                                     pdate: '',
                                     pcategory: '',
@@ -360,44 +417,75 @@
                                     ptrading_amount: '',
                                     premainning_amount: ''
                                 };
+                                this.dialogFormVisible = false;
+                                this.submitBtn = false;
+                                this.addSuccessful = true;
+                                this.$message({
+                                    message: '成功添加一条记录',
+                                    type: 'success',
+                                });
                             }
-                        }).catch(failedResponse =>{
+                            if (successResponse.data.code == 201) {
+                                this.$message({
+                                    message: successResponse.data.message,
+                                    type: 'error',
+                                });
+                                this.submitBtn = false;
+                            }
+                        }).catch(failedResponse => {
                             this.addSuccessful = false;
+                            this.submitBtn = false;
+                            this.$message({
+                                message: failedResponse.data.message,
+                                type: 'error'
+                            });
 
-                        } );
-                        // 让表格消失
-                        this.form={
-                            pnumber: '',
-                            pdate: '',
-                            pcategory: '',
-                            psource_shop: '',
-                            ptrading_amount: '',
-                            premainning_amount: ''
-                        };
-                        this.dialogFormVisible = false;
-                    }).catch(error =>{
+                        });
+                    }).catch(error => {
                     console.log("提交失败");
+                    this.submitBtn=false;
                     this.$message({
                         message: '无法提交，表单中数据有错误',
                         type: 'error'
                     });
 
                 });
-
             },
             del(delItem, index){
+                console.log(delItem);
                 this.$confirm('你确定要删除这条记录吗？','提示',{
                     confirmButtonText:'确定',
                     cancelButtonText:'取消',
                     type:'warning'
                 }).then(() =>{
-                    //如果用户确实要删除，则用delete方式删除，并且传递要删除的记录的eid
-                    this.$axios.delete('/home/delpayment',{
-                        params:{
-                            stockInId: delItem.pnumber
+                    //前端测试代码
+                    /*this.filterTableDataEnd=[];
+                    //删除在表格中tableDataEnd显示的哪个数据
+                    this.tableDataEnd.forEach((value,i)=>{
+                        if(i !==index){
+                            this.filterTableDataEnd.push(value);
                         }
-                    }).then(successResponse =>{
-                        //数据库删除成功在table表里进行删除,
+                    });
+                    this.tableDataEnd=this.filterTableDataEnd;
+                    this.filterTableDataEnd=[];
+
+                    //删除从数据源中tableData获得的数据
+                    this.tableData.forEach((value,i)=>{
+                        //通过主码快速过滤
+                        if(value.pnumber!=delItem.pnumber){
+                            this.filterTableDataEnd.push(value);
+                        }
+                    });
+                    this.tableData = this.filterTableDataEnd;
+                    this.filterTableDataEnd=[];
+                    this.$message({
+                        type: 'success',
+                        message: successResponse.data.message
+                    });*/
+                    //如果用户确实要删除，则用delete方式删除，并且传递要删除的记录的eid
+                    this.$axios.delete('/home/delpayment?pnumber='+delItem.pnumber)
+                        .then(successResponse =>{
+                            if(successResponse.data.code===200){
                         this.filterTableDataEnd=[];
                         //删除在表格中tableDataEnd显示的哪个数据
                         this.tableDataEnd.forEach((value,i)=>{
@@ -411,7 +499,7 @@
                         //删除从数据源中tableData获得的数据
                         this.tableData.forEach((value,i)=>{
                             //通过主码快速过滤
-                            if(value.vid!=delItem.vid){
+                            if(value.pnumber!=delItem.pnumber){
                                 this.filterTableDataEnd.push(value);
                             }
                         });
@@ -419,8 +507,9 @@
                         this.filterTableDataEnd=[];
                         this.$message({
                             type: 'success',
-                            message: '删除成功!'
+                            message: successResponse.data.message
                         });
+                            }
                     }).catch(failResponse =>{
                         //用户同意删除情况下数据库删除失败
                         this.$message({
@@ -456,6 +545,6 @@
     width: 75%;
   }
   .form {
-    height: 200px;
+    height: 100%;
   }
 </style>

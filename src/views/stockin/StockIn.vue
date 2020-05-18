@@ -282,11 +282,12 @@
         //过滤器
         // 创建的时候发送请求获取显示数据库所有员工的列表数据
         created() {
-            // this.tableDataEnd=[];
-            // this.tableData.forEach((value,index)=>{
-            //     this.tableDataEnd.push(value);
-            // });
-            this.tableData =  [];
+            //前端测试代码
+            /*this.tableDataEnd=[];
+            this.tableData.forEach((value,index)=>{
+                this.tableDataEnd.push(value);
+            });
+            this.tableData =  [];*/
             this.$axios.get("/staff/stockInList").then(res => {
                 if (res.data.code===200) {
                     this.tableData = res.data.data;
@@ -368,7 +369,7 @@
             },
             doFilter(){
                 let selectTag = this.selectTags;
-                if(this.searchInput == ""){
+                if(this.searchInput === ""){
                     this.$message.warning("查询信息不能为空！！！");
                     return;
                 }
@@ -382,7 +383,7 @@
                 this.filterTableDataEnd=[];
 
                 this.tableData.forEach((value,index)=>{
-                    if(selectTag=="inumber"){
+                    if(selectTag==="inumber"){
                         if(value.inumber){
                             let inumber = ""+value.inumber;
                             if(inumber.search(this.searchInput)!==-1){
@@ -390,7 +391,7 @@
                             }
                         }
                     }
-                    if(selectTag=="vname"){
+                    if(selectTag==="vname"){
                         if(value.vname){
                             let vname = ""+value.vname;
                             if(vname.search(this.searchInput)!==-1){
@@ -398,7 +399,7 @@
                             }
                         }
                     }
-                    if(selectTag=="gid"){
+                    if(selectTag==="gid"){
                         if(value.gid){
                             let gid =""+ value.gid;
                             console.log("gid"+typeof(gid)+gid);
@@ -407,7 +408,7 @@
                             }
                         }
                     }
-                    if(selectTag=="idate"){
+                    if(selectTag==="idate"){
                         if(value.idate){
                             let idate = ""+value.idate;
                             if(value.idate.search(this.searchInput)!==-1){
@@ -415,7 +416,7 @@
                             }
                         }
                     }
-                    if(selectTag=="iprice"){
+                    if(selectTag==="iprice"){
                         if(value.iprice){
                             let iprice = ""+value.iprice;
                             if(iprice.search(this.searchInput)!==-1){
@@ -423,7 +424,7 @@
                             }
                         }
                     }
-                    if(selectTag=="ipayment"){
+                    if(selectTag==="ipayment"){
                         if(value.ipayment){
                             let ipayment = ""+value.ipayment;
                             if(ipayment.search(this.searchInput)!==-1){
@@ -431,7 +432,7 @@
                             }
                         }
                     }
-                    if(selectTag=="icount"){
+                    if(selectTag==="icount"){
                         if(value.icount){
                             let icount = ""+value.icount;
                             if(icount.search(this.searchInput)!==-1){
@@ -591,11 +592,11 @@
                         } );
                     }).catch(error =>{
                         console.log("提交失败");
-                        this.submitBtn=false;
-                        this.$message({
-                             message: '无法提交，表单中数据有错误',
-                             type: 'error'
-                         });
+                    this.submitBtn=false;
+                    this.$message({
+                        message: '无法提交，表单中数据有错误',
+                        type: 'error'
+                    });
 
                 });
 
