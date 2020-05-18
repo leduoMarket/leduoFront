@@ -1,7 +1,7 @@
 <template>
   <div class="goodreturn">
   <el-card class="box-card">
-    <div slot="header" class="clearfix">
+    <div slot="header" class="clearFix">
       <span>退货单</span>
 
       <el-button style="float: right; padding: 3px 0" type="text" @click="dialogFormVisible = true">新建</el-button>
@@ -10,14 +10,14 @@
           <el-form-item label="商品代码" :label-width="formLabelWidth" prop="gid">
             <el-input v-model="dataInfo.gid" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="退货日期" :label-width="formLabelWidth" prop="rdate">
-            <el-input v-model="dataInfo.rdate" autocomplete="off"></el-input>
+          <el-form-item label="退货日期" :label-width="formLabelWidth" prop="rDate">
+            <el-input v-model="dataInfo.rDate" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="退货数量" :label-width="formLabelWidth" prop="rcount">
-            <el-input v-model="dataInfo.rcount" autocomplete="off"></el-input>
+          <el-form-item label="退货数量" :label-width="formLabelWidth" prop="rCount">
+            <el-input v-model="dataInfo.rCount" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="退货原因" :label-width="formLabelWidth" prop="rreason">
-            <el-input v-model="dataInfo.rreason" autocomplete="off"></el-input>
+          <el-form-item label="退货原因" :label-width="formLabelWidth" prop="rReason">
+            <el-input v-model="dataInfo.rReason" autocomplete="off"></el-input>
           </el-form-item>
 
         </el-form>
@@ -27,15 +27,6 @@
         </div>
       </el-dialog>
     </div>
-<!--    <div class="text item">-->
-<!--      <el-input style="width: 300px"-->
-<!--                placeholder="请输入商品编号"-->
-<!--                v-model="searchInput"-->
-<!--                clearable>-->
-<!--      </el-input>-->
-<!--      <el-button round @click="beginSearch">查询</el-button>-->
-<!--    </div>-->
-
     <div class="form">
       <!--查找-->
       <el-select v-model="selectTags" clearable size="medium"  placeholder="请选择" value="" >
@@ -52,7 +43,7 @@
       <el-button type="primary" icon="el-icon-refresh" @click="doReset" size="medium"  round  plain >重置</el-button>
 
       <el-table
-        :data="tableDataEnd.slice((currentPage-1)*pagesize,currentPage*pagesize)"
+        :data="tableDataEnd.slice((currentPage-1)*pageSize,currentPage*pageSize)"
         border
         style="width: 100%" @sort-change="changeTableSort">
         <el-table-column
@@ -64,7 +55,7 @@
         </el-table-column>
         <el-table-column
           :formatter="dateFormat"
-          prop="rdate"
+          prop="rDate"
           label="退货日期"
           sortable
           width="180"
@@ -74,7 +65,7 @@
         >
         </el-table-column>
         <el-table-column
-          prop="rcount"
+          prop="rCount"
           label="退货数量"
           width="150"
           sortable="custom"
@@ -82,13 +73,13 @@
         </el-table-column>
 
         <el-table-column
-          prop="rreason"
+          prop="rReason"
           width="250"
           label="退货原因">
         </el-table-column>
         <el-table-column
           fixed = "right"
-          prop="esalary"
+          prop="rHandle"
           label="操作">
 
           <template slot-scope="scope">
@@ -103,7 +94,7 @@
         @current-change="handleCurrentChange"
         :current-page="currentPage"
         :page-sizes="[3,5, 10, 20]"
-        :page-size="pagesize"
+        :page-size="pageSize"
         layout="total, sizes, prev, pager, next, jumper"
         :total="tableDataEnd.length">
       </el-pagination>
@@ -133,15 +124,15 @@
                 tableData: [
                     {
                         gid: 123456789012,
-                        rdate: '2020-05-01T00:00:00.0000000',
-                        rreason: 'jdsal',
-                        rcount:10
+                        rDate: '2020-05-01T00:00:00.0000000',
+                        rReason: '不喜欢',
+                        rCount:10
                 },
                     {
                         gid:1238901890123,
-                        rdate: '2020-04-01T00:00:00.0000000',
-                        rreason: 'jdsasajl',
-                        rcount:3
+                        rDate: '2020-04-01T00:00:00.0000000',
+                        rReason: '质量不好',
+                        rCount:3
                     }],
                 // 控制新增页面的form表单可见性
                 dialogFormVisible: false,
@@ -151,12 +142,12 @@
                 // 用于新增数据绑定
                 dataInfo: {
                     gid: '',
-                    rdate: '',
-                    rreason: '',
-                    rcount:'',
+                    rDate: '',
+                    rReason: '',
+                    rCount:'',
                 },
                 formLabelWidth: '120px',
-                pagesize:5,  //分页数量
+                pageSize:5,  //分页数量
                 currentPage:1 ,//初始页
 
                 totalItems:0,
@@ -172,10 +163,10 @@
                     value: 'gid',
                     label: '商品编号'
                 }, {
-                    value: 'rdate',
+                    value: 'rDate',
                     label: '退货日期'
                 }, {
-                    value: 'rcount',
+                    value: 'rCount',
                     label: '退货数量'
                 }
                 ],
@@ -185,13 +176,13 @@
                     gid:[
                         {required:true ,validator: reg_gid,  trigger: 'blur'}
                     ],
-                    rdate:[
+                    rDate:[
                         {required:true ,validator: reg_date,  trigger: 'blur'}
                     ],
-                    rcount: [
+                    rCount: [
                         {required:true ,validator: reg_count,  trigger: 'blur'}
                     ],
-                    rreason:[
+                    rReason:[
                         {required:true ,validator: reg_reason,  trigger: 'blur'}
                     ]
                 }
@@ -200,6 +191,9 @@
         // 创建的时候发送请求获取显示数据库所有退货单的列表数据
         created() {
             //前端代码测试
+           /* this.tableData.forEach((value)=>{
+                this.tableDataEnd.push(value);
+            });*/
             this.tableData=[];
             this.$axios.get("/home/goodsReturn").then(res=>{
                 if(res.data.code===200){
@@ -228,10 +222,10 @@
             changeTableSort(column){
                 console.log(column);
                 //获取字段名称和排序类型
-                var fieldName = column.prop;
-                var sortingType = column.order;
+                let fieldName = column.prop;
+                let sortingType = column.order;
                 //按照降序排序
-                if(sortingType == "descending"){
+                if(sortingType === "descending"){
                     this.tableDataEnd = this.tableData.sort((a, b) => b[fieldName] - a[fieldName]);
                 }
                 //按照升序排序
@@ -244,9 +238,9 @@
             //日期格式化显示
             dateFormat:function(row,column){
 
-                var date = row[column.property];
+                let date = row[column.property];
 
-                if(date == undefined){return ''};
+                if(date === undefined){return ''}
 
                 return moment(date).format("YYYY-MM-DD")
 
@@ -260,10 +254,10 @@
 
                 // return row[property] == value;
             },
-            // 初始页currentPage、初始每页数据数pagesize和数据data
+            // 初始页currentPage、初始每页数据数pageSize和数据data
             handleSizeChange: function (size) {
-                this.pagesize = size;
-                console.log(this.pagesize)
+                this.pageSize = size;
+                console.log(this.pageSize)
             },
             handleCurrentChange: function (currentPage) {
                 this.currentPage = currentPage;
@@ -283,7 +277,7 @@
                         message: '成功找到记录',
                         type: 'success'
                     });
-                }).catch(failedResponse=>{
+                }).catch(()=>{
                     this.$message('没有找到记录哦');
                 });
                 this.searchInput='';
@@ -293,7 +287,7 @@
 
             },
             doFilter(){
-                var selectTag = this.selectTags;
+                let selectTag = this.selectTags;
                 if(this.searchInput === ""){
                     this.$message.warning("查询信息不能为空！！！");
                     return;
@@ -306,8 +300,8 @@
                 this.searchInput = this.searchInput.trim();
                 this.tableDataEnd=[];
                 this.filterTableDataEnd=[];
-                this.tableData.forEach((value,index)=>{
-                    if(selectTag=="gid"){
+                this.tableData.forEach((value)=>{
+                    if(selectTag==="gid"){
                         if(value.gid){
                             let gid = ""+value.gid;
                             if(gid.search(this.searchInput)!==-1){
@@ -315,18 +309,18 @@
                             }
                         }
                     }
-                    if(selectTag=="rcount"){
-                        if(value.rcount){
-                            let rcount = ""+value.rcount;
-                            if(rcount.search(this.searchInput)!==-1){
+                    if(selectTag==="rCount"){
+                        if(value.rCount){
+                            let rCount = ""+value.rCount;
+                            if(rCount.search(this.searchInput)!==-1){
                                 this.filterTableDataEnd.push(value)
                             }
                         }
                     }
-                    if(selectTag=="rdate"){
-                        if(value.rdate){
-                            let rdate = ""+value.rdate;
-                            if(rdate.search(this.searchInput)!==-1){
+                    if(selectTag==="rDate"){
+                        if(value.rDate){
+                            let rDate = ""+value.rDate;
+                            if(rDate.search(this.searchInput)!==-1){
                                 this.filterTableDataEnd.push(value)
                             }
                         }
@@ -338,26 +332,32 @@
             doReset(){
                 this.searchInput="";
                 this.tableDataEnd=[];
-                this.tableData.forEach((value,index)=>{
+                this.tableData.forEach((value)=>{
                     this.tableDataEnd.push(value);
                 });
             },
             addGoodsReturn() {
                 // 前端测试代码，将push改为unshift
-                //     this.addSuccessful = true;
-                //     this.tableData.unshift(this.dataInfo);
-                //     this.tableDataEnd.unshift(this.dataInfo);
-                //     this.$message({
-                //         message: '成功添加一条记录',
-                //         type: 'success'
-                //     });
+               /* this.dialogFormVisible = false;
+                this.tableData.unshift(this.dataInfo);
+                this.tableDataEnd.unshift(this.dataInfo);
+                this.dataInfo = {
+                    gid: '',
+                    rDate: '',
+                    rReason: '',
+                    rCount: '',
+                };
+                this.$message({
+                    message: '成功添加一条记录',
+                    type: 'success'
+                });*/
                     this.$refs.dataInfo.validate()
-                        .then(res => {
+                        .then(() => {
                             this.$axios.post('/home/addgoodsReturn', {
                                 gid: this.dataInfo.gid,
-                                rdate: this.dataInfo.rdate,
-                                rreason: this.dataInfo.rreason,
-                                rcount: this.dataInfo.rcount,
+                                rDate: this.dataInfo.rDate,
+                                rReason: this.dataInfo.rReason,
+                                rCount: this.dataInfo.rCount,
                             }).then(successResponse => {
                                 if (successResponse.data.code === 200) {
 
@@ -366,9 +366,9 @@
                                     this.tableDataEnd.unshift(this.dataInfo);
                                     this.dataInfo = {
                                         gid: '',
-                                        rdate: '',
-                                        rreason: '',
-                                        rcount: '',
+                                        rDate: '',
+                                        rReason: '',
+                                        rCount: '',
                                     };
                                     this.$message({
                                         message: '成功添加一条记录',
@@ -388,7 +388,7 @@
                                 });
                             });
 
-                        }).catch(error => {
+                        }).catch(() => {
                         this.$message({
                             message: '无法提交，表单中数据有错误',
                             type: 'error'
@@ -401,30 +401,30 @@
             // 删除选中下标的一行数据，index由click处的scope.$index传过来的下标，delItem由scope.$row传过来的元素
             del(delItem, index) {
                 //删除前端测试
-                //数据库删除成功在table表里进行删除,
-                // this.filterTableDataEnd = [];
-                // //删除在表格中tableDataEnd显示的哪个数据
-                // this.tableDataEnd.forEach((value, i) => {
-                //     if (i !== index) {
-                //         this.filterTableDataEnd.push(value);
-                //     }
-                // });
-                // this.tableDataEnd = this.filterTableDataEnd;
-                // this.filterTableDataEnd = [];
-                //
-                // //删除从数据源中tableData获得的数据
-                // this.tableData.forEach((value, i) => {
-                //     //通过主码快速过滤
-                //     if (value.gid != delItem.gid || value.rreason != delItem.rreason || value.rdate != delItem.rdate || value.rcount != value.rcount) {
-                //         this.filterTableDataEnd.push(value);
-                //     }
-                // });
-                // this.tableData = this.filterTableDataEnd;
-                // this.filterTableDataEnd = [];
-                // this.$message({
-                //     type: 'success',
-                //     message: '删除成功!'
-                // });
+              /*  //数据库删除成功在table表里进行删除,
+                this.filterTableDataEnd = [];
+                //删除在表格中tableDataEnd显示的哪个数据
+                this.tableDataEnd.forEach((value, i) => {
+                    if (i !== index) {
+                        this.filterTableDataEnd.push(value);
+                    }
+                });
+                this.tableDataEnd = this.filterTableDataEnd;
+                this.filterTableDataEnd = [];
+
+                //删除从数据源中tableData获得的数据
+                this.tableData.forEach((value, i) => {
+                    //通过主码快速过滤
+                    if (value.gid != delItem.gid || value.rReason != delItem.rReason || value.rDate != delItem.rDate || value.rCount != value.rCount) {
+                        this.filterTableDataEnd.push(value);
+                    }
+                });
+                this.tableData = this.filterTableDataEnd;
+                this.filterTableDataEnd = [];
+                this.$message({
+                    type: 'success',
+                    message: '删除成功!'
+                });*/
 
                 this.$confirm('你确定要删这条记录？', '提示', {
                     confirmButtonText: '确定',
@@ -450,9 +450,9 @@
                             this.filterTableDataEnd = [];
 
                             //删除从数据源中tableData获得的数据
-                            this.tableData.forEach((value, i) => {
+                            this.tableData.forEach((value) => {
                                 //通过主码快速过滤
-                                if (value.gid != delItem.gid || value.rreason != delItem.rreason || value.rdate != delItem.rdate || value.rcount != delItem.rcount) {
+                                if (value.gid !== delItem.gid || value.rReason !== delItem.rReason || value.rDate !== delItem.rDate || value.rCount !== delItem.rCount) {
                                     this.filterTableDataEnd.push(value);
                                 }
                             });
@@ -468,7 +468,7 @@
                                 message: '删除失败'
                             });
                         }
-                    }).catch(failedResponse => {
+                    }).catch(() => {
                         this.$message({
                             type: 'info',
                             message: '删除失败'
