@@ -19,15 +19,16 @@
           <el-form-item label="出库日期" :label-width="formLabelWidth" prop="odate">
             <el-input v-model="dataInfo.odate" autocomplete="off"></el-input>
           </el-form-item>
+          <el-form-item label="数量" :label-width="formLabelWidth" prop="ocount">
+            <el-input v-model="dataInfo.ocount" autocomplete="off"></el-input>
+          </el-form-item>
           <el-form-item label="价格" :label-width="formLabelWidth" prop="oprice">
             <el-input v-model="dataInfo.oprice" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item label="已付款项" :label-width="formLabelWidth" prop="opayment">
             <el-input v-model="dataInfo.opayment" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="数量" :label-width="formLabelWidth" prop="ocount">
-            <el-input v-model="dataInfo.ocount" autocomplete="off"></el-input>
-          </el-form-item>
+
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisible = false">取 消</el-button>
@@ -35,14 +36,7 @@
         </div>
       </el-dialog>
     </div>
-<!--    <div class="text item">-->
-<!--      <el-input style="width: 300px"-->
-<!--                placeholder="请输入出库单单号"-->
-<!--                v-model="searchInput"-->
-<!--                clearable>-->
-<!--      </el-input>-->
-<!--      <el-button round @click="beginSearch">查询</el-button>-->
-<!--    </div>-->
+
     <div class="form">
       <el-select v-model="selectTags" clearable size="medium"  placeholder="请选择" value="" >
         <el-option
@@ -61,20 +55,21 @@
         style="width: 100%" ref="filterTable"  @sort-change="changeTableSort">
         <el-table-column
           prop="onumber"
+          width="140"
           label="出库单号"
         >
         </el-table-column>
         <el-table-column
           prop="gid"
           label="商品代码"
-          width="180"
+          width="150"
           sortable="custom"
         >
         </el-table-column>
         <el-table-column
           prop="vname"
           label="供应商名称"
-          width="180">
+          width="100">
         </el-table-column>
 
         <el-table-column
@@ -82,20 +77,10 @@
           prop="odate"
           label="出库日期"
           sortable
-          width="180"
+          width="120"
           column-key="date"
           :filters="[{text: '今年', value: '2020-'}, {text: '去年', value: '2019-'}, {text: '本月', value: '2020-05'}, {text: '上月', value: '2020-04'}]"
           :filter-method="filterHandler"
-        >
-        </el-table-column>
-        <el-table-column
-          prop="oprice"
-          label="价格">
-        </el-table-column>
-        <el-table-column
-          prop="opayment"
-          label="已付款项"
-          sortable="custom"
         >
         </el-table-column>
         <el-table-column
@@ -105,7 +90,21 @@
         >
         </el-table-column>
         <el-table-column
+          prop="oprice"
+          width="120"
+          label="价格">
+        </el-table-column>
+        <el-table-column
+          prop="opayment"
+          label="已付款项"
+          width="120"
+          sortable="custom"
+        >
+        </el-table-column>
+
+        <el-table-column
           prop="esalary"
+          fixed="right"
           label="操作">
 
           <template slot-scope="scope">
@@ -146,7 +145,32 @@
                 addSuccessful: false,
                 // delSuccessful: false,
                 // 在基础表格中展示的数据
-                tableData: [],
+                tableData: [{
+                    gid: 1302021121123,
+                    vname: 'ioio',
+                    onumber: 'O2020010190',
+                    odate: '2020-01-01',
+                    oprice: 90.0,
+                    opayment: 110.0,
+                    ocount: 20
+                },{
+                    gid: 1234123412342,
+                    vname: "iiii",
+                    onumber: 'O232390901002',
+                    odate: '2020-02-03',
+                    oprice: 100.2,
+                    opayment: 20.3,
+                    ocount: 20.2
+                },{
+                    gid: 1234123412342,
+                    vname: "iiii",
+                    onumber: 'O232390901002',
+                    odate: '2020-02-03',
+                    oprice: 100.2,
+                    opayment: 20.3,
+                    ocount: 20.2
+                }
+                ],
                 // 控制新增页面的form表单可见性
                 dialogFormVisible: false,
                 //删除的元素是谁
@@ -235,15 +259,17 @@
       // 创建的时候发送请求获取显示数据库所有员工的列表数据
       created() {
 
+         this.tableData=[];
           this.$axios.get("/staff/stockOut").then(res => {
-              if (res.data) {
-                  console.log(res);
-                  this.tableData = res.data;
+              if (res.data.code === 200) {
+
+                  this.tableData = res.data.data;
                   this.totalItems = this.tableData.length;
-                  this.tableData.forEach((value,index)=>{
+                  this.tableDataEnd= [];
+                  this.tableData.forEach((value)=>{
                       this.tableDataEnd.push(value);
                   });
-                  console.log(this.tableData.length);
+
               }
           }).catch(failResponse => {
 
@@ -279,33 +305,15 @@
             openAddPage() {
                 this.dialogFormVisible = true;
             },
-            //查询
-            beginSearch(){
-                this.$axios.get('/staff/querystockOut',{
-                    params:{
-                        onumber:this.searchInput,
-                    }
-                }).then(successfulResponse=>{
-                    console.log('this.tableData'+successfulResponse.data);
-                    this.tableData=[];
-                    this.tableData.push(successfulResponse.data);
-                    this.$message({
-                        message: '成功找到记录',
-                        type: 'success'
-                    });
-                }).catch(failedResponse=>{
-                    this.$message('没有找到记录哦');
-                });
-                this.searchInput='';
-            },
             //日期格式化显示
             dateFormat:function(row,column){
 
-                var date = row[column.property];
+                let date = row[column.property];
 
-                if(date == undefined){return ''};
-
-                return moment(date).format("YYYY-MM-DD")
+                if (date === undefined) {
+                    return ''
+                }
+                return moment(date).format("YYYY-MM-DD");
 
             },
             //日期筛选器
@@ -316,7 +324,7 @@
                 // return row[property] == value;
             },
             doFilter(){
-                var selectTag = this.selectTags;
+                let selectTag = this.selectTags;
                 if(this.searchInput === ""){
                     this.$message.warning("查询信息不能为空！！！");
                     return;
@@ -325,53 +333,62 @@
                     this.$message.warning("查询条件不能为空！！！");
                     return;
                 }
+                this.searchInput=this.searchInput.trim();
                 this.tableDataEnd=[];
                 this.filterTableDataEnd=[];
                 this.tableData.forEach((value,index)=>{
                     if(selectTag=="onumber"){
                         if(value.onumber){
-                            if(value.onumber.search(this.searchInput)!==-1){
+                            let onumber =""+ value.onumber;
+                            if(onumber.search(this.searchInput)!==-1){
                                 this.filterTableDataEnd.push(value)
                             }
                         }
                     }
                     if(selectTag=="vname"){
                         if(value.vname){
-                            if(value.vname.search(this.searchInput)!==-1){
+                            let vname = ""+value.vname;
+                            if(vname.search(this.searchInput)!==-1){
                                 this.filterTableDataEnd.push(value)
                             }
                         }
                     }
                     if(selectTag=="gid"){
                         if(value.gid){
-                            if(value.gid.search(this.searchInput)!==-1){
+                            let gid = ""+value.gid;
+                            if(gid.search(this.searchInput)!==-1){
                                 this.filterTableDataEnd.push(value)
                             }
                         }
                     }
                     if(selectTag=="odate"){
                         if(value.odate){
-                            if(value.odate.search(this.searchInput)!==-1){
+                            let odate = ""+value.odate;
+                            console.log("odate"+odate);
+                            if(odate.search(this.searchInput)!==-1){
                                 this.filterTableDataEnd.push(value)
                             }
                         }
                     }
                     if(selectTag=="oprice"){
                         if(value.oprice){
-                            if(value.oprice.search(this.searchInput)!==-1){
+                            let oprice = ""+ value.oprice;
+                            if(oprice.search(this.searchInput)!==-1){
                                 this.filterTableDataEnd.push(value)
                             }
                         }
                     }
                     if(selectTag=="opayment"){
                         if(value.opayment){
-                            if(value.opayment.search(this.searchInput)!==-1){
+                            let opayment = "" + value.opayment;
+                            if(opayment.search(this.searchInput)!==-1){
                                 this.filterTableDataEnd.push(value)
                             }
                         }
                     }
                     if(selectTag=="ocount"){
                         if(value.ocount){
+                            let ocount = ""+value.ocount;
                             if(value.ocount.search(this.searchInput)!==-1){
                                 this.filterTableDataEnd.push(value)
                             }
@@ -393,6 +410,26 @@
             },
             //新增出库单
             addStockOut() {
+                //前端测试部分
+                // 让表格消失
+                // this.dialogFormVisible = false;
+                // this.tableData.unshift(this.dataInfo);
+                // this.tableDataEnd.unshift(this.dataInfo);
+                // // 将填写框置空，方便下次填写
+                // this.dataInfo = {
+                //     gid: '',
+                //     vname: '',
+                //     onumber: '',
+                //     odate: '',
+                //     oprice: '',
+                //     opayment: '',
+                //     ocount: ''
+                // };
+                // this.$message({
+                //     message: '成功添加一条记录',
+                //     type: 'success'
+                // });
+
                 this.$refs.dataInfo.validate()
                     .then(res =>{
                         this.$axios.post('/staff/addstockOut', {
@@ -405,35 +442,37 @@
                             ocount: this.dataInfo.ocount
                         }).then(successResponse => {
                             if (successResponse.data.code === 200) {
-                                this.addSuccessful = true;
+                                //表格中回显
+                                // 让表格消失
+                                this.dialogFormVisible = false;
+                                this.tableData.unshift(this.dataInfo);
+                                this.tableDataEnd.unshift(this.dataInfo);
+                                // 将填写框置空，方便下次填写
+                                this.dataInfo = {
+                                    gid: '',
+                                    vname: '',
+                                    onumber: '',
+                                    odate: '',
+                                    oprice: '',
+                                    opayment: '',
+                                    ocount: ''
+                                };
+                                this.$message({
+                                    message: '成功添加一条记录',
+                                    type: 'success'
+                                });
+                            }else{
+                                this.$message({
+                                    message: successResponse.data.message,
+                                    type: 'error'
+                                });
                             }
                         }).catch(failedResponse => {
-                            this.addSuccessful = false;
-                        });
-                        if (!this.addSuccessful) {
-                            this.$message.error('插入数据失败');
-                        } else {
-                            this.tableData.push(this.dataInfo);
-                            this.tableDataEnd.push(this.dataInfo);
                             this.$message({
-                                message: '成功添加一条记录',
-                                type: 'success'
+                                message: failedResponse.data.message,
+                                type: 'error'
                             });
-                        }
-                        //将信息刷新到表格中
-                        this.tableData.push(this.addform);
-                        // 将填写框置空，方便下次填写
-                        this.dataInfo = {
-                            gid: '',
-                            vname: '',
-                            onumber: '',
-                            odate: '',
-                            oprice: '',
-                            opayment: '',
-                            ocount: ''
-                        };
-                        // 让表格消失
-                        this.dialogFormVisible = false;
+                        });
                     }).catch(error =>{
                     console.log("提交失败");
                     this.$message({
@@ -445,7 +484,30 @@
 
             // 删除选中下标的一行数据，index由click处的scope.$index传过来的小标，delItem由scope.$row传过来的元素
             del(delItem, index){
-                console.log(delItem);
+                // console.log(delItem);
+                // this.filterTableDataEnd=[];
+                // //删除在表格中tableDataEnd显示的哪个数据
+                // this.tableDataEnd.forEach((value,i)=>{
+                //     if(i !==index){
+                //         this.filterTableDataEnd.push(value);
+                //     }
+                // });
+                // this.tableDataEnd=this.filterTableDataEnd;
+                // this.filterTableDataEnd=[];
+                //
+                // //删除从数据源中tableData获得的数据
+                // this.tableData.forEach((value,i)=>{
+                //     //通过主码快速过滤
+                //     if(value.onumber!=delItem.onumber){
+                //         this.filterTableDataEnd.push(value);
+                //     }
+                // });
+                // this.tableData = this.filterTableDataEnd;
+                // this.filterTableDataEnd=[];
+                // this.$message({
+                //     type: 'success',
+                //     message: '删除成功!'
+                // });
                 this.$confirm('你确定要删除这条记录吗？','提示',{
                     confirmButtonText:'确定',
                     cancelButtonText:'取消',
@@ -457,29 +519,37 @@
                             stockOutId: delItem.onumber
                         }
                     }).then(successResponse =>{
-                        this.filterTableDataEnd=[];
-                        //删除在表格中tableDataEnd显示的哪个数据
-                        this.tableDataEnd.forEach((value,i)=>{
-                            if(i !==index){
-                                this.filterTableDataEnd.push(value);
-                            }
-                        });
-                        this.tableDataEnd=this.filterTableDataEnd;
-                        this.filterTableDataEnd=[];
+                        if(successResponse.data.code === 200){
 
-                        //删除从数据源中tableData获得的数据
-                        this.tableData.forEach((value,i)=>{
-                            //通过主码快速过滤
-                            if(value.onumber!=delItem.onumber){
-                                this.filterTableDataEnd.push(value);
-                            }
-                        });
-                        this.tableData = this.filterTableDataEnd;
-                        this.filterTableDataEnd=[];
-                        this.$message({
-                            type: 'success',
-                            message: '删除成功!'
-                        });
+                            this.filterTableDataEnd=[];
+                            //删除在表格中tableDataEnd显示的哪个数据
+                            this.tableDataEnd.forEach((value,i)=>{
+                                if(i !==index){
+                                    this.filterTableDataEnd.push(value);
+                                }
+                            });
+                            this.tableDataEnd=this.filterTableDataEnd;
+                            this.filterTableDataEnd=[];
+
+                            //删除从数据源中tableData获得的数据
+                            this.tableData.forEach((value,i)=>{
+                                //通过主码快速过滤
+                                if(value.onumber!=delItem.onumber){
+                                    this.filterTableDataEnd.push(value);
+                                }
+                            });
+                            this.tableData = this.filterTableDataEnd;
+                            this.filterTableDataEnd=[];
+                            this.$message({
+                                type: 'success',
+                                message: '删除成功!'
+                            });
+                        }else {
+                            this.$message({
+                                type: 'info',
+                                message: '删除失败!'
+                            });
+                        }
                     }).catch(failResponse =>{
                         //用户同意删除情况下数据库删除失败
                         this.$message({

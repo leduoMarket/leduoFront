@@ -66,26 +66,29 @@
         <el-table-column
           prop="gid"
           label="商品代码"
-          width="180"
+          width="150"
           sortable="custom"
         >
         </el-table-column>
         <el-table-column
           prop="gname"
           label="商品名称"
-          width="180">
+          width="150">
         </el-table-column>
         <el-table-column
         prop="categories"
-        label="商品类别">
+        label="商品类别"
+        width="180">
       </el-table-column>
         <el-table-column
           prop="address"
-          label="生产地址">
+          label="生产地址"
+          width="200">
         </el-table-column>
         <el-table-column
           prop="charge_unit"
-          label="计价单位">
+          label="计价单位"
+          width="100">
         </el-table-column>
         <el-table-column
           :formatter="dateFormat"
@@ -99,6 +102,7 @@
         >
         </el-table-column>
         <el-table-column
+          fixed = "right"
           prop="esalary"
           label="操作">
           <!--          默认为每一行增加删除操作，只需要在methods里面定义就好-->
@@ -130,7 +134,7 @@
         reg_gchange_unit,
         reg_date,
     } from "../login/validator";
-
+    import moment from 'moment';
     export default {
         name: "Goods",
         data() {
@@ -138,8 +142,20 @@
                 // 标记删除或者添加是否成功
                 addSuccessful: false,
                 //显示页面的表单数据
-                tableData: [
-
+                tableData: [{
+                    gid:1234567,
+                    gname:'肥皂1',
+                    categories:'生活用品',
+                    address:'世纪金都',
+                    charge_unit:'1',
+                    gdate:'2020-09-04'},
+                {
+                    gid:2345678,
+                    gname:'肥皂2',
+                    categories:'生活用品2',
+                    address:'世纪金都2',
+                    charge_unit:'2',
+                    gdate:'2020-10-04'}
                 ],
                 //删除的元素是谁
                 delItem: [
@@ -209,18 +225,26 @@
         },
         // 创建的时候发送请求获取显示数据库列表数据
         created() {
-
+            //前端代码测试
+            // this.tableDataEnd=[];
+            // this.tableData.forEach((value,)=>{
+            //     this.tableDataEnd.push(value);
+            // });
+            this.tableData=[];
             this.$axios.get("/home/goods").then(res => {
-                if(res.data){
-                    console.log(res);
-                    this.tableData = res.data;
-                    this.itemCount = res.data.length;
+                if(res.data.code === 200){
+                    this.tableData = res.data.data;
+                    this.itemCount = res.data.data.length;
                     this.tableDataEnd=[];
-                    this.tableDataEnd = this.tableData;
-                    console.log(this.itemCount);
+                    this.tableData.forEach((value)=>{
+                        this.tableDataEnd.push(value);
+                    });
                 }
             }).catch(failResponse => {
-
+                this.$message({
+                    type: 'info',
+                    message: failResponse.data.message
+                });
             })
         },
         methods: {
@@ -247,26 +271,31 @@
                     this.$message.warning("查询信息不能为空！！！");
                     return;
                 }
+                //去空格
+                this.searchInput = this.searchInput.trim();
                 this.tableDataEnd=[];
                 this.filterTableDataEnd=[];
                 this.tableData.forEach((value,index)=>{
                     if(selectTag=="gid"){
                         if(value.gid){
-                            if(value.gid.search(this.searchInput)!==-1){
+                            let gid = ""+value.gid;
+                            if(gid.search(this.searchInput)!==-1){
                                 this.filterTableDataEnd.push(value)
                             }
                         }
                     }
                     if(selectTag=="gname"){
                         if(value.gname){
-                            if(value.gname.search(this.searchInput)!==-1){
+                            let gname = ""+value.gname;
+                            if(gname.search(this.searchInput)!==-1){
                                 this.filterTableDataEnd.push(value)
                             }
                         }
                     }
                     if(selectTag=="categories"){
                         if(value.categories){
-                            if(value.categories.search(this.searchInput)!==-1){
+                            let categories = ""+value.categories;
+                            if(categories.search(this.searchInput)!==-1){
                                 this.filterTableDataEnd.push(value)
                             }
                         }
@@ -329,6 +358,31 @@
             },
             // 删除选中下标的一行数据，index由click处的scope.$index传过来的小标，delItem由scope.$row传过来的元素
             del(delItem, index){
+                // //前端代码测试
+                //数据库删除成功在table表里进行删除,
+                // this.filterTableDataEnd = [];
+                // //删除在表格中tableDataEnd显示的哪个数据
+                // this.tableDataEnd.forEach((value, i) => {
+                //     if (i !== index) {
+                //         this.filterTableDataEnd.push(value);
+                //     }
+                // });
+                // this.tableDataEnd = this.filterTableDataEnd;
+                // this.filterTableDataEnd = [];
+                //
+                // //删除从数据源中tableData获得的数据
+                // this.tableData.forEach((value, i) => {
+                //     //通过主码快速过滤
+                //     if (value.gid != delItem.gid || value.gname != delItem.gname || value.categories != delItem.categories || value.address != delItem.address || value.charge_unit != delItem.charge_unit || value.gdate != delItem.gdate) {
+                //         this.filterTableDataEnd.push(value);
+                //     }
+                // });
+                // this.tableData = this.filterTableDataEnd;
+                // this.filterTableDataEnd = [];
+                // this.$message({
+                //     type: 'success',
+                //     message: '删除成功!'
+                // });
                 this.$confirm('你确定要删除这条记录吗？','提示',{
                     confirmButtonText:'确定',
                     cancelButtonText:'取消',
@@ -340,18 +394,42 @@
                             GoodsId: delItem.gid
                         }
                     }).then(successResponse =>{
-                        //数据库删除成功在table表里进行删除,
-                        this.tableData.splice(index, 1);
-                        this.tableDataEnd.slice(index,1);
-                        this.$message({
-                            type: 'success',
-                            message: '删除成功!'
-                        });
+                        if(successResponse.data.code===200) {
+                            //数据库删除成功在table表里进行删除,
+                            this.filterTableDataEnd = [];
+                            //删除在表格中tableDataEnd显示的哪个数据
+                            this.tableDataEnd.forEach((value, i) => {
+                                if (i !== index) {
+                                    this.filterTableDataEnd.push(value);
+                                }
+                            });
+                            this.tableDataEnd = this.filterTableDataEnd;
+                            this.filterTableDataEnd = [];
+
+                            //删除从数据源中tableData获得的数据
+                            this.tableData.forEach((value, i) => {
+                                //通过主码快速过滤
+                                if (value.gid != delItem.gid || value.gname != delItem.gname || value.categories != delItem.categories || value.address != delItem.address || value.charge_unit != delItem.charge_unit || value.gdate != delItem.gdate) {
+                                    this.filterTableDataEnd.push(value);
+                                }
+                            });
+                            this.tableData = this.filterTableDataEnd;
+                            this.filterTableDataEnd = [];
+                            this.$message({
+                                type: 'success',
+                                message: '删除成功!'
+                            });
+                        }else {
+                            this.$message({
+                                type: 'info',
+                                message: successResponse.data.message
+                            });
+                        }
                     }).catch(failResponse =>{
                         //用户同意删除情况下数据库删除失败
                         this.$message({
                             type: 'info',
-                            message: '删除失败'
+                            message: failResponse.data.message
                         });
                     })
                 }).catch(() =>{
@@ -377,6 +455,24 @@
             },
             //新增表单操作
             addGoods(){
+                //前端代码测试
+                // this.addSuccessful = true;
+                // //将信息刷新到表格中
+                // this.tableData.unshift(this.dataInfo);
+                // this.tableDataEnd.unshift(this.dataInfo);
+                // this.$message({
+                //     message: '成功添加一条记录',
+                //     type: 'success',
+                // });
+                // //清空填写单的信息放到请求体中，避免请求延迟已经被清空才刷新在信息到表格中
+                // this.dataInfo = {
+                //     gid : '',
+                //     gname : '',
+                //     categories: '',
+                //     address : '',
+                //     charge_unit : '',
+                //     gdate: '',
+                // };
                 this.$refs.dataInfo.validate()
                     .then(res =>{
                         this.$axios.post('/home/Goods',{
@@ -387,17 +483,17 @@
                             charge_unit:this.dataInfo.charge_unit,
                             gdate:this.dataInfo.gdate
                         }).then(successResponse =>{
-                            if(successResponse.data.code == 200){
-                                this.addSuccessful = true;
+                            if(successResponse.data.code === 200){
+                                this.dialogFormVisible = false;
+                                //将信息刷新到表格中
+                                this.tableData.unshift(this.dataInfo);
+                                this.tableDataEnd.unshift(this.dataInfo);
                                 this.$message({
                                     message: '成功添加一条记录',
                                     type: 'success',
                                 });
-                                //将信息刷新到表格中
-                                this.tableData.push(this.addform);
-                                this.tableDataEnd.push(this.addform);
                                 //清空填写单的信息放到请求体中，避免请求延迟已经被清空才刷新在信息到表格中
-                                this.addform = {
+                                this.dataInfo = {
                                     gid : '',
                                     gname : '',
                                     categories: '',
@@ -405,20 +501,19 @@
                                     charge_unit : '',
                                     gdate: '',
                                 };
+                            }else {
+                                this.$message({
+                                    message: successResponse.data.message,
+                                    type: 'error'
+                                });
                             }
                         }).catch(failedResponse =>{
+                            this.$message({
+                                message: failedResponse.data.message,
+                                type: 'error'
+                            });
 
                         } );
-                        // 让表格消失
-                        this.addform = {
-                            gid : '',
-                            gname : '',
-                            categories:'',
-                            address : '',
-                            charge_unit : '',
-                            gdate: '',
-                        };
-                        this.dialogFormVisible = false;
                     }).catch(error =>{
                     this.$message({
                         message: '无法提交，表单中数据有错误',

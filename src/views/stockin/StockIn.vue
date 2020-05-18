@@ -289,18 +289,24 @@
             });
             this.tableData =  [];*/
             this.$axios.get("/staff/stockInList").then(res => {
-                if (res.data.code==200) {
-                    console.log(res);
+                if (res.data.code===200) {
                     this.tableData = res.data.data;
                     this.totalItems = this.tableData.length;
                     this.tableDataEnd=[];
-                    this.tableData.forEach((value,index)=>{
+                    this.tableData.forEach((value)=>{
                         this.tableDataEnd.push(value);
                     });
-                    console.log(this.tableData.length);
+                }else{
+                    this.$message({
+                        type: 'info',
+                        message: res.data.message
+                    });
                 }
             }).catch(failResponse => {
-
+                this.$message({
+                    type: 'info',
+                    message: "获取数据失败"
+                });
             })
         },
 
@@ -493,6 +499,11 @@
                                     type: 'success',
                                     message: successResponse.data.message
                                 });
+                            }else {
+                                this.$message({
+                                    type: 'info',
+                                    message: '删除失败!'
+                                });
                             }
                     }).catch(failResponse =>{
                         //用户同意删除情况下数据库删除失败
@@ -531,10 +542,6 @@
                 // this.dialogFormVisible = false;
                 this.$refs.addform.validate()  //判断表单验证是否通过，验证通过执行.then()，否则执行.catch()
                     .then(res =>{
-                        console.log("正则成功");
-                        // if(this.addLastForm===this.addform){
-                        //     this.$message.warning('您已经提交过，请勿重复提交');
-                        // }
                         this.$axios.post('/staff/stockInAdd',{
                             inumber:this.addform.inumber,
                             gid:this.addform.gid,
@@ -545,6 +552,7 @@
                             icount:this.addform.icount,
                         }).then(successResponse =>{
                             if(successResponse.data.code === 200){
+                                this.dialogFormVisible = false;
                                 this.tableDataEnd.unshift(this.addform);
                                 this.tableData.unshift(this.tableDataEnd);
                                 //清空填写单的信息放到请求体中，避免请求延迟已经被清空才刷新在信息到表格中
@@ -557,7 +565,7 @@
                                     ipayment: '',
                                     icount: '',
                                 };
-                                this.dialogFormVisible = false;
+
                                 this.submitBtn=false;
                                 this.addSuccessful = true;
                                 this.$message({
@@ -566,7 +574,7 @@
                                 });
                                 //将信息刷新到表格中，指向同一个数据源所以只添加一次
                             }
-                            if(successResponse.data.code==201){
+                            if(successResponse.data.code===201){
                                 this.$message({
                                     message: successResponse.data.message,
                                     type: 'error',
