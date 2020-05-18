@@ -24,8 +24,8 @@
           <el-form-item label="计价单位" :label-width="formLabelWidth" prop="chargeUnit">
             <el-input v-model="dataInfo.chargeUnit" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="生产日期" :label-width="formLabelWidth" prop="gdate">
-            <el-input v-model="dataInfo.gdate" autocomplete="off"></el-input>
+          <el-form-item label="生产日期" :label-width="formLabelWidth" prop="gDate">
+            <el-input v-model="dataInfo.gDate" autocomplete="off"></el-input>
           </el-form-item>
 
         </el-form>
@@ -83,7 +83,7 @@
         </el-table-column>
         <el-table-column
           :formatter="dateFormat"
-          prop="gdate"
+          prop="gDate"
           label="生产日期"
           sortable
           width="180"
@@ -130,6 +130,7 @@
         name: "Goods",
         data() {
             return {
+                scope:null,
                 // 标记删除或者添加是否成功
                 addSuccessful: false,
                 //显示页面的表单数据
@@ -139,14 +140,14 @@
                     categories:'生活用品',
                     address:'世纪金都',
                     chargeUnit:'1',
-                    gdate:'2020-09-04'},
+                    gDate:'2020-09-04'},
                 {
                     gid:2345678,
                     gName:'肥皂2',
                     categories:'生活用品2',
                     address:'世纪金都2',
                     chargeUnit:'2',
-                    gdate:'2020-10-04'}
+                    gDate:'2020-10-04'}
                 ],
                 //删除的元素是谁
                 delItem: [
@@ -161,7 +162,7 @@
                     categories:'',
                     address:'',
                     chargeUnit:'',
-                    gdate:''
+                    gDate:''
                 },
                 formLabelWidth: '120px',
                 pageSize:5,
@@ -194,7 +195,7 @@
                     chargeUnit:[
                         {required:true ,validator: reg_gchange_unit,  trigger: 'blur'}
                     ],
-                    gdate:[
+                    gDate:[
                         {required:true ,validator: reg_date,  trigger: 'blur'}
                     ]
                 },
@@ -223,7 +224,32 @@
             this.tableData=[];
             this.$axios.get("/home/goods").then(res => {
                 if(res.data.code === 200){
-                    this.tableData = res.data.data;
+                    let item = {
+                        gid:'',
+                        gName:'',
+                        categories:'',
+                        address:'',
+                        chargeUnit:'',
+                        gDate:''
+                    };
+                    res.data.data.forEach(value=>{
+                        //要修改
+                        item.gid=value.gid;
+                        item.gName=value.gname;
+                        item.categories=value.categories;
+                        item.address=value.address;
+                        item.chargeUnit=value.chargeUnit;
+                        item.gDate=value.gDate;
+                        this.tableData.push(item);
+                        item = {
+                            gid:'',
+                            gName:'',
+                            categories:'',
+                            address:'',
+                            chargeUnit:'',
+                            gDate:''
+                        };
+                    });
                     this.totalItems = res.data.data.length;
                     this.tableDataEnd=[];
                     this.tableData.forEach((value)=>{
@@ -350,7 +376,7 @@
                 //删除从数据源中tableData获得的数据
                 this.tableData.forEach((value, i) => {
                     //通过主码快速过滤
-                    if (value.gid !== delItem.gid || value.gName !== delItem.gName || value.categories !== delItem.categories || value.address !== delItem.address || value.chargeUnit !== delItem.chargeUnit || value.gdate !== delItem.gdate) {
+                    if (value.gid !== delItem.gid || value.gName !== delItem.gName || value.categories !== delItem.categories || value.address !== delItem.address || value.chargeUnit !== delItem.chargeUnit || value.gDate !== delItem.gDate) {
                         this.filterTableDataEnd.push(value);
                     }
                 });
@@ -386,7 +412,7 @@
                             //删除从数据源中tableData获得的数据
                             this.tableData.forEach((value) => {
                                 //通过主码快速过滤
-                                if (value.gid !== delItem.gid || value.gName !== delItem.gName || value.categories !== delItem.categories || value.address !== delItem.address || value.chargeUnit !== delItem.chargeUnit || value.gdate !== delItem.gdate) {
+                                if (value.gid !== delItem.gid || value.gName !== delItem.gName || value.categories !== delItem.categories || value.address !== delItem.address || value.chargeUnit !== delItem.chargeUnit || value.gDate !== delItem.gDate) {
                                     this.filterTableDataEnd.push(value);
                                 }
                             });
@@ -448,7 +474,7 @@
                     categories: '',
                     address : '',
                     chargeUnit : '',
-                    gdate: '',
+                    gDate: '',
                 };*/
                 this.$refs.dataInfo.validate()
                     .then(() =>{
@@ -458,7 +484,7 @@
                             categories:this.dataInfo.categories,
                             address:this.dataInfo.address,
                             chargeUnit:this.dataInfo.chargeUnit,
-                            gdate:this.dataInfo.gdate
+                            gDate:this.dataInfo.gDate
                         }).then(successResponse =>{
                             if(successResponse.data.code === 200){
                                 this.dialogFormVisible = false;
@@ -476,7 +502,7 @@
                                     categories: '',
                                     address : '',
                                     chargeUnit : '',
-                                    gdate: '',
+                                    gDate: '',
                                 };
                             }else {
                                 this.$message({

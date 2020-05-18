@@ -38,7 +38,7 @@
         <el-button type="primary" icon="el-icon-search" @click="doFilter"  size="medium" round  plain>搜索</el-button>
         <el-button type="primary" icon="el-icon-refresh" @click="doReset" size="medium"  round  plain >重置</el-button>
         <el-table
-          :data="tableDataEnd.slice((currentPage-1)*pagesize,currentPage*pagesize)"
+          :data="tableDataEnd.slice((currentPage-1)*pageSize,currentPage*pageSize)"
           border
           style="width: 100%"  @sort-change="changeTableSort">
           <el-table-column
@@ -66,7 +66,7 @@
             label="帐号状态">
           </el-table-column>
           <el-table-column
-            prop="ehandle"
+            prop="eHandle"
             label="操作">
             <template slot-scope="scope">
               <el-button style="float: left; padding-right: 3px;" type="text"><span style="color: blue" @click="edit(scope.row,scope.$index)">编辑</span></el-button>
@@ -80,7 +80,7 @@
           @current-change="handleCurrentChange"
           :current-page="currentPage"
           :page-sizes="[3,5, 10, 20]"
-          :page-size="pagesize"
+          :page-size="pageSize"
           layout="total, sizes, prev, pager, next, jumper"
           :total="tableDataEnd.length">
         </el-pagination>
@@ -99,6 +99,7 @@
         name: "Employees",
         data() {
             return {
+                scope:null,
                 addSuccessful:false,
                 // delSuccessful: false,
                 // 在基础表格中展示的数据
@@ -129,7 +130,7 @@
                 updItem:[],
                 //
                 formLabelWidth: '120px',
-                pagesize:5,
+                pageSize:5,
                 currentPage:1, //初始页
 
                 //初始数据的长度
@@ -225,11 +226,11 @@
             //数据搜索
             doFilter(){
                 let selectTag = this.selectTags;
-                if(selectTag == ""){
+                if(selectTag === ""){
                     this.$message.warning("查询条件不能为空！！！");
                     return;
                 }
-                if(this.searchInput == ""){
+                if(this.searchInput === ""){
                     this.$message.warning("查询信息不能为空！！！");
                     return;
                 }
@@ -243,14 +244,14 @@
                             }
                         }
                     }
-                    if(selectTag=="user_name"){
+                    if(selectTag==="user_name"){
                         if(value.user_name){
                             if(value.user_name.search(this.searchInput)!==-1){
                                 this.filterTableDataEnd.push(value)
                             }
                         }
                     }
-                    if(selectTag=="role"){
+                    if(selectTag==="role"){
                         if(value.role){
                             if(value.role.search(this.searchInput)!==-1){
                                 this.filterTableDataEnd.push(value)
@@ -263,10 +264,10 @@
                 this.filterTableDataEnd=[];
             },
 
-            // 初始页currentPage、初始每页数据数pagesize和数据data
+            // 初始页currentPage、初始每页数据数pageSize和数据data
             handleSizeChange: function (size) {
-                this.pagesize = size;
-                console.log(this.pagesize)
+                this.pageSize = size;
+                console.log(this.pageSize)
             },
             handleCurrentChange: function (currentPage) {
                 this.currentPage = currentPage;
@@ -276,16 +277,11 @@
             changeTableSort(column){
                 console.log(column);
                 //获取字段名称和排序类型
-                var fieldName = column.prop;
-                var sortingType = column.order;
-                //如果字段名称为“创建时间”，将“创建时间”转换为时间戳，才能进行大小比较
-                if(fieldName=="idate"){
-                    this.tableDataEnd.map(item => {
-                        item.idate = this.$moment(item.idate).valueOf();
-                    });
-                }
+                let fieldName = column.prop;
+                let sortingType = column.order;
+
                 //按照降序排序
-                if(sortingType == "descending"){
+                if(sortingType === "descending"){
                     this.tableDataEnd = this.tableData.sort((a, b) => b[fieldName] - a[fieldName]);
                 }
                 //按照升序排序
@@ -293,13 +289,7 @@
                     this.tableDataEnd = this.tableData.sort((a, b) => a[fieldName] - b[fieldName]);
                     console.log(this.tableDataEnd)
                 }
-                if(fieldName=="idate"){
-                    this.tableDataEnd.map(item => {
-                        item.idate = this.$moment(item.idate).format(
-                            "YYYY-MM-DD HH:mm:ss"
-                        );
-                    });
-                }
+
             },
             //更新数据
             upd(){
@@ -308,7 +298,7 @@
                     userName:this.dataInfo.user_name,
                     phone:this.dataInfo.phone,
                 }).then(successResponse =>{
-                    if(successResponse.data.code == 200){
+                    if(successResponse.data.code === 200){
                         this.tableDataEnd[this.index]=this.dataInfo;
                         this.tableData.forEach(value => {
                             if(value.uid === this.dataInfo.uid){
@@ -321,7 +311,7 @@
                             message: '修改成功!'
                         });
                     }
-                }).catch(failedResponse =>{
+                }).catch(() =>{
                     this.$message({
                         type: 'error',
                         message: '修改失败'
@@ -367,30 +357,38 @@
                     //如果用户确实要删除，则用delete方式删除，并且传递要删除的记录的eid
                     this.$axios.delete('/admin/delemp?empId='+delItem.uid)
                         .then(successResponse =>{
-                        this.filterTableDataEnd=[];
-                        //删除在表格中tableDataEnd显示的哪个数据
-                        this.tableDataEnd.forEach((value,i)=>{
-                            if(i !==index){
-                                this.filterTableDataEnd.push(value);
-                            }
-                        });
-                        this.tableDataEnd=this.filterTableDataEnd;
-                        this.filterTableDataEnd=[];
-                        //删除从数据源中tableData获得的数据
-                        this.tableData.forEach((value)=>{
-                            //通过主码快速过滤
-                            if(value.uid!==delItem.uid){
-                                this.filterTableDataEnd.push(value);
-                            }
-                        });
-                        this.tableData = this.filterTableDataEnd;
-                        this.filterTableDataEnd=[];
+                            if(successResponse.data.code===200){
+                                this.filterTableDataEnd=[];
+                                //删除在表格中tableDataEnd显示的哪个数据
+                                this.tableDataEnd.forEach((value,i)=>{
+                                    if(i !==index){
+                                        this.filterTableDataEnd.push(value);
+                                    }
+                                });
+                                this.tableDataEnd=this.filterTableDataEnd;
+                                this.filterTableDataEnd=[];
+                                //删除从数据源中tableData获得的数据
+                                this.tableData.forEach((value)=>{
+                                    //通过主码快速过滤
+                                    if(value.uid!==delItem.uid){
+                                        this.filterTableDataEnd.push(value);
+                                    }
+                                });
+                                this.tableData = this.filterTableDataEnd;
+                                this.filterTableDataEnd=[];
 
-                        this.$message({
-                            type: 'success',
-                            message: '删除成功!'
-                        });
-                    }).catch(failResponse =>{
+                                this.$message({
+                                    type: 'success',
+                                    message: '删除成功!'
+                                });
+                            }else {
+                                this.$message({
+                                    type: 'info',
+                                    message: '删除失败'
+                                });
+                            }
+
+                    }).catch(() =>{
                         //用户同意删除情况下数据库删除失败
                         this.$message({
                             type: 'info',
@@ -411,14 +409,7 @@
     }
 </script>
 <style scoped>
-  .text {
-    font-size: 14px;
-  }
 
-  .item {
-    margin-bottom: 50px;
-
-  }
 
   .box-card {
     width: 75%;

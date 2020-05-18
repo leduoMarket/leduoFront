@@ -131,6 +131,7 @@
         name: "GoodPrice",
       data() {
             return {
+                scope:null,
                 // 标记删除或者添加是否成功
                 addSuccessful: false,
                 // delSuccessful: false,
@@ -275,8 +276,35 @@
             this.tableData=[];
             this.$axios.get("/home/commodityPricing").then(res=>{
                 if(res.data.code === 200){
-                    this.tableData = res.data.data;
-                    this.totalItems = res.data.data.length;
+                    let item = {
+                        gid: '',
+                        gName: '',
+                        pOldPrice: '',
+                        pNewPrice: '',
+                        pReason: '',
+                        pDate: '',
+                        pHandler: '',
+
+                    };
+                    res.data.data.forEach(value=>{
+                        item.gid=value.gid;
+                        item.gName=value.gname;
+                        item.pNewPrice=value.pnewprice;
+                        item.pOldPrice=value.poldprice;
+                        item.pReason=value.preason;
+                        item.pDate=value.pdate;
+                        item.pHandler=value.phandler;
+                        this.tableData.push(item);
+                        item = {
+                            gid: '',
+                            gName: '',
+                            pOldPrice: '',
+                            pNewPrice: '',
+                            pReason: '',
+                            pDate: '',
+                            pHandler: '',
+                        };
+                    });
                     this.tableDataEnd=[];
                     this.tableData.forEach((value)=>{
                         this.tableDataEnd.push(value);
@@ -446,12 +474,12 @@
                     .then(() =>{
                         this.$axios.post('/home/addcommodityPricing', {
                             gid: this.dataInfo.gid,
-                            gName: this.dataInfo.gName,
-                            pOldPrice: this.dataInfo.pOldPrice,
-                            pNewPrice: this.dataInfo.pNewPrice,
-                            pReason: this.dataInfo.pReason,
-                            pDate: this.dataInfo.pDate,
-                            pHandler: this.dataInfo.pHandler,
+                            gname: this.dataInfo.gName,
+                            poldprice: this.dataInfo.pOldPrice,
+                            pnewprice: this.dataInfo.pNewPrice,
+                            preason: this.dataInfo.pReason,
+                            pdate: this.dataInfo.pDate,
+                            phandler: this.dataInfo.pHandler,
                         }).then(successResponse => {
                             if (successResponse.data.code === 200) {
                                 this.dialogFormVisible = false;
@@ -526,11 +554,7 @@
                     type: 'warning'
                 }).then(() => {
                     //如果用户确实要删除，则用delete方式删除，并且传递要删除的记录的eid
-                    this.$axios.delete('/home/delcommodityPricing', {
-                        params: {
-                            priceId: delItem.gid
-                        }
-                    }).then(successResponse => {
+                    this.$axios.delete('/home/delcommodityPricing=').then(successResponse => {
                         if(successResponse.data.code ===200){
                             //数据库删除成功在table表里进行删除,
                             this.filterTableDataEnd=[];

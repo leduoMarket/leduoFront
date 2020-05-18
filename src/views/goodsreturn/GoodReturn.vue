@@ -117,6 +117,7 @@
         name: "GoodReturn",
         data() {
             return {
+                scope:null,
                 // 标记删除或者添加是否成功
                 addSuccessful: false,
                 // delSuccessful: false,
@@ -198,7 +199,26 @@
             this.$axios.get("/home/goodsReturn").then(res=>{
                 if(res.data.code===200){
                     console.log(res);
-                    this.tableData = res.data.data;
+                    let item = {
+                        gid: '',
+                        rDate: '',
+                        rReason: '',
+                        rCount:'',
+
+                    };
+                    res.data.data.forEach(value=>{
+                        item.gid=value.gid;
+                        item.rDate=value.rdate;
+                        item.rReason=value.rreason;
+                        item.rCount=value.rcount;
+                        this.tableData.push(item);
+                        item = {
+                            gid: '',
+                            rDate: '',
+                            rReason: '',
+                            rCount:'',
+                        };
+                    });
                     this.tableDataEnd=[];
                     this.tableData.forEach((value)=>{
                         this.tableDataEnd.push(value);
@@ -262,25 +282,6 @@
             handleCurrentChange: function (currentPage) {
                 this.currentPage = currentPage;
                 console.log(this.currentPage)
-            },
-            //查询
-            beginSearch(){
-                this.$axios.get('/home/querygoodsReturn',{
-                    params:{
-                        gid:this.searchInput,
-                    }
-                }).then(successfulResponse=>{
-                    console.log('this.tableData'+successfulResponse.data);
-                    this.tableData=[];
-                    this.tableData.push(successfulResponse.data);
-                    this.$message({
-                        message: '成功找到记录',
-                        type: 'success'
-                    });
-                }).catch(()=>{
-                    this.$message('没有找到记录哦');
-                });
-                this.searchInput='';
             },
             openAddPage() {
                 this.dialogFormVisible = true;
@@ -355,9 +356,9 @@
                         .then(() => {
                             this.$axios.post('/home/addgoodsReturn', {
                                 gid: this.dataInfo.gid,
-                                rDate: this.dataInfo.rDate,
-                                rReason: this.dataInfo.rReason,
-                                rCount: this.dataInfo.rCount,
+                                rdate: this.dataInfo.rDate,
+                                rreason: this.dataInfo.rReason,
+                                rcount: this.dataInfo.rCount,
                             }).then(successResponse => {
                                 if (successResponse.data.code === 200) {
 
