@@ -73,14 +73,12 @@
         <el-table-column
           prop="vname"
           label="供应商名称"
-          width="120"
+          width="180"
         >
         </el-table-column>
         <el-table-column
           prop="vaddress"
-          label="地址"
-          width="120"
-        >
+          label="地址">
         </el-table-column>
         <el-table-column
           prop="vphone"
@@ -149,41 +147,41 @@
                 // 从后台传来的初始数据
                 tableData: [
                     {
-                        vid: 20200401,
+                        vid: '20200401',
                         vname: '王二虎',
                         vaddress: '北极西南',
-                        vphone: 13677273048,
+                        vphone: '13677273048',
                         vemail:'2409981311@qq.com',
                         vfax: '123',
-                        vcredit: 1,
-                        vsettle_account: 10000
+                        vcredit: '1',
+                        vsettle_account: '10000'
                     },{
-                        vid: 20200402,
+                        vid: '20200402',
                         vname: '王小虎',
                         vaddress: '成都双流',
-                        vphone: 17289891212,
+                        vphone: '17289891212',
                         vemail:'230339223@qq.com',
                         vfax: '3333',
-                        vcredit: 2,
-                        vsettle_account: 40.0
+                        vcredit: '2',
+                        vsettle_account: '40.0'
                     },{
-                        vid: 20180901,
+                        vid: '20180901',
                         vname: '李承',
                         vaddress: '甘肃金山',
-                        vphone: 18922002121,
+                        vphone: '18922002121',
                         vemail:'12902229@qq.com',
                         vfax: '2ss',
-                        vcredit: 3,
-                        vsettle_account: 5222
+                        vcredit: '3',
+                        vsettle_account: '5222'
                     },{
-                        vid: 20180203,
+                        vid: '20180203',
                         vname: '宋丽',
                         vaddress: '甘肃成安',
-                        vphone: 13711293939,
+                        vphone: '13711293939',
                         vemail:'676710@qq.com',
                         vfax: 'wewee',
-                        vcredit: 2,
-                        vsettle_account: 10000
+                        vcredit: '2',
+                        vsettle_account: '10000'
                     }
                 ],
                 //删除的元素是谁
@@ -278,10 +276,40 @@
         },
       // 创建的时候发送请求获取显示数据库所有员工的列表数据
       created() {
-          this.$axios.get("/home/Vender").then(res=>{
+            this.tableData=[];
+          this.$axios.get("/staff/getAllVenders").then(res=>{
               if(res.data.code===200){
-                  console.log(res);
-                  this.tableData = res.data;
+                  let item = {
+                      vid: '',
+                      vname: '',
+                      vaddress: '',
+                      vphone: '',
+                      vemail:'',
+                      vfax: '',
+                      vcredit: '',
+                      vsettle_account: ''
+                  };
+                  res.data.data.forEach(value=>{
+                      item.vid=value.vid;
+                      item.vname =value.vname;
+                      item.vaddress=value.vaddress;
+                      item.vphone=value.vphone;
+                      item.vemail=value.vemail;
+                      item.vfax = value.vfax;
+                      item.vcredit= value.vcredit;
+                      item.vsettle_account=value.vsettleAccount;
+                      this.tableData.push(item);
+                      item = {
+                          vid: '',
+                          vname: '',
+                          vaddress: '',
+                          vphone: '',
+                          vemail:'',
+                          vfax: '',
+                          vcredit: '',
+                          vsettle_account: ''
+                      };
+                  });
                   this.totalItems = this.tableData.length;
                   this.tableDataEnd=[];
                   this.tableData.forEach((value,index)=>{
@@ -402,7 +430,7 @@
             addVender(){
                 this.$refs.addform.validate()
                     .then(res =>{
-                        this.$axios.post('/home/addVender', {
+                        this.$axios.post('/staff/addVender', {
                             vid: this.addform.vid,
                             vname: this.addform.vname,
                             vaddress: this.addform.vaddress,
@@ -410,7 +438,7 @@
                             vemail: this.addform.vemail,
                             vfax: this.addform.vfax,
                             vcredit: this.addform.vcredit,
-                            vsettle_account: this.addform.vsettle_account,
+                            vsettleAccount: this.addform.vsettle_account,
 
                         }).then(successResponse => {
                             if (successResponse.data.code === 200) {
@@ -468,11 +496,8 @@
                     type:'warning'
                 }).then(() =>{
                     //如果用户确实要删除，则用delete方式删除，并且传递要删除的记录的eid
-                    this.$axios.delete('/home/delVender',{
-                        params:{
-                            venderId: delItem.vid
-                        }
-                    }).then(successResponse =>{
+                    this.$axios.delete('/staff/delVender?venderId='+delItem.vid
+                    ).then(successResponse =>{
                         //数据库删除成功在table表里进行删除,
                         this.filterTableDataEnd=[];
                         //删除在表格中tableDataEnd显示的哪个数据
