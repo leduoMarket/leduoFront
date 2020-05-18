@@ -143,7 +143,7 @@
                 this.$router.replace('/register');
             },
             login () {
-               
+
                 //前端测试代码
                 if(this.loginForm.uid == this.user1.username){
                     console.log(this.user1.role);

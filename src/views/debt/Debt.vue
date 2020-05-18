@@ -87,6 +87,7 @@
         reg_date,
         reg_money, reg_userName,
     } from "../login/validator";
+    import moment from 'moment'
   export default {
         name: "Debt",
         data() {
@@ -95,7 +96,25 @@
                 addSuccessful: false,
                 // delSuccessful: false,
                 // 在基础表格中展示的数据
-                tableData: [],
+                tableData: [{
+                    dnumber: 'd2020010301',
+                    gid: '21348329',
+                    vname: '方便面',
+                    ddate: '2020-01-03T00:00:00.0000000',
+                    ddebt: '1242',
+                },{
+                    dnumber: 'd2020020501',
+                    gid: '214412',
+                    vname: '橙汁',
+                    ddate: '2020-02-05T00:00:00.0000000',
+                    ddebt: '142',
+                },{
+                    dnumber: 'd2020200321',
+                    gid: '12423432',
+                    vname: '可乐',
+                    ddate: '2020-03-21T00:00:00.0000000',
+                    ddebt: '636',
+                }],
                 // 控制新增页面的form表单可见性
                 dialogFormVisible: false,
                 //删除的元素是谁
@@ -165,8 +184,12 @@
         },
         // 创建的时候发送请求获取显示数据库所有的列表数据
         created() {
+            //前端测试代码
+          /*  this.tableData.forEach((value,index)=>{
+                this.tableDataEnd.push(value);
+            });*/
             this.$axios.get("/home/debt").then(res => {
-                if(res.data){
+                if(res.data.code === 200){
                     console.log(res);
                     this.tableData = res.data;
                     this.itemCount = res.data.length;
@@ -204,45 +227,57 @@
                     this.$message.warning("查询信息不能为空！！！");
                     return;
                 }
+                if(selectTag === ""){
+                    this.$message.warning("查询条件不能为空！！！");
+                    return;
+                }
+
+                this.searchInput=this.searchInput.trim();
                 this.tableDataEnd=[];
                 this.filterTableDataEnd=[];
                 this.tableData.forEach((value,index)=>{
                     if(selectTag=="dnumber"){
                         if(value.dnumber){
-                            if(value.dnumber.search(this.searchInput)!==-1){
+                            let dnumber = ""+value.dnumber;
+                            if(dnumber.search(this.searchInput)!==-1){
                                 this.filterTableDataEnd.push(value)
                             }
                         }
                     }
                     if(selectTag=="gid"){
                         if(value.gid){
-                            if(value.gid.search(this.searchInput)!==-1){
+                            let gid= ""+value.gid;
+                            if(gid.search(this.searchInput)!==-1){
                                 this.filterTableDataEnd.push(value)
                             }
                         }
                     }
                     if(selectTag=="vname"){
                         if(value.vname){
-                            if(value.vname.search(this.searchInput)!==-1){
+                            let vname=""+value.vname;
+                            if(vname.search(this.searchInput)!==-1){
                                 this.filterTableDataEnd.push(value)
                             }
                         }
                     }
                     if(selectTag=="ddebt"){
                         if(value.ddebt){
-                            if(value.ddebt.search(this.searchInput)!==-1){
+                            let ddebt=""+value.ddebt;
+                            if(ddebt.search(this.searchInput)!==-1){
                                 this.filterTableDataEnd.push(value)
                             }
                         }
                     }if(selectTag=="ddate"){
                         if(value.ddate){
-                            if(value.ddate.search(this.searchInput)!==-1){
+                            let ddate = ""+value.ddate;
+                            if(ddate.search(this.searchInput)!==-1){
                                 this.filterTableDataEnd.push(value)
                             }
                         }
                     }
                     console.log(index);
                 });
+                this.tableDataEnd=[];
                 this.tableDataEnd=this.filterTableDataEnd;
                 this.filterTableDataEnd=[];
             },
@@ -281,24 +316,6 @@
                 this.currentPage = currentPage;
                 console.log(this.currentPage)
             },
-            //查询
-            beginSearch(){
-                this.$axios.get('/home/queryDebt',{
-                    params:{
-                        dnumber:this.searchInput,
-                    }
-                }).then(successfulResponse=>{
-                    console.log('this.tableData'+successfulResponse.data);
-                    this.tableData=[];
-                    this.tableData.push(successfulResponse.data);
-                    this.$message({
-                        message: '成功找到记录',
-                        type: 'success'
-                    });
-                }).catch(failedResponse=>{
-                    this.$message('没有找到记录哦');
-                })
-            },
             openAddPage() {
                 this.dialogFormVisible = true;
 
@@ -311,12 +328,35 @@
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    //如果用户确实要删除，则用delete方式删除，并且传递要删除的记录的eid
-                    this.$axios.delete('/delDebt', {
-                        params: {
-                            debtId: delItem.dnumber
+                    //前端测试代码
+                    /*//数据库删除成功在table表里进行删除,
+                    this.filterTableDataEnd=[];
+                    //删除在表格中tableDataEnd显示的哪个数据
+                    this.tableDataEnd.forEach((value,i)=>{
+                        if(i !==index){
+                            this.filterTableDataEnd.push(value);
                         }
-                    }).then(successResponse => {
+                    });
+                    this.tableDataEnd=this.filterTableDataEnd;
+                    this.filterTableDataEnd=[];
+
+                    //删除从数据源中tableData获得的数据
+                    this.tableData.forEach((value,i)=>{
+                        //通过主码快速过滤
+                        if(value.dnumber!=delItem.dnumber){
+                            this.filterTableDataEnd.push(value);
+                        }
+                    });
+                    this.tableData = this.filterTableDataEnd;
+                    this.filterTableDataEnd=[];
+                    this.$message({
+                        type: 'success',
+                        message: successResponse.data.message
+                    });*/
+                    //如果用户确实要删除，则用delete方式删除，并且传递要删除的记录的eid
+                    this.$axios.delete('/delDebt？dnumber='+delItem.dnumber)
+                        .then(successResponse => {
+                            if(successResponse.data.code===200){
                         //数据库删除成功在table表里进行删除,
                         this.filterTableDataEnd=[];
                         //删除在表格中tableDataEnd显示的哪个数据
@@ -339,8 +379,9 @@
                         this.filterTableDataEnd=[];
                         this.$message({
                             type: 'success',
-                            message: '删除成功!'
+                            message: successResponse.data.message
                         });
+                            }
                     }).catch(failedResponse => {
                         this.$message({
                             type: 'info',
@@ -354,7 +395,6 @@
                         message: '已删除取消'
                     });
                 });
-                console.log(delItem);
             }
         }
     }
