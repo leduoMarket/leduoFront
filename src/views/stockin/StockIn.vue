@@ -19,15 +19,16 @@
           <el-form-item label="入库日期" :label-width="formLabelWidth" prop="idate">
             <el-input v-model="addform.idate" autocomplete="off"></el-input>
           </el-form-item>
+          <el-form-item label="数量" :label-width="formLabelWidth" prop="icount">
+            <el-input v-model="addform.icount" autocomplete="off"></el-input>
+          </el-form-item>
           <el-form-item label="价格" :label-width="formLabelWidth" prop="iprice">
             <el-input v-model="addform.iprice" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item label="已付款项" :label-width="formLabelWidth" prop="ipayment">
             <el-input v-model="addform.ipayment" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="数量" :label-width="formLabelWidth" prop="icount">
-            <el-input v-model="addform.icount" autocomplete="off"></el-input>
-          </el-form-item>
+
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisible = false">取 消</el-button>
@@ -57,40 +58,29 @@
         <el-table-column
           prop="inumber"
           label="入库单号"
+          width="120"
         >
         </el-table-column>
         <el-table-column
           prop="gid"
           label="商品代码"
-          width="180"
+          width="150"
           sortable="custom"
         >
         </el-table-column>
         <el-table-column
           prop="vname"
           label="供应商名称"
-          width="180">
+          width="120">
         </el-table-column>
         <el-table-column
           :formatter="dateFormat"
           prop="idate"
           label="入库日期"
-          width="180"
+          width="120"
           column-key="date"
           :filters="[{text: '今年', value: '2020-'}, {text: '去年', value: '2019-'}, {text: '本月', value: '2020-05'}, {text: '上月', value: '2020-04'}]"
           :filter-method="filterHandler"
-        >
-        </el-table-column>
-        <el-table-column
-          prop="iprice"
-          label="价格"
-          sortable="custom"
-        >
-        </el-table-column>
-        <el-table-column
-          prop="ipayment"
-          label="已付款项"
-          sortable="custom"
         >
         </el-table-column>
         <el-table-column
@@ -99,6 +89,21 @@
           sortable="custom"
         >
         </el-table-column>
+        <el-table-column
+          prop="iprice"
+          label="价格"
+          sortable="custom"
+          width="80"
+        >
+        </el-table-column>
+        <el-table-column
+          prop="ipayment"
+          label="已付款项"
+          sortable="custom"
+          width="120"
+        >
+        </el-table-column>
+
         <el-table-column
           prop="esalary"
           label="操作">
@@ -142,47 +147,47 @@
                 tableData: [
                     {
                         inumber:'I2020040101',
-                        gid:'1234567890123',
+                        gid:1234567890123,
                         vname:'雪碧',
                         idate:'2020-04-01T00:00:00.0000000',
-                        iprice:'10',
-                        ipayment:'300',
-                        icount:'40'
+                        iprice:10,
+                        ipayment:300,
+                        icount:40
                     },
                     {
                         inumber:'I2020040302',
-                        gid:'1234567890123',
+                        gid:1234567890123,
                         vname:'橙汁',
                         idate:'2020-04-03T00:00:00.0000000',
-                        iprice:'9',
-                        ipayment:'9090',
-                        icount:'10'
+                        iprice:9,
+                        ipayment:9090,
+                        icount:10
                     },
                     {
                         inumber:'I2020040502',
-                        gid:'1234567890123',
+                        gid:1234567890124,
                         vname:'橙汁',
                         idate:'2020-04-05T00:00:00.0000000',
-                        iprice:'15.5',
-                        ipayment:'9090',
-                        icount:'10'
+                        iprice:15.5,
+                        ipayment:9090,
+                        icount:10
                     },
                     {
                         inumber:'I2020040201',
-                        gid:'1234567890123',
+                        gid:1234567890125,
                         vname:'可乐',
                         idate:'2019-04-02T00:00:00.0000000',
-                        iprice:'12.2',
-                        ipayment:'9090',
-                        icount:'10'
+                        iprice:12.2,
+                        ipayment:9090,
+                        icount:10
                     },{
                         inumber:'I2020040301',
-                        gid:'1234567890123',
+                        gid:1234567890126,
                         vname:'橙汁',
                         idate:'2020-04-03T00:00:00.0000000',
-                        iprice:'13.7',
-                        ipayment:'9090',
-                        icount:'10'
+                        iprice:13.7,
+                        ipayment:9090,
+                        icount:10
                     },
                 ],
                 nowDate:"",   //当前日期
@@ -229,16 +234,17 @@
                 }, {
                     value: 'idate',
                     label: '入库日期'
-                }, {
+                },{
+                    value: 'icount',
+                    label: '数量'
+                },
+                    {
                     value: 'iprice',
                     label: '价格'
                 },{
                     value: 'ipayment',
                     label: '已付款项'
-                },{
-                    value: 'icount',
-                    label: '数量'
-                }
+                },
                 ],
                 value: '',
                 addLastForm:'',
@@ -276,6 +282,10 @@
         //过滤器
         // 创建的时候发送请求获取显示数据库所有员工的列表数据
         created() {
+            this.tableDataEnd=[];
+            this.tableData.forEach((value,index)=>{
+                this.tableDataEnd.push(value);
+            });
             this.$axios.get("/staff/stockInList").then(res => {
                 if (res.data.code==200) {
                     console.log(res);
@@ -359,12 +369,15 @@
                     this.$message.warning("查询条件不能为空！！！");
                     return;
                 }
+
+                this.searchInput=this.searchInput.trim();
                 this.tableDataEnd=[];
                 this.filterTableDataEnd=[];
+
                 this.tableData.forEach((value,index)=>{
                     if(selectTag=="inumber"){
                         if(value.inumber){
-                            if(value.inumber.search(this.searchInput)!==-1){
+                            if(inumber.search(this.searchInput)!==-1){
                                 this.filterTableDataEnd.push(value)
                             }
                         }
@@ -378,7 +391,9 @@
                     }
                     if(selectTag=="gid"){
                         if(value.gid){
-                            if(value.gid.search(this.searchInput)!==-1){
+                            let gid =""+ value.gid;
+                            console.log("gid"+typeof(gid)+gid);
+                            if(gid.search(this.searchInput)!==-1){
                                 this.filterTableDataEnd.push(value)
                             }
                         }
@@ -392,21 +407,24 @@
                     }
                     if(selectTag=="iprice"){
                         if(value.iprice){
-                            if(value.iprice.search(this.searchInput)!==-1){
+                            let iprice = ""+value.iprice;
+                            if(iprice.search(this.searchInput)!==-1){
                                 this.filterTableDataEnd.push(value)
                             }
                         }
                     }
                     if(selectTag=="ipayment"){
                         if(value.ipayment){
-                            if(value.ipayment.search(this.searchInput)!==-1){
+                            let ipayment = ""+value.ipayment;
+                            if(ipayment.search(this.searchInput)!==-1){
                                 this.filterTableDataEnd.push(value)
                             }
                         }
                     }
                     if(selectTag=="icount"){
                         if(value.icount){
-                            if(value.icount.search(this.searchInput)!==-1){
+                            let icount = ""+value.icount;
+                            if(icount.search(this.searchInput)!==-1){
                                 this.filterTableDataEnd.push(value)
                             }
                         }
@@ -414,13 +432,14 @@
 
                     console.log(index);
                 });
+                this.tableDataEnd=[];
                 this.tableDataEnd=this.filterTableDataEnd;
                 this.filterTableDataEnd=[];
             },
             doReset(){
                 this.searchInput="";
                 this.tableDataEnd=[];
-                this.tableData.forEach((value,index)=>{
+                this.tableData.forEach((value)=>{
                     this.tableDataEnd.push(value);
                 });
             },
@@ -432,31 +451,6 @@
             handleCurrentChange: function (currentPage) {
                 this.currentPage = currentPage;
                 console.log(this.currentPage)
-            },
-            //查询
-            beginSearch(){
-                this.$axios.get('/staff/queryStockIn',{
-                    params:{
-                        inumber:this.searchInput,
-                    }
-                }).then(successfulResponse => {
-                    //服务器执行了查找但是没找到,返回的数据为空，
-                    if (!successfulResponse.data) {
-                        this.$message('没有找到记录哦');
-                    } else {
-                        //服务器返回了结果并且结果不为空
-                        //先将tableData数据清空
-                        this.tableData = [];
-                        //查找出来的结果显示到tableData里面
-                        this.tableData.push(successfulResponse.data);
-                        this.$message({
-                            message: '成功找到记录',
-                            type: 'success'
-                        });
-                    }
-                }).catch(failedResponse => {
-                    this.$message('查找错误');
-                })
             },
 
             // 删除选中下标的一行数据，index由click处的scope.$index传过来的小标，delItem由scope.$row传过来的元素
@@ -513,6 +507,21 @@
             addStockIn(){
                 //逻辑前端判断
                 this.submitBtn=true;
+                //前端测试部分
+                //将信息刷新到表格中，指向同一个数据源所以只添加一次
+                this.tableDataEnd.unshift(this.addform);
+                this.tableData.unshift(this.tableDataEnd);
+                //清空填写单的信息放到请求体中，避免请求延迟已经被清空才刷新在信息到表格中
+                this.addform = {
+                    inumber : '',
+                    gid : '',
+                    vname : '',
+                    idate : '',
+                    iprice: '',
+                    ipayment: '',
+                    icount: '',
+                };
+                this.dialogFormVisible = false;
                 this.$refs.addform.validate()  //判断表单验证是否通过，验证通过执行.then()，否则执行.catch()
                     .then(res =>{
                         if(this.addLastForm===this.addform){
@@ -527,7 +536,7 @@
                             ipayment:this.addform.ipayment,
                             icount:this.addform.icount,
                         }).then(successResponse =>{
-                            if(successResponse.data.code == 200){
+                            if(successResponse.data.code === 200){
                                 this.submitBtn=false;
                                 this.addSuccessful = true;
                                 this.$message({
@@ -548,23 +557,17 @@
                                     ipayment: '',
                                     icount: '',
                                 };
+                                this.dialogFormVisible = false;
                             }
                         }).catch(failedResponse =>{
                             this.addSuccessful = false;
                             this.submitBtn=false;
+                            this.$message({
+                                message:failedResponse.data.message,
+                                type: 'error'
+                            });
 
                         } );
-                        // 让表格消失
-                        this.addform = {
-                            inumber : '',
-                            gid : '',
-                            vname : '',
-                            idate : '',
-                            iprice: '',
-                            ipayment: '',
-                            icount: '',
-                        };
-                        this.dialogFormVisible = false;
                     }).catch(error =>{
                         console.log("提交失败");
                         this.submitBtn=false;
