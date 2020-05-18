@@ -1,32 +1,32 @@
 <template>
   <div class="stockIn">
   <el-card class="box-card">
-    <div slot="header" class="clearfix">
+    <div slot="header" class="clearFix">
       <span>入库单</span>
 <!--      新建页面-->
       <el-button style="float: right; padding: 3px 0" type="text" @click="dialogFormVisible = true">新建</el-button>
       <el-dialog title="入库单" :visible.sync="dialogFormVisible">
-        <el-form :model="addform" :rules="stockInRules"  ref="addform">
-          <el-form-item label="入库单号" :label-width="formLabelWidth" prop="inumber">
-            <el-input v-model="addform.inumber" autocomplete="off"></el-input>
+        <el-form :model="addForm" :rules="stockInRules"  ref="addForm">
+          <el-form-item label="入库单号" :label-width="formLabelWidth" prop="iNumber">
+            <el-input v-model="addForm.iNumber" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item label="商品代码" :label-width="formLabelWidth" prop="gid">
-            <el-input v-model="addform.gid" autocomplete="off"></el-input>
+            <el-input v-model="addForm.gid" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="供应商名称" :label-width="formLabelWidth" prop="vname">
-            <el-input v-model="addform.vname" autocomplete="off"></el-input>
+          <el-form-item label="供应商名称" :label-width="formLabelWidth" prop="vName">
+            <el-input v-model="addForm.vName" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="入库日期" :label-width="formLabelWidth" prop="idate">
-            <el-input v-model="addform.idate" autocomplete="off"></el-input>
+          <el-form-item label="入库日期" :label-width="formLabelWidth" prop="iDate">
+            <el-input v-model="addForm.iDate" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="数量" :label-width="formLabelWidth" prop="icount">
-            <el-input v-model="addform.icount" autocomplete="off"></el-input>
+          <el-form-item label="数量" :label-width="formLabelWidth" prop="iCount">
+            <el-input v-model="addForm.iCount" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="价格" :label-width="formLabelWidth" prop="iprice">
-            <el-input v-model="addform.iprice" autocomplete="off"></el-input>
+          <el-form-item label="价格" :label-width="formLabelWidth" prop="iPrice">
+            <el-input v-model="addForm.iPrice" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="已付款项" :label-width="formLabelWidth" prop="ipayment">
-            <el-input v-model="addform.ipayment" autocomplete="off"></el-input>
+          <el-form-item label="已付款项" :label-width="formLabelWidth" prop="iPayment">
+            <el-input v-model="addForm.iPayment" autocomplete="off"></el-input>
           </el-form-item>
 
         </el-form>
@@ -51,12 +51,12 @@
       <el-button type="primary" icon="el-icon-refresh" @click="doReset" size="medium"  round  plain >重置</el-button>
 
       <el-table
-        :data="tableDataEnd.slice((currentPage-1)*pagesize,currentPage*pagesize)"
+        :data="tableDataEnd.slice((currentPage-1)*pageSize,currentPage*pageSize)"
         border
         style="width: 100%"  ref="filterTable" @sort-change="changeTableSort"
       >
         <el-table-column
-          prop="inumber"
+          prop="iNumber"
           label="入库单号"
           width="120"
         >
@@ -69,13 +69,13 @@
         >
         </el-table-column>
         <el-table-column
-          prop="vname"
+          prop="vName"
           label="供应商名称"
           width="120">
         </el-table-column>
         <el-table-column
           :formatter="dateFormat"
-          prop="idate"
+          prop="iDate"
           label="入库日期"
           width="120"
           column-key="date"
@@ -84,20 +84,20 @@
         >
         </el-table-column>
         <el-table-column
-          prop="icount"
+          prop="iCount"
           label="数量"
           sortable="custom"
         >
         </el-table-column>
         <el-table-column
-          prop="iprice"
+          prop="iPrice"
           label="价格"
           sortable="custom"
           width="80"
         >
         </el-table-column>
         <el-table-column
-          prop="ipayment"
+          prop="iPayment"
           label="已付款项"
           sortable="custom"
           width="120"
@@ -105,7 +105,7 @@
         </el-table-column>
 
         <el-table-column
-          prop="esalary"
+          prop="eSalary"
           label="操作">
 <!--          默认为每一行增加删除操作，只需要在methods里面定义就好-->
           <template slot-scope="scope">
@@ -118,7 +118,7 @@
         @current-change="handleCurrentChange"
         :current-page="currentPage"
         :page-sizes="[3,5, 10, 20]"
-        :page-size="pagesize"
+        :page-size="pageSize"
         layout="total, sizes, prev, pager, next, jumper"
         :total="tableDataEnd.length">
       </el-pagination>
@@ -141,53 +141,54 @@
         name: "StockIn",
         data() {
             return {
+                scope:null,
                 // 标记删除或者添加是否成功
                 addSuccessful: false,
                 //显示页面的表单数据
                 tableData: [
                     {
-                        inumber:'I2020040101',
+                        iNumber:'I2020040101',
                         gid:1234567890123,
-                        vname:'雪碧',
-                        idate:'2020-04-01T00:00:00.0000000',
-                        iprice:10,
-                        ipayment:300,
-                        icount:40
+                        vName:'雪碧',
+                        iDate:'2020-04-01T00:00:00.0000000',
+                        iPrice:10,
+                        iPayment:300,
+                        iCount:40
                     },
                     {
-                        inumber:'I2020040302',
+                        iNumber:'I2020040302',
                         gid:1234567890123,
-                        vname:'橙汁',
-                        idate:'2020-04-03T00:00:00.0000000',
-                        iprice:9,
-                        ipayment:9090,
-                        icount:10
+                        vName:'橙汁',
+                        iDate:'2020-04-03T00:00:00.0000000',
+                        iPrice:9,
+                        iPayment:9090,
+                        iCount:10
                     },
                     {
-                        inumber:'I2020040502',
+                        iNumber:'I2020040502',
                         gid:1234567890124,
-                        vname:'橙汁',
-                        idate:'2020-04-05T00:00:00.0000000',
-                        iprice:15.5,
-                        ipayment:9090,
-                        icount:10
+                        vName:'橙汁',
+                        iDate:'2020-04-05T00:00:00.0000000',
+                        iPrice:15.5,
+                        iPayment:9090,
+                        iCount:10
                     },
                     {
-                        inumber:'I2020040201',
+                        iNumber:'I2020040201',
                         gid:1234567890125,
-                        vname:'可乐',
-                        idate:'2019-04-02T00:00:00.0000000',
-                        iprice:12.2,
-                        ipayment:9090,
-                        icount:10
+                        vName:'可乐',
+                        iDate:'2019-04-02T00:00:00.0000000',
+                        iPrice:12.2,
+                        iPayment:9090,
+                        iCount:10
                     },{
-                        inumber:'I2020040301',
+                        iNumber:'I2020040301',
                         gid:1234567890126,
-                        vname:'橙汁',
-                        idate:'2020-04-03T00:00:00.0000000',
-                        iprice:13.7,
-                        ipayment:9090,
-                        icount:10
+                        vName:'橙汁',
+                        iDate:'2020-04-03T00:00:00.0000000',
+                        iPrice:13.7,
+                        iPayment:9090,
+                        iCount:10
                     },
                 ],
                 nowDate:"",   //当前日期
@@ -199,17 +200,17 @@
                 dialogTableVisible: false,
                 dialogFormVisible: false,
                 // 用于新增表单数据时的绑定
-                addform: {
-                    inumber:'',
+                addForm: {
+                    iNumber:'',
                     gid:'',
-                    vname:'',
-                    idate:'',
-                    iprice:'',
-                    ipayment:'',
-                    icount:''
+                    vName:'',
+                    iDate:'',
+                    iPrice:'',
+                    iPayment:'',
+                    iCount:''
                 },
                 formLabelWidth: '120px',
-                pagesize:5,
+                pageSize:5,
                 currentPage:1, //初始页
                 //初始数据的长度
                 totalItems:0,
@@ -222,27 +223,27 @@
                 selectTags:"",
                 //选择框的选项
                 options: [{
-                    value: 'inumber',
+                    value: 'iNumber',
                     label: '入库单代码'
                 }, {
                     value: 'gid',
                     label: '商品代码'
                 }, {
-                    value: 'vname',
+                    value: 'vName',
                     label: '供应商名称'
 
                 }, {
-                    value: 'idate',
+                    value: 'iDate',
                     label: '入库日期'
                 },{
-                    value: 'icount',
+                    value: 'iCount',
                     label: '数量'
                 },
                     {
-                    value: 'iprice',
+                    value: 'iPrice',
                     label: '价格'
                 },{
-                    value: 'ipayment',
+                    value: 'iPayment',
                     label: '已付款项'
                 },
                 ],
@@ -254,25 +255,25 @@
                 submitBtn:false,
                 //表单验证规则
                 stockInRules:{
-                    inumber:[
+                    iNumber:[
                         { required:true ,validator: reg_inumber, trigger:'blur'}
                     ],
                     gid:[
                         { required:true ,validator: reg_gid,  trigger: 'blur'}
                     ],
-                    vname:[
+                    vName:[
                         { required:true ,validator: reg_vname, trigger:'blur'}
                     ],
-                    idate:[
+                    iDate:[
                         { required:true ,validator: reg_date,   trigger: 'blur' }
                     ],
-                    iprice:[
+                    iPrice:[
                         { required:true ,validator: reg_money , trigger:'blur'}
                     ],
-                    ipayment:[
+                    iPayment:[
                         { required:true ,validator: reg_money, trigger:'blur'}
                     ],
-                    icount:[
+                    iCount:[
                         { required:true ,validator: reg_count, trigger:'blur'}
                     ]
                 },
@@ -283,13 +284,47 @@
         // 创建的时候发送请求获取显示数据库所有员工的列表数据
         created() {
             //前端测试代码
-            /*this.tableDataEnd=[];
-            this.tableData.forEach((value,index)=>{
-                this.tableDataEnd.push(value);
-            });
-            this.tableData =  [];*/
+            // this.tableDataEnd=[];
+            // this.tableData.forEach((value)=>{
+            //     this.tableDataEnd.push(value);
+            // });
+            this.tableData =  [];
             this.$axios.get("/staff/stockInList").then(res => {
                 if (res.data.code===200) {
+                    let item = {
+                        iNumber:'',
+                        gid:'',
+                        vName:'',
+                        iDate:'',
+                        iPrice:'',
+                        iPayment:'',
+                        iCount:''
+
+                    };
+                    res.data.data.forEach(value=>{
+                        item.iNumber=value.inumber;
+                        item.gid=value.gid;
+                        item.vName=value.vname;
+                        item.iDate=value.idate;
+                        item.iPrice=value.iprice;
+                        item.iPayment=value.ipayment;
+                        item.iCount=value.icount;
+                        this.tableData.push(item);
+                        item = {
+                            iNumber:'',
+                            gid:'',
+                            vName:'',
+                            iDate:'',
+                            iPrice:'',
+                            iPayment:'',
+                            iCount:''
+                        };
+                    });
+                    this.totalItems = this.tableData.length;
+                    this.tableDataEnd=[];
+                    this.tableData.forEach((value)=>{
+                        this.tableDataEnd.push(value);
+                    });
                     this.tableData = res.data.data;
                     this.totalItems = this.tableData.length;
                     this.tableDataEnd=[];
@@ -305,35 +340,22 @@
             }).catch(failResponse => {
                 this.$message({
                     type: 'info',
-                    message: "获取数据失败"
+                    message: failResponse.data.message
                 });
             })
         },
 
         methods: {
-            /*//初始化加载列表
-            getDeviceTypes() {
-                this.loading = true;         //将“创建时间”转换为所需的时间格式
-                 this.tableData.map(item => {
-                     item.createTime = this.$moment(item.createTime).format("YYYY-MM-DD HH:mm:ss");
-                 });
-                 this.loading = false;
-                 },*/
-
             //分页排序整体表格数据
             changeTableSort(column){
                 console.log(column);
                 //获取字段名称和排序类型
-                var fieldName = column.prop;
-                var sortingType = column.order;
+                let fieldName = column.prop;
+                let sortingType = column.order;
                 //如果字段名称为“创建时间”，将“创建时间”转换为时间戳，才能进行大小比较
-                if(fieldName=="idate"){
-                 this.tableDataEnd.map(item => {
-                     item.idate = this.$moment(item.idate).valueOf();
-                 });
-                }
+
                 //按照降序排序
-                if(sortingType == "descending"){
+                if(sortingType === "descending"){
                     this.tableDataEnd = this.tableData.sort((a, b) => b[fieldName] - a[fieldName]);
                 }
                 //按照升序排序
@@ -341,22 +363,16 @@
                     this.tableDataEnd = this.tableData.sort((a, b) => a[fieldName] - b[fieldName]);
                     console.log(this.tableDataEnd)
                 }
-                if(fieldName=="idate"){
-                    this.tableDataEnd.map(item => {
-                        item.idate = this.$moment(item.idate).format(
-                            "YYYY-MM-DD HH:mm:ss"
-                        );
-                    });
-                }
-
             },
 
             //日期格式化显示
             dateFormat:function(row,column){
 
-                var date = row[column.property];
+                let date = row[column.property];
 
-                if(date == undefined){return ''};
+                if(date === undefined){
+                    return ''
+                }
 
                 return moment(date).format("YYYY-MM-DD")
 
@@ -383,18 +399,18 @@
                 this.filterTableDataEnd=[];
 
                 this.tableData.forEach((value,index)=>{
-                    if(selectTag==="inumber"){
-                        if(value.inumber){
-                            let inumber = ""+value.inumber;
-                            if(inumber.search(this.searchInput)!==-1){
+                    if(selectTag==="iNumber"){
+                        if(value.iNumber){
+                            let iNumber = ""+value.iNumber;
+                            if(iNumber.search(this.searchInput)!==-1){
                                 this.filterTableDataEnd.push(value)
                             }
                         }
                     }
-                    if(selectTag==="vname"){
-                        if(value.vname){
-                            let vname = ""+value.vname;
-                            if(vname.search(this.searchInput)!==-1){
+                    if(selectTag==="vName"){
+                        if(value.vName){
+                            let vName = ""+value.vName;
+                            if(vName.search(this.searchInput)!==-1){
                                 this.filterTableDataEnd.push(value)
                             }
                         }
@@ -408,34 +424,34 @@
                             }
                         }
                     }
-                    if(selectTag==="idate"){
-                        if(value.idate){
-                            let idate = ""+value.idate;
-                            if(value.idate.search(this.searchInput)!==-1){
+                    if(selectTag==="iDate"){
+                        if(value.iDate){
+                            let iDate = ""+value.iDate;
+                            if(iDate.search(this.searchInput)!==-1){
                                 this.filterTableDataEnd.push(value)
                             }
                         }
                     }
-                    if(selectTag==="iprice"){
-                        if(value.iprice){
-                            let iprice = ""+value.iprice;
-                            if(iprice.search(this.searchInput)!==-1){
+                    if(selectTag==="iPrice"){
+                        if(value.iPrice){
+                            let iPrice = ""+value.iPrice;
+                            if(iPrice.search(this.searchInput)!==-1){
                                 this.filterTableDataEnd.push(value)
                             }
                         }
                     }
-                    if(selectTag==="ipayment"){
-                        if(value.ipayment){
-                            let ipayment = ""+value.ipayment;
-                            if(ipayment.search(this.searchInput)!==-1){
+                    if(selectTag==="iPayment"){
+                        if(value.iPayment){
+                            let iPayment = ""+value.iPayment;
+                            if(iPayment.search(this.searchInput)!==-1){
                                 this.filterTableDataEnd.push(value)
                             }
                         }
                     }
-                    if(selectTag==="icount"){
-                        if(value.icount){
-                            let icount = ""+value.icount;
-                            if(icount.search(this.searchInput)!==-1){
+                    if(selectTag==="iCount"){
+                        if(value.iCount){
+                            let iCount = ""+value.iCount;
+                            if(iCount.search(this.searchInput)!==-1){
                                 this.filterTableDataEnd.push(value)
                             }
                         }
@@ -454,10 +470,10 @@
                     this.tableDataEnd.push(value);
                 });
             },
-            // 初始页currentPage、初始每页数据数pagesize和数据data
+            // 初始页currentPage、初始每页数据数pageSize和数据data
             handleSizeChange: function (size) {
-                this.pagesize = size;
-                console.log(this.pagesize)
+                this.pageSize = size;
+                console.log(this.pageSize)
             },
             handleCurrentChange: function (currentPage) {
                 this.currentPage = currentPage;
@@ -466,14 +482,32 @@
 
             // 删除选中下标的一行数据，index由click处的scope.$index传过来的小标，delItem由scope.$row传过来的元素
             del(delItem, index){
-                console.log(delItem);
+                // this.filterTableDataEnd=[];
+                // //删除在表格中tableDataEnd显示的哪个数据
+                // this.tableDataEnd.forEach((value,i)=>{
+                //     if(i !==index){
+                //         this.filterTableDataEnd.push(value);
+                //     }
+                // });
+                // this.tableDataEnd=this.filterTableDataEnd;
+                // this.filterTableDataEnd=[];
+                // //删除从数据源中tableData获得的数据
+                // this.tableData.forEach((value)=>{
+                //     //通过主码快速过滤
+                //     if(value.iNumber!==delItem.iNumber){
+                //         this.filterTableDataEnd.push(value);
+                //     }
+                // });
+                // this.tableData = this.filterTableDataEnd;
+                // this.filterTableDataEnd=[];
+                // console.log(delItem);
                 this.$confirm('你确定要删除这条记录吗？','提示',{
                     confirmButtonText:'确定',
                     cancelButtonText:'取消',
                     type:'warning'
                 }).then(() =>{
                     //如果用户确实要删除，则用delete方式删除，并且传递要删除的记录的eid
-                    this.$axios.delete('/staff/delstockIn?inumber='+delItem.inumber)
+                    this.$axios.delete('/staff/delstockIn?inumber='+delItem.iNumber)
                         .then(successResponse =>{
                             if(successResponse.data.code===200){
                                 this.filterTableDataEnd=[];
@@ -486,9 +520,9 @@
                                 this.tableDataEnd=this.filterTableDataEnd;
                                 this.filterTableDataEnd=[];
                                 //删除从数据源中tableData获得的数据
-                                this.tableData.forEach((value,i)=>{
+                                this.tableData.forEach((value)=>{
                                     //通过主码快速过滤
-                                    if(value.inumber!=delItem.inumber){
+                                    if(value.iNumber!==delItem.iNumber){
                                         this.filterTableDataEnd.push(value);
                                     }
                                 });
@@ -505,7 +539,7 @@
                                     message: '删除失败!'
                                 });
                             }
-                    }).catch(failResponse =>{
+                    }).catch(() =>{
                         //用户同意删除情况下数据库删除失败
                         this.$message({
                             type: 'info',
@@ -524,46 +558,46 @@
             //新增表单操作
             addStockIn(){
                 //逻辑前端判断
-                this.submitBtn=true;
-                //前端测试部分
-                //将信息刷新到表格中，指向同一个数据源所以只添加一次
-                // this.tableDataEnd.unshift(this.addform);
-                // this.tableData.unshift(this.tableDataEnd);
+                // this.submitBtn=true;
+                // //前端测试部分
+                // //将信息刷新到表格中，指向同一个数据源所以只添加一次
+                // this.tableDataEnd.unshift(this.addForm);
+                // this.tableData.unshift(this.addForm);
                 // //清空填写单的信息放到请求体中，避免请求延迟已经被清空才刷新在信息到表格中
-                // this.addform = {
-                //     inumber : '',
+                // this.addForm = {
+                //     iNumber : '',
                 //     gid : '',
-                //     vname : '',
-                //     idate : '',
-                //     iprice: '',
-                //     ipayment: '',
-                //     icount: '',
+                //     vName : '',
+                //     iDate : '',
+                //     iPrice: '',
+                //     iPayment: '',
+                //     iCount: '',
                 // };
                 // this.dialogFormVisible = false;
                 this.$refs.addform.validate()  //判断表单验证是否通过，验证通过执行.then()，否则执行.catch()
-                    .then(res =>{
+                    .then(() =>{
                         this.$axios.post('/staff/stockInAdd',{
-                            inumber:this.addform.inumber,
-                            gid:this.addform.gid,
-                            vname:this.addform.vname,
-                            idate:this.addform.idate,
-                            iprice:this.addform.iprice,
-                            ipayment:this.addform.ipayment,
-                            icount:this.addform.icount,
+                            inumber:this.addForm.iNumber,
+                            gid:this.addForm.gid,
+                            vname:this.addForm.vName,
+                            idate:this.addForm.iDate,
+                            iprice:this.addForm.iPrice,
+                            ipayment:this.addForm.iPayment,
+                            icount:this.addForm.iCount,
                         }).then(successResponse =>{
                             if(successResponse.data.code === 200){
                                 this.dialogFormVisible = false;
-                                this.tableDataEnd.unshift(this.addform);
-                                this.tableData.unshift(this.tableDataEnd);
+                                this.tableDataEnd.unshift(this.addForm);
+                                this.tableData.unshift(this.addForm);
                                 //清空填写单的信息放到请求体中，避免请求延迟已经被清空才刷新在信息到表格中
-                                this.addform = {
-                                    inumber : '',
+                                this.addForm = {
+                                    iNumber : '',
                                     gid : '',
-                                    vname : '',
-                                    idate : '',
-                                    iprice: '',
-                                    ipayment: '',
-                                    icount: '',
+                                    vName : '',
+                                    iDate : '',
+                                    iPrice: '',
+                                    iPayment: '',
+                                    iCount: '',
                                 };
 
                                 this.submitBtn=false;
@@ -590,7 +624,7 @@
                             });
 
                         } );
-                    }).catch(error =>{
+                    }).catch(() =>{
                         console.log("提交失败");
                     this.submitBtn=false;
                     this.$message({
@@ -606,15 +640,6 @@
 </script>
 
 <style scoped>
-
-  .text {
-    font-size: 14px;
-  }
-
-  .item {
-    margin-bottom: 50px;
-
-  }
   .box-card {
     width: 75%;
   }

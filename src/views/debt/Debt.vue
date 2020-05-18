@@ -1,7 +1,7 @@
 <template>
   <div class="debt">
   <el-card class="box-card">
-    <div slot="header" class="clearfix">
+    <div slot="header" class="clearFix">
       <span>欠款单</span>
       <!--<el-button style="float: right; padding: 3px 0" type="text" @click="dialogFormVisible = true">新建</el-button>-->
     </div>
@@ -19,11 +19,11 @@
       <el-button type="primary" icon="el-icon-search" @click="doFilter"  size="medium" round  plain>搜索</el-button>
       <el-button type="primary" icon="el-icon-refresh" @click="doReset" size="medium"  round  plain >重置</el-button>
       <el-table
-        :data="tableDataEnd.slice((currentPage-1)*pagesize,currentPage*pagesize)"
+        :data="tableDataEnd.slice((currentPage-1)*pageSize,currentPage*pageSize)"
         border
         style="width: 100%"  @sort-change="changeTableSort">
         <el-table-column
-          prop="dnumber"
+          prop="dNumber"
           label="欠款单号"
           width="180"
 
@@ -37,18 +37,18 @@
         >
         </el-table-column>
         <el-table-column
-          prop="vname"
+          prop="vName"
           label="供应商名称">
         </el-table-column>
         <el-table-column
-          prop="ddebt"
+          prop="dDebt"
           label="欠款金额"
           sortable="custom"
         >
         </el-table-column>
         <el-table-column
           :formatter="dateFormat"
-          prop="ddate"
+          prop="dDate"
           label="日期"
           width="180"
           column-key="date"
@@ -57,7 +57,7 @@
         >
         </el-table-column>
         <el-table-column
-          prop="esalary"
+          prop="eHandler"
           label="操作">
 
           <template slot-scope="scope">
@@ -70,7 +70,7 @@
         @current-change="handleCurrentChange"
         :current-page="currentPage"
         :page-sizes="[3,5, 10, 20]"
-        :page-size="pagesize"
+        :page-size="pageSize"
         layout="total, sizes, prev, pager, next, jumper"
         :total="tableDataEnd.length">
       </el-pagination>
@@ -85,35 +85,36 @@
         reg_gid,
         reg_vname,
         reg_date,
-        reg_money, reg_userName,
+        reg_money,
     } from "../login/validator";
     import moment from 'moment'
   export default {
         name: "Debt",
         data() {
             return {
+                scope:null,
                 // 标记删除或者添加是否成功
                 addSuccessful: false,
                 // delSuccessful: false,
                 // 在基础表格中展示的数据
                 tableData: [{
-                    dnumber: 'd2020010301',
+                    dNumber: 'd2020010301',
                     gid: '21348329',
-                    vname: '方便面',
-                    ddate: '2020-01-03T00:00:00.0000000',
-                    ddebt: '1242',
+                    vName: '方便面',
+                    dDate: '2020-01-03T00:00:00.0000000',
+                    dDebt: '1242',
                 },{
-                    dnumber: 'd2020020501',
+                    dNumber: 'd2020020501',
                     gid: '214412',
-                    vname: '橙汁',
-                    ddate: '2020-02-05T00:00:00.0000000',
-                    ddebt: '142',
+                    vName: '橙汁',
+                    dDate: '2020-02-05T00:00:00.0000000',
+                    dDebt: '142',
                 },{
-                    dnumber: 'd2020200321',
+                    dNumber: 'd2020200321',
                     gid: '12423432',
-                    vname: '可乐',
-                    ddate: '2020-03-21T00:00:00.0000000',
-                    ddebt: '636',
+                    vName: '可乐',
+                    dDate: '2020-03-21T00:00:00.0000000',
+                    dDebt: '636',
                 }],
                 // 控制新增页面的form表单可见性
                 dialogFormVisible: false,
@@ -121,17 +122,15 @@
                 delItem: [],
                 // 用于新增数据绑定
                 dataInfo: {
-                    dnumber: '',
+                    dNumber: '',
                     gid: '',
-                    vname: '',
-                    ddate: '',
-                    ddebt: '',
+                    vName: '',
+                    dDate: '',
+                    dDebt: '',
                 },
                 formLabelWidth: '120px',
-                pagesize:5,  //分页数量
+                pageSize:5,  //分页数量
                 currentPage:1 ,//初始页
-                searchInput:'',
-
                 //初始数据的长度
                 totalItems:0,
                 //最后在页面中显示的数据
@@ -144,38 +143,38 @@
 
 
                 debtRules:{
-                    dnumber:[
+                    dNumber:[
                         {required:true ,validator: reg_dnumber,  trigger: 'blur'}
                     ],
                     gid:[
                         {required:true ,validator: reg_gid,  trigger: 'blur'}
                     ],
-                    vname:[
+                    vName:[
                         {required:true ,validator: reg_vname,  trigger: 'blur'}
                     ],
-                    ddate:[
+                    dDate:[
                         {required:true ,validator: reg_date,  trigger: 'blur'}
                     ],
-                    ddebt:[
+                    dDebt:[
                         {required:true ,validator: reg_money,  trigger: 'blur'}
                     ],
 
                 },
                 //选择框的选项
                 options: [{
-                    value: 'dnumber',
+                    value: 'dNumber',
                     label: '欠款单号'
                 }, {
                     value: 'gid',
                     label: '商品编号'
                 }, {
-                    value: 'vname',
+                    value: 'vName',
                     label: '供应商名称'
                 }, {
-                    value: 'ddate',
+                    value: 'dDate',
                     label: '日期'
                 }, {
-                    value: 'ddebt',
+                    value: 'dDebt',
                     label: '欠款金额'
                 }
                 ],
@@ -185,21 +184,23 @@
         // 创建的时候发送请求获取显示数据库所有的列表数据
         created() {
             //前端测试代码
-          /*  this.tableData.forEach((value,index)=>{
-                this.tableDataEnd.push(value);
-            });*/
+            // this.tableData.forEach((value,index)=>{
+            //     this.tableDataEnd.push(value);
+            // });
+
+            this.tableData=[];
             this.$axios.get("/home/debt").then(res => {
                 if(res.data.code === 200){
                     console.log(res);
                     this.tableData = res.data;
                     this.itemCount = res.data.length;
                     this.tableDataEnd=[];
-                    this.tableData.forEach((value,index)=>{
+                    this.tableData.forEach((value)=>{
                         this.tableDataEnd.push(value);
                     });
                     console.log(this.itemCount);
                 }
-            }).catch(failResponse => {
+            }).catch(() => {
 
             })
         },
@@ -208,10 +209,10 @@
             changeTableSort(column){
                 console.log(column);
                 //获取字段名称和排序类型
-                var fieldName = column.prop;
-                var sortingType = column.order;
+                let fieldName = column.prop;
+                let sortingType = column.order;
                 //按照降序排序
-                if(sortingType == "descending"){
+                if(sortingType === "descending"){
                     this.tableDataEnd = this.tableData.sort((a, b) => b[fieldName] - a[fieldName]);
                 }
                 //按照升序排序
@@ -222,8 +223,8 @@
             },
 
             doFilter(){
-                var selectTag = this.selectTags;
-                if(this.searchInput == ""){
+                let selectTag = this.selectTags;
+                if(this.searchInput === ""){
                     this.$message.warning("查询信息不能为空！！！");
                     return;
                 }
@@ -236,15 +237,15 @@
                 this.tableDataEnd=[];
                 this.filterTableDataEnd=[];
                 this.tableData.forEach((value,index)=>{
-                    if(selectTag=="dnumber"){
-                        if(value.dnumber){
-                            let dnumber = ""+value.dnumber;
-                            if(dnumber.search(this.searchInput)!==-1){
+                    if(selectTag==="dNumber"){
+                        if(value.dNumber){
+                            let dNumber = ""+value.dNumber;
+                            if(dNumber.search(this.searchInput)!==-1){
                                 this.filterTableDataEnd.push(value)
                             }
                         }
                     }
-                    if(selectTag=="gid"){
+                    if(selectTag==="gid"){
                         if(value.gid){
                             let gid= ""+value.gid;
                             if(gid.search(this.searchInput)!==-1){
@@ -252,25 +253,25 @@
                             }
                         }
                     }
-                    if(selectTag=="vname"){
-                        if(value.vname){
-                            let vname=""+value.vname;
-                            if(vname.search(this.searchInput)!==-1){
+                    if(selectTag==="vName"){
+                        if(value.vName){
+                            let vName=""+value.vName;
+                            if(vName.search(this.searchInput)!==-1){
                                 this.filterTableDataEnd.push(value)
                             }
                         }
                     }
-                    if(selectTag=="ddebt"){
-                        if(value.ddebt){
-                            let ddebt=""+value.ddebt;
-                            if(ddebt.search(this.searchInput)!==-1){
+                    if(selectTag==="dDebt"){
+                        if(value.dDebt){
+                            let dDebt=""+value.dDebt;
+                            if(dDebt.search(this.searchInput)!==-1){
                                 this.filterTableDataEnd.push(value)
                             }
                         }
-                    }if(selectTag=="ddate"){
-                        if(value.ddate){
-                            let ddate = ""+value.ddate;
-                            if(ddate.search(this.searchInput)!==-1){
+                    }if(selectTag==="dDate"){
+                        if(value.dDate){
+                            let dDate = ""+value.dDate;
+                            if(dDate.search(this.searchInput)!==-1){
                                 this.filterTableDataEnd.push(value)
                             }
                         }
@@ -284,16 +285,18 @@
             doReset(){
                 this.searchInput="";
                 this.tableDataEnd=[];
-                this.tableData.forEach((value,index)=>{
+                this.tableData.forEach((value)=>{
                     this.tableDataEnd.push(value);
                 });
             },
             //日期格式化显示
             dateFormat:function(row,column){
 
-                var date = row[column.property];
+                let date = row[column.property];
 
-                if(date == undefined){return ''};
+                if(date === undefined){
+                    return ''
+                }
 
                 return moment(date).format("YYYY-MM-DD")
 
@@ -307,10 +310,10 @@
 
                 // return row[property] == value;
             },
-            // 初始页currentPage、初始每页数据数pagesize和数据data
+            // 初始页currentPage、初始每页数据数pageSize和数据data
             handleSizeChange: function (size) {
-                this.pagesize = size;
-                console.log(this.pagesize)
+                this.pageSize = size;
+                console.log(this.pageSize)
             },
             handleCurrentChange: function (currentPage) {
                 this.currentPage = currentPage;
@@ -329,32 +332,29 @@
                     type: 'warning'
                 }).then(() => {
                     //前端测试代码
-                    /*//数据库删除成功在table表里进行删除,
-                    this.filterTableDataEnd=[];
-                    //删除在表格中tableDataEnd显示的哪个数据
-                    this.tableDataEnd.forEach((value,i)=>{
-                        if(i !==index){
-                            this.filterTableDataEnd.push(value);
-                        }
-                    });
-                    this.tableDataEnd=this.filterTableDataEnd;
-                    this.filterTableDataEnd=[];
+                    //数据库删除成功在table表里进行删除,
+                    // this.filterTableDataEnd=[];
+                    // //删除在表格中tableDataEnd显示的哪个数据
+                    // this.tableDataEnd.forEach((value,i)=>{
+                    //     if(i !==index){
+                    //         this.filterTableDataEnd.push(value);
+                    //     }
+                    // });
+                    // this.tableDataEnd=this.filterTableDataEnd;
+                    // this.filterTableDataEnd=[];
+                    //
+                    // //删除从数据源中tableData获得的数据
+                    // this.tableData.forEach((value)=>{
+                    //     //通过主码快速过滤
+                    //     if(value.dNumber!==delItem.dNumber){
+                    //         this.filterTableDataEnd.push(value);
+                    //     }
+                    // });
+                    // this.tableData = this.filterTableDataEnd;
+                    // this.filterTableDataEnd=[];
 
-                    //删除从数据源中tableData获得的数据
-                    this.tableData.forEach((value,i)=>{
-                        //通过主码快速过滤
-                        if(value.dnumber!=delItem.dnumber){
-                            this.filterTableDataEnd.push(value);
-                        }
-                    });
-                    this.tableData = this.filterTableDataEnd;
-                    this.filterTableDataEnd=[];
-                    this.$message({
-                        type: 'success',
-                        message: successResponse.data.message
-                    });*/
                     //如果用户确实要删除，则用delete方式删除，并且传递要删除的记录的eid
-                    this.$axios.delete('/delDebt？dnumber='+delItem.dnumber)
+                    this.$axios.delete('/delDebt？dNumber='+delItem.dNumber)
                         .then(successResponse => {
                             if(successResponse.data.code===200){
                         //数据库删除成功在table表里进行删除,
@@ -369,9 +369,9 @@
                         this.filterTableDataEnd=[];
 
                         //删除从数据源中tableData获得的数据
-                        this.tableData.forEach((value,i)=>{
+                        this.tableData.forEach((value)=>{
                             //通过主码快速过滤
-                            if(value.dnumber!=delItem.dnumber){
+                            if(value.dNumber!==delItem.dNumber){
                                 this.filterTableDataEnd.push(value);
                             }
                         });
@@ -382,7 +382,7 @@
                             message: successResponse.data.message
                         });
                             }
-                    }).catch(failedResponse => {
+                    }).catch(() => {
                         this.$message({
                             type: 'info',
                             message: '删除失败'
@@ -401,14 +401,7 @@
 </script>
 
 <style scoped>
-  .text {
-    font-size: 14px;
-  }
 
-  .item {
-    margin-bottom: 50px;
-
-  }
   .box-card {
     width: 75%;
   }

@@ -1,34 +1,34 @@
 <template>
-  <div class="vender">
+  <div class="v">
   <el-card class="box-card"  >
-    <div slot="header" class="clearfix">
+    <div slot="header" class="clearFix">
       <span>供应商表</span>
       <el-button style="float: right; padding: 3px 0" type="text" @click="dialogFormVisible = true">新建</el-button>
       <el-dialog title="供应商表" :visible.sync="dialogFormVisible">
-        <el-form :model="addform"  :rules="venderRules" ref="addform">
+        <el-form :model="addForm"  :rules="venderRules" ref="addForm">
           <el-form-item label="供应商代码" :label-width="formLabelWidth" prop="vid">
-            <el-input v-model="addform.vid" autocomplete="off"></el-input>
+            <el-input v-model="addForm.vid" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="供应商名称" :label-width="formLabelWidth" prop="vname">
-            <el-input v-model="addform.vname" autocomplete="off"></el-input>
+          <el-form-item label="供应商名称" :label-width="formLabelWidth" prop="vName">
+            <el-input v-model="addForm.vName" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="地址" :label-width="formLabelWidth" prop="vaddress">
-            <el-input v-model="addform.vaddress" autocomplete="off"></el-input>
+          <el-form-item label="地址" :label-width="formLabelWidth" prop="vAddress">
+            <el-input v-model="addForm.vAddress" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="电话" :label-width="formLabelWidth" prop="vphone">
-            <el-input v-model="addform.vphone" autocomplete="off"></el-input>
+          <el-form-item label="电话" :label-width="formLabelWidth" prop="vPhone">
+            <el-input v-model="addForm.vPhone" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="邮箱" :label-width="formLabelWidth" prop="vemail">
-          <el-input v-model="addform.vemail" autocomplete="off"></el-input>
+          <el-form-item label="邮箱" :label-width="formLabelWidth" prop="vEmail">
+          <el-input v-model="addForm.vEmail" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="传真" :label-width="formLabelWidth" prop="vfax">
-            <el-input v-model="addform.vfax" autocomplete="off"></el-input>
+          <el-form-item label="传真" :label-width="formLabelWidth" prop="vFax">
+            <el-input v-model="addForm.vFax" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="信誉" :label-width="formLabelWidth" prop="vcredit">
-            <el-input v-model="addform.vcredit" autocomplete="off"></el-input>
+          <el-form-item label="信誉" :label-width="formLabelWidth" prop="vCredit">
+            <el-input v-model="addForm.vCredit" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="贷款结算" :label-width="formLabelWidth" prop="vsettle_account">
-            <el-input v-model="addform.vsettle_account" autocomplete="off"></el-input>
+          <el-form-item label="贷款结算" :label-width="formLabelWidth" prop="vSettleAccount">
+            <el-input v-model="addForm.vSettleAccount" autocomplete="off"></el-input>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -37,15 +37,6 @@
         </div>
       </el-dialog>
     </div>
-<!--    <div class="text item">-->
-<!--      <el-input style="width: 300px"-->
-<!--                placeholder="请输入供应商代码"-->
-<!--                v-model="input"-->
-<!--                clearable>-->
-<!--      </el-input>-->
-<!--      <el-button round>查询</el-button>-->
-<!--    </div>-->
-
     <div class="form">
       <el-select v-model="selectTags" clearable size="medium"  placeholder="请选择" value="" >
         <el-option
@@ -60,7 +51,7 @@
       <el-button type="primary" icon="el-icon-search" @click="doFilter"  size="medium" round  plain>搜索</el-button>
       <el-button type="primary" icon="el-icon-refresh" @click="doReset" size="medium"  round  plain >重置</el-button>
       <el-table
-        :data="tableDataEnd.slice((currentPage-1)*pagesize,currentPage*pagesize)"
+        :data="tableDataEnd.slice((currentPage-1)*pageSize,currentPage*pageSize)"
         border
         style="width: 100%"  ref="filterTable" size="medium"  stripe  @sort-change="changeTableSort">
         <el-table-column
@@ -71,45 +62,45 @@
         >
         </el-table-column>
         <el-table-column
-          prop="vname"
+          prop="vName"
           label="供应商名称"
           width="100"
         >
         </el-table-column>
         <el-table-column
-          prop="vaddress"
+          prop="vAddress"
           label="地址"
           width="100"
         >
         </el-table-column>
         <el-table-column
-          prop="vphone"
+          prop="vPhone"
           width="130"
           label="电话">
         </el-table-column>
         <el-table-column
-          prop="vemail"
+          prop="vEmail"
           label="E-mail"
           width="180">
         </el-table-column>
         <el-table-column
-          prop="vfax"
+          prop="vFax"
           width="120"
           label="传真">
         </el-table-column>
         <el-table-column
-          prop="vcredit"
+          prop="vCredit"
           label="信誉"
           sortable="custom"
         >
         </el-table-column>
         <el-table-column
-          prop="vsettle_account"
+          prop="vSettleAccount"
           label="贷款结算">
         </el-table-column>
         <el-table-column
           fixed="right"
-          prop="esalary"
+          prop="eSalary"
           label="操作">
 
           <template slot-scope="scope">
@@ -122,7 +113,7 @@
         @current-change="handleCurrentChange"
         :current-page="currentPage"
         :page-sizes="[3,5, 10, 20]"
-        :page-size="pagesize"
+        :page-size="pageSize"
         layout="total, sizes, prev, pager, next, jumper"
         :total="tableDataEnd.length">
       </el-pagination>
@@ -143,61 +134,62 @@
       reg_count
   } from "../login/validator";
   export default {
-        name: "Vender",
+        name: "V",
         data() {
             return {
+                scope:null,
                 //添加表单成功吗
                 addSuccessful:false,
                 // 从后台传来的初始数据
                 tableData: [
                     {
                         vid: 1234567,
-                        vname: 'weqwe',
-                        vaddress: 'wewew',
-                        vphone: 13112122323,
-                        vemail:'123@qq.com',
-                        vfax: '12321312',
-                        vcredit: 12,
-                        vsettle_account: 898
+                        vName: 'weqwe',
+                        vAddress: 'wewew',
+                        vPhone: 13112122323,
+                        vEmail:'123@qq.com',
+                        vFax: '12321312',
+                        vCredit: 12,
+                        vSettleAccount: 898
                     },
                     {
                         vid: 20200401,
-                        vname: '王二虎',
-                        vaddress: '北极西南',
-                        vphone: 13677273048,
-                        vemail:'2409981311@qq.com',
-                        vfax: 123,
-                        vcredit: 1,
-                        vsettle_account: 10000
+                        vName: '王二虎',
+                        vAddress: '北极西南',
+                        vPhone: 13677273048,
+                        vEmail:'2409981311@qq.com',
+                        vFax: 123,
+                        vCredit: 1,
+                        vSettleAccount: 10000
                     },{
                         vid: 20200403,
-                        vname: '王二虎',
-                        vaddress: '北极西南',
-                        vphone: 13677273048,
-                        vemail:'2409981311@qq.com',
-                        vfax: 123,
-                        vcredit: 1,
-                        vsettle_account: 10000
+                        vName: '王二虎',
+                        vAddress: '北极西南',
+                        vPhone: 13677273048,
+                        vEmail:'2409981311@qq.com',
+                        vFax: 123,
+                        vCredit: 1,
+                        vSettleAccount: 10000
                     },
                     {
                         vid: 20200404,
-                        vname: '王二虎',
-                        vaddress: '北极西南',
-                        vphone: 13677273048,
-                        vemail:'2409981311@qq.com',
-                        vfax: 123,
-                        vcredit: 1,
-                        vsettle_account: 10000
+                        vName: '王二虎',
+                        vAddress: '北极西南',
+                        vPhone: 13677273048,
+                        vEmail:'2409981311@qq.com',
+                        vFax: 123,
+                        vCredit: 1,
+                        vSettleAccount: 10000
                     },
                     {
                         vid: 20200405,
-                        vname: '王二虎',
-                        vaddress: '北极西南',
-                        vphone: 13677273048,
-                        vemail:'2409981311@qq.com',
-                        vfax: 123,
-                        vcredit: 1,
-                        vsettle_account: 10000
+                        vName: '王二虎',
+                        vAddress: '北极西南',
+                        vPhone: 13677273048,
+                        vEmail:'2409981311@qq.com',
+                        vFax: 123,
+                        vCredit: 1,
+                        vSettleAccount: 10000
                     },
                 ],
                 //删除的元素是谁
@@ -207,18 +199,18 @@
                 // 控制员工新增页面的form表单可见性
                 dialogTableVisible: false,
                 dialogFormVisible: false,
-                addform: {
+                addForm: {
                     vid: '',
-                    vname: '',
-                    vaddress: '',
-                    vphone: '',
-                    vemail:'',
-                    vfax: '',
-                    vcredit: '',
-                    vsettle_account: ''
+                    vName: '',
+                    vAddress: '',
+                    vPhone: '',
+                    vEmail:'',
+                    vFax: '',
+                    vCredit: '',
+                    vSettleAccount: ''
                 },
                 formLabelWidth: '120px',
-                pagesize:5,
+                pageSize:5,
                 currentPage:1, //初始页
 
                 //搜索功能的数据
@@ -237,25 +229,25 @@
                     vid:[
                         { required:true ,validator: reg_vid,  trigger: 'blur'}
                     ],
-                    vname:[
+                    vName:[
                         { required:true ,validator: reg_vname, trigger:'blur'}
                     ],
-                    vaddress:[
+                    vAddress:[
                         { required:true ,validator: reg_address, trigger:'blur' }
                     ],
-                    vphone :[
+                    vPhone :[
                         {required:true ,validator: reg_phone, trigger:'blur'}
                     ],
-                    vemail: [
+                    vEmail: [
                         {required:true ,validator: reg_email, trigger:'blur'}
                     ],
-                    vfax:[
+                    vFax:[
                         {required:true ,validator: reg_fax, trigger:'blur'}
                     ],
-                    vcredit:[
+                    vCredit:[
                         {required:true ,validator: reg_credit, trigger:'blur'}
                     ],
-                    vsettle_account:[
+                    vSettleAccount:[
                         {required:true ,validator: reg_count, trigger:'blur'}
                     ]
                 },
@@ -264,25 +256,25 @@
                     value: 'vid',
                     label: '供应商代码'
                 }, {
-                    value: 'vname',
+                    value: 'vName',
                     label: '供应商名称'
                 }, {
-                    value: 'vaddress',
+                    value: 'vAddress',
                     label: '供应商地址'
                 }, {
-                    value: 'vphone',
+                    value: 'vPhone',
                     label: '供应商电话'
                 }, {
-                    value: 'vemail',
+                    value: 'vEmail',
                     label: '供应商E-mail'
                 },{
-                    value: 'vfax',
+                    value: 'vFax',
                     label: '供应商传真'
                 },{
-                    value: 'vcredit',
+                    value: 'vCredit',
                     label: '供应商信誉'
                 },{
-                    value: 'vsettle_account',
+                    value: 'vSettleAccount',
                     label: '供应商贷款'
                 }
                 ],
@@ -291,38 +283,42 @@
         },
       // 创建的时候发送请求获取显示数据库所有员工的列表数据
       created() {
+          // this.tableDataEnd=[];
+          // this.tableData.forEach((value)=>{
+          //     this.tableDataEnd.push(value);
+          // });
           this.tableData = [];
           this.$axios.get("/staff/getAllVenders").then(res=>{
               if(res.data.code===200){
                   let item = {
                       vid: '',
-                      vname: '',
-                      vaddress: '',
-                      vphone: '',
-                      vemail:'',
-                      vfax: '',
-                      vcredit: '',
-                      vsettle_account: ''
+                      vName: '',
+                      vAddress: '',
+                      vPhone: '',
+                      vEmail:'',
+                      vFax: '',
+                      vCredit: '',
+                      vSettleAccount: ''
                   };
                   res.data.data.forEach(value=>{
                       item.vid=value.vid;
-                      item.vname =value.vname;
-                      item.vaddress=value.vaddress;
-                      item.vphone=value.vphone;
-                      item.vemail=value.vemail;
-                      item.vfax = value.vfax;
-                      item.vcredit= value.vcredit;
-                      item.vsettle_account=value.vsettleAccount;
+                      item.vName =value.vname;
+                      item.vAddress=value.vaddress;
+                      item.vPhone=value.vphone;
+                      item.vEmail=value.vemail;
+                      item.vFax = value.vfax;
+                      item.vCredit= value.vcredit;
+                      item.vSettleAccount=value.vsettleAccount;
                       this.tableData.push(item);
                       item = {
                           vid: '',
-                          vname: '',
-                          vaddress: '',
-                          vphone: '',
-                          vemail:'',
-                          vfax: '',
-                          vcredit: '',
-                          vsettle_account: ''
+                          vName: '',
+                          vAddress: '',
+                          vPhone: '',
+                          vEmail:'',
+                          vFax: '',
+                          vCredit: '',
+                          vSettleAccount: ''
                       };
                   });
                   this.totalItems = this.tableData.length;
@@ -332,7 +328,8 @@
                   });
                   console.log(this.tableData.length);
               }
-          }).catch(failResponse=>{
+          }).catch(()=>{
+
               this.$message.error('不能加载该页面的数据');
 
           })
@@ -342,10 +339,10 @@
             changeTableSort(column){
                 console.log(column);
                 //获取字段名称和排序类型
-                var fieldName = column.prop;
-                var sortingType = column.order;
+                let fieldName = column.prop;
+                let sortingType = column.order;
                 //按照降序排序
-                if(sortingType == "descending"){
+                if(sortingType === "descending"){
                     this.tableDataEnd = this.tableData.sort((a, b) => b[fieldName] - a[fieldName]);
                 }
                 //按照升序排序
@@ -357,7 +354,7 @@
 
             doFilter(){
                 let selectTag = this.selectTags;
-                if(this.searchInput == ""){
+                if(this.searchInput === ""){
                     this.$message.warning("查询信息不能为空！！！");
                     return;
                 }
@@ -369,7 +366,7 @@
                 this.tableDataEnd=[];
                 this.filterTableDataEnd=[];
                 this.tableData.forEach((value,index)=>{
-                    if(selectTag=="vid"){
+                    if(selectTag==="vid"){
                         if(value.vid){
                             //int 与  string
                             let vid = ""+value.vid;
@@ -378,54 +375,54 @@
                             }
                         }
                     }
-                    if(selectTag=="vname"){
-                        if(value.vname){
-                            let vname =""+ value.vname;
-                            if(vname.search(this.searchInput)!==-1){
+                    if(selectTag==="vName"){
+                        if(value.vName){
+                            let vName =""+ value.vName;
+                            if(vName.search(this.searchInput)!==-1){
                                 this.filterTableDataEnd.push(value)
                             }
                         }
                     }
-                    if(selectTag=="vaddress"){
-                        if(value.vaddress){
-                            let vaddress = value.vaddress;
-                            if(vaddress.search(this.searchInput)!==-1){
+                    if(selectTag==="vAddress"){
+                        if(value.vAddress){
+                            let vAddress = value.vAddress;
+                            if(vAddress.search(this.searchInput)!==-1){
                                 this.filterTableDataEnd.push(value)
                             }
                         }
                     }
-                    if(selectTag=="vphone"){
-                        if(value.vphone){
-                            let vphone ="" + value.vphone;
-                            if(vphone.search(this.searchInput)!==-1){
+                    if(selectTag==="vPhone"){
+                        if(value.vPhone){
+                            let vPhone ="" + value.vPhone;
+                            if(vPhone.search(this.searchInput)!==-1){
                                 this.filterTableDataEnd.push(value)
                             }
                         }
-                    }if(selectTag=="vemail"){
-                        if(value.vemail){
-                            let vemail ="" + value.vemail;
-                            if(vemail.search(this.searchInput)!==-1){
+                    }if(selectTag==="vEmail"){
+                        if(value.vEmail){
+                            let vEmail ="" + value.vEmail;
+                            if(vEmail.search(this.searchInput)!==-1){
                                 this.filterTableDataEnd.push(value)
                             }
                         }
-                    }if(selectTag=="vfax"){
-                        if(value.vfax){
-                            let vfax = ""+value.vfax;
-                            if(vfax.search(this.searchInput)!==-1){
+                    }if(selectTag==="vFax"){
+                        if(value.vFax){
+                            let vFax = ""+value.vFax;
+                            if(vFax.search(this.searchInput)!==-1){
                                 this.filterTableDataEnd.push(value)
                             }
                         }
-                    }if(selectTag=="vcredit"){
-                        if(value.vcredit){
-                            let vcredit = ""+value.vcredit;
-                            if(vcredit.search(this.searchInput)!==-1){
+                    }if(selectTag==="vCredit"){
+                        if(value.vCredit){
+                            let vCredit = ""+value.vCredit;
+                            if(vCredit.search(this.searchInput)!==-1){
                                 this.filterTableDataEnd.push(value)
                             }
                         }
-                    }if(selectTag=="vsettle_account"){
-                        if(value.vsettle_account){
-                            let vsettle_account = ""+value.vsettle_account;
-                            if(vsettle_account.search(this.searchInput)!==-1){
+                    }if(selectTag==="vSettleAccount"){
+                        if(value.vSettleAccount){
+                            let vSettleAccount = ""+value.vSettleAccount;
+                            if(vSettleAccount.search(this.searchInput)!==-1){
                                 this.filterTableDataEnd.push(value)
                             }
                         }
@@ -438,15 +435,15 @@
             doReset(){
                 this.searchInput="";
                 this.tableDataEnd=[];
-                this.tableData.forEach((value,index)=>{
+                this.tableData.forEach((value)=>{
                     this.tableDataEnd.push(value);
                 });
             },
 
-            // 初始页currentPage、初始每页数据数pagesize和数据data
+            // 初始页currentPage、初始每页数据数pageSize和数据data
             handleSizeChange: function (size) {
-                this.pagesize = size;
-                console.log(this.pagesize)
+                this.pageSize = size;
+                console.log(this.pageSize)
             },
             handleCurrentChange: function (currentPage) {
                 this.currentPage = currentPage;
@@ -454,31 +451,31 @@
             },
             addVender(){
                 //前端测试部分
-                // this.tableData.unshift(this.addform);
-                // this.tableDataEnd.unshift(this.addform);
+                // this.tableData.unshift(this.addForm);
+                // this.tableDataEnd.unshift(this.addForm);
                 // //清空填写单的信息放到请求体中，避免请求延迟已经被清空才刷新在信息到表格中
-                // this.addform = {
+                // this.addForm = {
                 //     vid: '',
-                //     vname: '',
-                //     vaddress: '',
-                //     vphone: '',
-                //     vemail:'',
-                //     vfax: '',
-                //     vcredit: '',
-                //     vsettle_account: ''
+                //     vName: '',
+                //     vAddress: '',
+                //     vPhone: '',
+                //     vEmail:'',
+                //     vFax: '',
+                //     vCredit: '',
+                //     vSettleAccount: ''
                 // };
                 // this.dialogFormVisible = false;
                 this.$refs.addform.validate()
-                    .then(res =>{
+                    .then(() =>{
                         this.$axios.post('/staff/addVender', {
-                            vid: this.addform.vid,
-                            vname: this.addform.vname,
-                            vaddress: this.addform.vaddress,
-                            vphone: this.addform.vphone,
-                            vemail: this.addform.vemail,
-                            vfax: this.addform.vfax,
-                            vcredit: this.addform.vcredit,
-                            vsettleAccount: this.addform.vsettle_account,
+                            vid: this.addForm.vid,
+                            vname: this.addForm.vName,
+                            vaddress: this.addForm.vAddress,
+                            vphone: this.addForm.vPhone,
+                            vemail: this.addForm.vEmail,
+                            vfax: this.addForm.vFax,
+                            vcredit: this.addForm.vCredit,
+                            vsettleAccount: this.addForm.vSettleAccount,
 
                         }).then(successResponse => {
                             if (successResponse.data.code === 200) {
@@ -488,25 +485,25 @@
                                     type: 'success',
                                 });
                                 //将信息刷新到表格中
-                                this.tableData.unshift(this.addform);
-                                this.tableDataEnd.unshift(this.addform);
+                                this.tableData.unshift(this.addForm);
+                                this.tableDataEnd.unshift(this.addForm);
                                 //清空填写单的信息放到请求体中，避免请求延迟已经被清空才刷新在信息到表格中
-                                this.addform = {
+                                this.addForm = {
                                     vid: '',
-                                    vname: '',
-                                    vaddress: '',
-                                    vphone: '',
-                                    vemail:'',
-                                    vfax: '',
-                                    vcredit: '',
-                                    vsettle_account: ''
+                                    vName: '',
+                                    vAddress: '',
+                                    vPhone: '',
+                                    vEmail:'',
+                                    vFax: '',
+                                    vCredit: '',
+                                    vSettleAccount: ''
                                 };
                                 this.dialogFormVisible = false;
                             }
                         }).catch(failedResponse => {
                             this.$message.error(failedResponse.data.message);
                         });
-                    }).catch(error =>{
+                    }).catch(()=>{
                         console.log("提交失败");
                         this.$message({
                         message: '无法提交，表单中数据有错误',
@@ -529,7 +526,7 @@
                 // //删除从数据源中tableData获得的数据
                 // this.tableData.forEach((value,i)=>{
                 //     //通过主码快速过滤
-                //     if(value.vid!=delItem.vid){
+                //     if(value.vid!==delItem.vid){
                 //         this.filterTableDataEnd.push(value);
                 //     }
                 // });
@@ -559,9 +556,9 @@
                             this.tableDataEnd=this.filterTableDataEnd;
                             this.filterTableDataEnd=[];
                             //删除从数据源中tableData获得的数据
-                            this.tableData.forEach((value,i)=>{
+                            this.tableData.forEach((value)=>{
                                 //通过主码快速过滤
-                                if(value.vid!=delItem.vid){
+                                if(value.vid!==delItem.vid){
                                     this.filterTableDataEnd.push(value);
                                 }
                             });
@@ -575,7 +572,7 @@
                             this.$message.error("删除失败");
                         }
 
-                    }).catch(failResponse =>{
+                    }).catch(() =>{
                         //用户同意删除情况下数据库删除失败
                         this.$message({
                             type: 'info',
@@ -598,14 +595,6 @@
 </script>
 
 <style scoped>
-  .text {
-    font-size: 14px;
-  }
-
-  .item {
-    margin-bottom: 50px;
-
-  }
   .box-card {
     width: 75%;
   }
