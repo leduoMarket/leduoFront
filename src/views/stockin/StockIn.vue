@@ -282,10 +282,11 @@
         //过滤器
         // 创建的时候发送请求获取显示数据库所有员工的列表数据
         created() {
-            this.tableDataEnd=[];
-            this.tableData.forEach((value,index)=>{
-                this.tableDataEnd.push(value);
-            });
+            // this.tableDataEnd=[];
+            // this.tableData.forEach((value,index)=>{
+            //     this.tableDataEnd.push(value);
+            // });
+            this.tableData =  [];
             this.$axios.get("/staff/stockInList").then(res => {
                 if (res.data.code==200) {
                     console.log(res);
@@ -377,6 +378,7 @@
                 this.tableData.forEach((value,index)=>{
                     if(selectTag=="inumber"){
                         if(value.inumber){
+                            let inumber = ""+value.inumber;
                             if(inumber.search(this.searchInput)!==-1){
                                 this.filterTableDataEnd.push(value)
                             }
@@ -384,7 +386,8 @@
                     }
                     if(selectTag=="vname"){
                         if(value.vname){
-                            if(value.vname.search(this.searchInput)!==-1){
+                            let vname = ""+value.vname;
+                            if(vname.search(this.searchInput)!==-1){
                                 this.filterTableDataEnd.push(value)
                             }
                         }
@@ -400,6 +403,7 @@
                     }
                     if(selectTag=="idate"){
                         if(value.idate){
+                            let idate = ""+value.idate;
                             if(value.idate.search(this.searchInput)!==-1){
                                 this.filterTableDataEnd.push(value)
                             }
@@ -511,24 +515,25 @@
                 this.submitBtn=true;
                 //前端测试部分
                 //将信息刷新到表格中，指向同一个数据源所以只添加一次
-                this.tableDataEnd.unshift(this.addform);
-                this.tableData.unshift(this.tableDataEnd);
-                //清空填写单的信息放到请求体中，避免请求延迟已经被清空才刷新在信息到表格中
-                this.addform = {
-                    inumber : '',
-                    gid : '',
-                    vname : '',
-                    idate : '',
-                    iprice: '',
-                    ipayment: '',
-                    icount: '',
-                };
-                this.dialogFormVisible = false;
+                // this.tableDataEnd.unshift(this.addform);
+                // this.tableData.unshift(this.tableDataEnd);
+                // //清空填写单的信息放到请求体中，避免请求延迟已经被清空才刷新在信息到表格中
+                // this.addform = {
+                //     inumber : '',
+                //     gid : '',
+                //     vname : '',
+                //     idate : '',
+                //     iprice: '',
+                //     ipayment: '',
+                //     icount: '',
+                // };
+                // this.dialogFormVisible = false;
                 this.$refs.addform.validate()  //判断表单验证是否通过，验证通过执行.then()，否则执行.catch()
                     .then(res =>{
-                        if(this.addLastForm===this.addform){
-                            this.$message.warning('您已经提交过，请勿重复提交');
-                        }
+                        console.log("正则成功");
+                        // if(this.addLastForm===this.addform){
+                        //     this.$message.warning('您已经提交过，请勿重复提交');
+                        // }
                         this.$axios.post('/staff/stockInAdd',{
                             inumber:this.addform.inumber,
                             gid:this.addform.gid,
@@ -539,16 +544,8 @@
                             icount:this.addform.icount,
                         }).then(successResponse =>{
                             if(successResponse.data.code === 200){
-                                this.submitBtn=false;
-                                this.addSuccessful = true;
-                                this.$message({
-                                    message: '成功添加一条记录',
-                                    type: 'success',
-                                });
-                                //将信息刷新到表格中，指向同一个数据源所以只添加一次
-                                this.tableDataEnd.push(this.addform);
-                                this.tableData.push(this.addform);
-
+                                this.tableDataEnd.unshift(this.addform);
+                                this.tableData.unshift(this.tableDataEnd);
                                 //清空填写单的信息放到请求体中，避免请求延迟已经被清空才刷新在信息到表格中
                                 this.addform = {
                                     inumber : '',
@@ -560,6 +557,20 @@
                                     icount: '',
                                 };
                                 this.dialogFormVisible = false;
+                                this.submitBtn=false;
+                                this.addSuccessful = true;
+                                this.$message({
+                                    message: '成功添加一条记录',
+                                    type: 'success',
+                                });
+                                //将信息刷新到表格中，指向同一个数据源所以只添加一次
+                            }
+                            if(successResponse.data.code==201){
+                                this.$message({
+                                    message: successResponse.data.message,
+                                    type: 'error',
+                                });
+                                this.submitBtn = false;
                             }
                         }).catch(failedResponse =>{
                             this.addSuccessful = false;
