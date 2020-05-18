@@ -73,12 +73,14 @@
         <el-table-column
           prop="vname"
           label="供应商名称"
-          width="180"
+          width="120"
         >
         </el-table-column>
         <el-table-column
           prop="vaddress"
-          label="地址">
+          label="地址"
+          width="120"
+        >
         </el-table-column>
         <el-table-column
           prop="vphone"
@@ -147,41 +149,41 @@
                 // 从后台传来的初始数据
                 tableData: [
                     {
-                        vid: '20200401',
+                        vid: 20200401,
                         vname: '王二虎',
                         vaddress: '北极西南',
-                        vphone: '13677273048',
+                        vphone: 13677273048,
                         vemail:'2409981311@qq.com',
                         vfax: '123',
-                        vcredit: '1',
-                        vsettle_account: '10000'
+                        vcredit: 1,
+                        vsettle_account: 10000
                     },{
-                        vid: '20200402',
+                        vid: 20200402,
                         vname: '王小虎',
                         vaddress: '成都双流',
-                        vphone: '17289891212',
+                        vphone: 17289891212,
                         vemail:'230339223@qq.com',
                         vfax: '3333',
-                        vcredit: '2',
-                        vsettle_account: '40.0'
+                        vcredit: 2,
+                        vsettle_account: 40.0
                     },{
-                        vid: '20180901',
+                        vid: 20180901,
                         vname: '李承',
                         vaddress: '甘肃金山',
-                        vphone: '18922002121',
+                        vphone: 18922002121,
                         vemail:'12902229@qq.com',
                         vfax: '2ss',
-                        vcredit: '3',
-                        vsettle_account: '5222'
+                        vcredit: 3,
+                        vsettle_account: 5222
                     },{
-                        vid: '20180203',
+                        vid: 20180203,
                         vname: '宋丽',
                         vaddress: '甘肃成安',
-                        vphone: '13711293939',
+                        vphone: 13711293939,
                         vemail:'676710@qq.com',
                         vfax: 'wewee',
-                        vcredit: '2',
-                        vsettle_account: '10000'
+                        vcredit: 2,
+                        vsettle_account: 10000
                     }
                 ],
                 //删除的元素是谁
@@ -277,7 +279,7 @@
       // 创建的时候发送请求获取显示数据库所有员工的列表数据
       created() {
           this.$axios.get("/home/Vender").then(res=>{
-              if(res.data){
+              if(res.data.code===200){
                   console.log(res);
                   this.tableData = res.data;
                   this.totalItems = this.tableData.length;
