@@ -37,11 +37,15 @@
         >
         </el-table-column>
         <el-table-column
-          prop="level_string"
+          prop="levelString"
           label="级别">
         </el-table-column>
         <el-table-column
-          prop="create_time"
+          prop="createdTime"
+          label="创建时间">
+        </el-table-column>
+        <el-table-column
+          prop="handler"
           label="创建时间">
         </el-table-column>
       </el-table>
@@ -75,10 +79,10 @@
                     value:'message',
                     label:'日志信息',
                 },{
-                    value:'level_string',
+                    value:'levelString',
                     label:'级别',
                 },{
-                    value:'create_time',
+                    value:'createdTime',
                     label:'创建时间',
                 }],
                 value: '',
@@ -146,9 +150,9 @@
                             }
                         }
                     }
-                    if(selectTag=="level_string"){
-                        if(value.level_string){
-                            if(value.level_string.search(this.searchInput)!==-1){
+                    if(selectTag=="levelString"){
+                        if(value.levelString){
+                            if(value.levelString.search(this.searchInput)!==-1){
                                 this.filterTableDataEnd.push(value)
                             }
                         }
