@@ -3,14 +3,12 @@
     <el-card class="box-card">
       <div slot="header" class="clearfix">
         <span>商品分类表</span>
-        <a href="http://localhost:8080/home/goods">
-        <el-button style="float: right; padding: 3px 0" type="text">返回</el-button>
-        </a>
+        <el-button style="float: right; padding: 3px 0" type="text"  @click="goBack">返回</el-button>
       </div>
       <div class="form">
         <el-table
           :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)"
-          border
+          size="mini"
           style="width: 100%">
             <el-table-column label="商品大类">
               <el-table-column
@@ -1002,6 +1000,9 @@
                 this.currentPage = currentPage;
                 console.log(this.currentPage)
             },
+            goBack(){
+                this.$router.go(-1);
+            }
         },
     }
 </script>

@@ -178,7 +178,7 @@
                     console.log(this.tableDataEnd);
                 }
             }).catch(fail =>{
-                this.$message.warning(fail.message);
+                this.$message.warning(fail.data.message);
             });
 
         },
@@ -195,12 +195,12 @@
                         status:item.uStatus
                     }).then(()=>{
                         this.$message({
-                            type: 'info',
+                            type: 'success',
                             message: '修改成功'
                         });
                     }).catch(() =>{
                         this.$message({
-                            type: 'info',
+                            type: 'error',
                             message: '修改失败'
                         });
                     })
@@ -214,12 +214,12 @@
                     status:item.uStatus
                 }).then(res =>{
                     this.$message({
-                        type: 'info',
+                        type: 'success',
                         message: res.data.message
                     });
                 }).catch(() =>{
                     this.$message({
-                        type: 'info',
+                        type: 'error',
                         message: '修改失败'
                     });
                 });

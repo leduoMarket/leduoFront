@@ -149,21 +149,28 @@
                     console.log(this.user1.role);
                     sessionStorage.setItem('user','1234567');
                     sessionStorage.setItem('role','1');
-                    this.$router.replace({path: '/home/firstPage'})
+                    sessionStorage.setItem('uid',JSON.stringify(this.loginForm.uid));
+                    this.$router.replace({path: '/home/firstPage'});
                 }else if(this.loginForm.uid == this.user2.username){
                     console.log(this.user2.role);
                     sessionStorage.setItem('user','2234567');
                     sessionStorage.setItem('role','2');
-                    this.$router.replace({path:'/homet/firstPage'})
+
+                    sessionStorage.setItem('uid',JSON.stringify(this.loginForm.uid));
+                    this.$router.replace({path:'/homet/firstPage'});
+
                 }else if(this.loginForm.uid == this.user3.username){
                     console.log(this.user3.role);
                     sessionStorage.setItem('user','3234567');
                     sessionStorage.setItem('role','3');
+                    sessionStorage.setItem('uid',JSON.stringify(this.loginForm.uid));
                     this.$router.replace({path:'/homes/firstPage'})
                 }
                 this.$refs.loginForm.validate()
                     .then(res => {
                         this.loadingBtn = false;
+                        //这里是验证码的地方
+                        this.refreshCode();
                         this.$axios
                             .post('/login', {
                                 uid:this.loginForm.uid,
@@ -179,21 +186,22 @@
                                     //键值对，值：string，不能是json
                                     sessionStorage.setItem('user',successResponse.data.data.sessionId);
                                     // sessionStorage.setItem('uid',this.loginForm.uid);
-
                                     console.log("role from dataBase:"+successResponse.data.data.role);
                                     if(successResponse.data.data.role == 1){
                                         // sessionStorage.setItem('role',successResponse.data.role);
                                         sessionStorage.setItem('role','1');
                                         console.log("管理员");
-                                        this.$router.replace({path: '/home/firstPage'})
+                                        this.$message.success(successResponse.data.message);
+                                        this.$router.replace({path: '/home/firstPage'});
                                     }else if(successResponse.data.data.role == 2){
                                         sessionStorage.setItem('role','2');
-                                        sessionStorage.setItem('uid',JSON.stringify(this.loginForm.uid));
+                                        this.$message.success(successResponse.data.message);
                                     //     sessionStorage.setItem('role',successResponse.data.role);
                                         console.log("财务");
                                         this.$router.replace({path:'/homet/firstPage'})
                                     }else if(successResponse.data.data.role == 3){
                                         sessionStorage.setItem('role','3');
+                                        this.$message.success(successResponse.data.message);
                                         // sessionStorage.setItem('role',successResponse.data.role);
                                         console.log("员工");
                                         this.$router.replace({path:'/homes/firstPage'})
@@ -212,7 +220,7 @@
 
                    }).catch(error =>{
                      this.$message({
-                      message: '无法提交，用户名或者密码格式错误',
+                      message: '无法提交，用户名或者密码格式错误或者验证码错误',
                        type: 'error'
                     });
                 });

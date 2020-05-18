@@ -3,7 +3,7 @@
   <el-card class="box-card">
     <div slot="header" class="clearfix">
       <span>登陆账号</span>
-      <el-button style="float: right; padding: 3px 0" type="text" @click="goBack">返回</el-button>
+      <el-button style="float: right; padding: 3px 0" type="text" @click="goBack">返回首页</el-button>
     </div>
     <div  class="text item">
 
@@ -97,23 +97,36 @@
                     uid:this.form.eid,
                 }
             }).then(res =>{
-                this.form.eid=res.data.data.uid;
-                this.form.ename=res.data.data.userName;
-                this.form.ephone=res.data.data.phone;
-                this.form.erole=res.data.data.role;
-
+                if(res.data.code===200){
+                    this.form.eid=res.data.data.uid;
+                    this.form.ename=res.data.data.userName;
+                    this.form.ephone=res.data.data.phone;
+                    this.form.erole=res.data.data.role;
+                }
             }).catch(failResponse =>{
-
+                this.$message.error(failResponse.data.message);
             });
 
         },
         methods:{
             goBack() {
-                this.$router.go(-1)
+                let role = sessionStorage.getItem("role");
+                if(role === "1"){
+                    this.$router.replace({path: '/home/firstPage'});
+                }else if(role === "2"){
+                    this.$router.replace({path:'/homet/firstPage'})
+                }else if(role === "3"){
+                    this.$router.replace({path:'/homes/firstPage'})
+                }
+                this.$router.go(-1);
             },
             submit(){
                 this.$refs.form.validate()
                     .then(res =>{
+                        if(this.form.epwd1 === this.from.epwd2){
+                            this.$message.info("两次密码一样");
+                            return;
+                        }
                         this.$confirm('此操作将修改你的密码, 是否继续?', '提示', {
                             confirmButtonText: '确定',
                             cancelButtonText: '取消',
@@ -126,7 +139,7 @@
                                     pwd2:md5(this.form.epwd2),
                                 }
                             }).then(successResponse =>{
-                                if(successResponse.data.code == 200){
+                                if(successResponse.data.code === 200){
                                     this.$message({
                                         type: 'success',
                                         message: successResponse.data.message
@@ -135,7 +148,7 @@
                             }).catch(failedResponse =>{
                                 this.$message({
                                     type: 'info',
-                                    message: '修改失败，您的密码可能错误!'
+                                    message: failedResponse.data.message
                                 });
 
 
@@ -147,7 +160,8 @@
                                 message: '已取消修改'
                             });
                         });
-                    }).catch(failResponse =>{
+                    }).catch(() =>{
+                        this.$message.error("密码格式不对");
 
                 });
 

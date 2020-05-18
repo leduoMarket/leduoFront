@@ -276,10 +276,40 @@
         },
       // 创建的时候发送请求获取显示数据库所有员工的列表数据
       created() {
-          this.$axios.get("/home/Vender").then(res=>{
-              if(res.data){
-                  console.log(res);
-                  this.tableData = res.data;
+            this.tableData=[];
+          this.$axios.get("/staff/getAllVenders").then(res=>{
+              if(res.data.code===200){
+                  let item = {
+                      vid: '',
+                      vname: '',
+                      vaddress: '',
+                      vphone: '',
+                      vemail:'',
+                      vfax: '',
+                      vcredit: '',
+                      vsettle_account: ''
+                  };
+                  res.data.data.forEach(value=>{
+                      item.vid=value.vid;
+                      item.vname =value.vname;
+                      item.vaddress=value.vaddress;
+                      item.vphone=value.vphone;
+                      item.vemail=value.vemail;
+                      item.vfax = value.vfax;
+                      item.vcredit= value.vcredit;
+                      item.vsettle_account=value.vsettleAccount;
+                      this.tableData.push(item);
+                      item = {
+                          vid: '',
+                          vname: '',
+                          vaddress: '',
+                          vphone: '',
+                          vemail:'',
+                          vfax: '',
+                          vcredit: '',
+                          vsettle_account: ''
+                      };
+                  });
                   this.totalItems = this.tableData.length;
                   this.tableDataEnd=[];
                   this.tableData.forEach((value,index)=>{
@@ -400,7 +430,7 @@
             addVender(){
                 this.$refs.addform.validate()
                     .then(res =>{
-                        this.$axios.post('/home/addVender', {
+                        this.$axios.post('/staff/addVender', {
                             vid: this.addform.vid,
                             vname: this.addform.vname,
                             vaddress: this.addform.vaddress,
@@ -408,7 +438,7 @@
                             vemail: this.addform.vemail,
                             vfax: this.addform.vfax,
                             vcredit: this.addform.vcredit,
-                            vsettle_account: this.addform.vsettle_account,
+                            vsettleAccount: this.addform.vsettle_account,
 
                         }).then(successResponse => {
                             if (successResponse.data.code === 200) {
@@ -466,11 +496,8 @@
                     type:'warning'
                 }).then(() =>{
                     //如果用户确实要删除，则用delete方式删除，并且传递要删除的记录的eid
-                    this.$axios.delete('/home/delVender',{
-                        params:{
-                            venderId: delItem.vid
-                        }
-                    }).then(successResponse =>{
+                    this.$axios.delete('/staff/delVender?venderId='+delItem.vid
+                    ).then(successResponse =>{
                         //数据库删除成功在table表里进行删除,
                         this.filterTableDataEnd=[];
                         //删除在表格中tableDataEnd显示的哪个数据
