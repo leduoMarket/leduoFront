@@ -1,7 +1,7 @@
 <template>
   <div class="goods">
   <el-card class="box-card">
-    <div slot="header" class="clearfix">
+    <div slot="header" class="clearFix">
       <span>商品表</span>
            <!-- 新建页面-->
         <el-button style="float: right; padding: 3px 0" type="text"  @click="goToClass">分类规则</el-button>
@@ -12,8 +12,8 @@
           <el-form-item label="商品代码" :label-width="formLabelWidth" prop="gid">
             <el-input v-model="dataInfo.gid" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="商品名称" :label-width="formLabelWidth" prop="gname">
-            <el-input v-model="dataInfo.gname" autocomplete="off"></el-input>
+          <el-form-item label="商品名称" :label-width="formLabelWidth" prop="gName">
+            <el-input v-model="dataInfo.gName" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item label="商品类别" :label-width="formLabelWidth" prop="categories">
           <el-input v-model="dataInfo.categories" autocomplete="off"></el-input>
@@ -21,8 +21,8 @@
           <el-form-item label="生产地址" :label-width="formLabelWidth" prop="address">
             <el-input v-model="dataInfo.address" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="计价单位" :label-width="formLabelWidth" prop="charge_unit">
-            <el-input v-model="dataInfo.charge_unit" autocomplete="off"></el-input>
+          <el-form-item label="计价单位" :label-width="formLabelWidth" prop="chargeUnit">
+            <el-input v-model="dataInfo.chargeUnit" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item label="生产日期" :label-width="formLabelWidth" prop="gdate">
             <el-input v-model="dataInfo.gdate" autocomplete="off"></el-input>
@@ -37,15 +37,6 @@
       </el-dialog>
 
     </div>
-    <!--    查询模块-->
-    <!--<div class="text item">
-      <el-input style="width: 300px"
-                placeholder="请输入商品编号"
-                v-model="searchInput"
-                clearable>
-      </el-input>
-      <el-button round @click="beginSearch">查询</el-button>
-    </div>-->
     <div class="form">
       <el-select v-model="selectTags" clearable size="medium"  placeholder="请选择" value="" >
         <el-option
@@ -60,7 +51,7 @@
       <el-button type="primary" icon="el-icon-search" @click="doFilter"  size="medium" round  plain>搜索</el-button>
       <el-button type="primary" icon="el-icon-refresh" @click="doReset" size="medium"  round  plain >重置</el-button>
       <el-table
-        :data="tableDataEnd.slice((currentPage-1)*pagesize,currentPage*pagesize)"
+        :data="tableDataEnd.slice((currentPage-1)*pageSize,currentPage*pageSize)"
         border
         style="width: 100%" @sort-change="changeTableSort">
         <el-table-column
@@ -71,7 +62,7 @@
         >
         </el-table-column>
         <el-table-column
-          prop="gname"
+          prop="gName"
           label="商品名称"
           width="150">
         </el-table-column>
@@ -86,7 +77,7 @@
           width="200">
         </el-table-column>
         <el-table-column
-          prop="charge_unit"
+          prop="chargeUnit"
           label="计价单位"
           width="100">
         </el-table-column>
@@ -103,7 +94,7 @@
         </el-table-column>
         <el-table-column
           fixed = "right"
-          prop="esalary"
+          prop="gHandle"
           label="操作">
           <!--          默认为每一行增加删除操作，只需要在methods里面定义就好-->
           <template slot-scope="scope">
@@ -116,7 +107,7 @@
         @current-change="handleCurrentChange"
         :current-page="currentPage"
         :page-sizes="[3,5, 10, 20]"
-        :page-size="pagesize"
+        :page-size="pageSize"
         layout="total, sizes, prev, pager, next, jumper"
         :total="tableDataEnd.length">
       </el-pagination>
@@ -144,17 +135,17 @@
                 //显示页面的表单数据
                 tableData: [{
                     gid:1234567,
-                    gname:'肥皂1',
+                    gName:'肥皂1',
                     categories:'生活用品',
                     address:'世纪金都',
-                    charge_unit:'1',
+                    chargeUnit:'1',
                     gdate:'2020-09-04'},
                 {
                     gid:2345678,
-                    gname:'肥皂2',
+                    gName:'肥皂2',
                     categories:'生活用品2',
                     address:'世纪金都2',
-                    charge_unit:'2',
+                    chargeUnit:'2',
                     gdate:'2020-10-04'}
                 ],
                 //删除的元素是谁
@@ -166,16 +157,15 @@
                 // 用于新增表单数据时的绑定
                 dataInfo: {
                     gid:'',
-                    gname:'',
+                    gName:'',
                     categories:'',
                     address:'',
-                    charge_unit:'',
+                    chargeUnit:'',
                     gdate:''
                 },
                 formLabelWidth: '120px',
-                pagesize:5,
+                pageSize:5,
                 currentPage:1, //初始页
-                searchInput:'',
 
                 //初始数据的长度
                 totalItems:0,
@@ -192,7 +182,7 @@
                     gid:[
                         {required:true ,validator: reg_gid,  trigger: 'blur'}
                     ],
-                    gname:[
+                    gName:[
                         {required:true ,validator: reg_gname,  trigger: 'blur'}
                     ],
                     categories:[
@@ -201,7 +191,7 @@
                     address:[
                         {required:true ,validator: reg_address,  trigger: 'blur'}
                     ],
-                    charge_unit:[
+                    chargeUnit:[
                         {required:true ,validator: reg_gchange_unit,  trigger: 'blur'}
                     ],
                     gdate:[
@@ -213,7 +203,7 @@
                     value: 'gid',
                     label: '商品代码'
                 }, {
-                    value: 'gname',
+                    value: 'gName',
                     label: '商品名称'
                 }, {
                     value: 'categories',
@@ -226,15 +216,15 @@
         // 创建的时候发送请求获取显示数据库列表数据
         created() {
             //前端代码测试
-            // this.tableDataEnd=[];
-            // this.tableData.forEach((value,)=>{
-            //     this.tableDataEnd.push(value);
-            // });
+           /* this.tableDataEnd=[];
+            this.tableData.forEach((value,)=>{
+                this.tableDataEnd.push(value);
+            });*/
             this.tableData=[];
             this.$axios.get("/home/goods").then(res => {
                 if(res.data.code === 200){
                     this.tableData = res.data.data;
-                    this.itemCount = res.data.data.length;
+                    this.totalItems = res.data.data.length;
                     this.tableDataEnd=[];
                     this.tableData.forEach((value)=>{
                         this.tableDataEnd.push(value);
@@ -252,10 +242,10 @@
             changeTableSort(column){
                 console.log(column);
                 //获取字段名称和排序类型
-                var fieldName = column.prop;
-                var sortingType = column.order;
+                let fieldName = column.prop;
+                let sortingType = column.order;
                 //按照降序排序
-                if(sortingType == "descending"){
+                if(sortingType === "descending"){
                     this.tableDataEnd = this.tableData.sort((a, b) => b[fieldName] - a[fieldName]);
                 }
                 //按照升序排序
@@ -266,9 +256,13 @@
             },
 
             doFilter(){
-                var selectTag = this.selectTags;
-                if(this.searchInput == ""){
+                let selectTag = this.selectTags;
+                if(this.searchInput === ""){
                     this.$message.warning("查询信息不能为空！！！");
+                    return;
+                }
+                if(selectTag === ""){
+                    this.$message.warning("查询条件不能为空！！！");
                     return;
                 }
                 //去空格
@@ -276,7 +270,7 @@
                 this.tableDataEnd=[];
                 this.filterTableDataEnd=[];
                 this.tableData.forEach((value,index)=>{
-                    if(selectTag=="gid"){
+                    if(selectTag==="gid"){
                         if(value.gid){
                             let gid = ""+value.gid;
                             if(gid.search(this.searchInput)!==-1){
@@ -284,15 +278,15 @@
                             }
                         }
                     }
-                    if(selectTag=="gname"){
-                        if(value.gname){
-                            let gname = ""+value.gname;
-                            if(gname.search(this.searchInput)!==-1){
+                    if(selectTag==="gName"){
+                        if(value.gName){
+                            let gName = ""+value.gName;
+                            if(gName.search(this.searchInput)!==-1){
                                 this.filterTableDataEnd.push(value)
                             }
                         }
                     }
-                    if(selectTag=="categories"){
+                    if(selectTag==="categories"){
                         if(value.categories){
                             let categories = ""+value.categories;
                             if(categories.search(this.searchInput)!==-1){
@@ -302,6 +296,7 @@
                     }
                     console.log(index);
                 });
+                this.tableDataEnd=[];
                 this.tableDataEnd=this.filterTableDataEnd;
                 this.filterTableDataEnd=[];
             },
@@ -313,9 +308,9 @@
             //日期格式化显示
             dateFormat:function(row,column){
 
-                var date = row[column.property];
+                let date = row[column.property];
 
-                if(date == undefined){return ''};
+                if(date === undefined){return ''}
 
                 return moment(date).format("YYYY-MM-DD")
 
@@ -329,60 +324,42 @@
 
                 // return row[property] == value;
             },
-            // 初始页currentPage、初始每页数据数pagesize和数据data
+            // 初始页currentPage、初始每页数据数pageSize和数据data
             handleSizeChange: function (size) {
-                this.pagesize = size;
-                console.log(this.pagesize)
+                this.pageSize = size;
+                console.log(this.pageSize)
             },
             handleCurrentChange: function (currentPage) {
                 this.currentPage = currentPage;
                 console.log(this.currentPage)
             },
-            //查询
-            beginSearch(){
-                this.$axios.get('/home/queryGoods',{
-                    params:{
-                        gid:this.searchInput,
-                    }
-                }).then(successfulResponse=>{
-                    console.log('this.tableData'+successfulResponse.data);
-                    this.tableData=[];
-                    this.tableData.push(successfulResponse.data);
-                    this.$message({
-                        message: '成功找到记录',
-                        type: 'success'
-                    });
-                }).catch(failedResponse=>{
-                    this.$message('没有找到记录哦');
-                })
-            },
             // 删除选中下标的一行数据，index由click处的scope.$index传过来的小标，delItem由scope.$row传过来的元素
             del(delItem, index){
                 // //前端代码测试
-                //数据库删除成功在table表里进行删除,
-                // this.filterTableDataEnd = [];
-                // //删除在表格中tableDataEnd显示的哪个数据
-                // this.tableDataEnd.forEach((value, i) => {
-                //     if (i !== index) {
-                //         this.filterTableDataEnd.push(value);
-                //     }
-                // });
-                // this.tableDataEnd = this.filterTableDataEnd;
-                // this.filterTableDataEnd = [];
-                //
-                // //删除从数据源中tableData获得的数据
-                // this.tableData.forEach((value, i) => {
-                //     //通过主码快速过滤
-                //     if (value.gid != delItem.gid || value.gname != delItem.gname || value.categories != delItem.categories || value.address != delItem.address || value.charge_unit != delItem.charge_unit || value.gdate != delItem.gdate) {
-                //         this.filterTableDataEnd.push(value);
-                //     }
-                // });
-                // this.tableData = this.filterTableDataEnd;
-                // this.filterTableDataEnd = [];
-                // this.$message({
-                //     type: 'success',
-                //     message: '删除成功!'
-                // });
+                /*//数据库删除成功在table表里进行删除,
+                this.filterTableDataEnd = [];
+                //删除在表格中tableDataEnd显示的哪个数据
+                this.tableDataEnd.forEach((value, i) => {
+                    if (i !== index) {
+                        this.filterTableDataEnd.push(value);
+                    }
+                });
+                this.tableDataEnd = this.filterTableDataEnd;
+                this.filterTableDataEnd = [];
+
+                //删除从数据源中tableData获得的数据
+                this.tableData.forEach((value, i) => {
+                    //通过主码快速过滤
+                    if (value.gid !== delItem.gid || value.gName !== delItem.gName || value.categories !== delItem.categories || value.address !== delItem.address || value.chargeUnit !== delItem.chargeUnit || value.gdate !== delItem.gdate) {
+                        this.filterTableDataEnd.push(value);
+                    }
+                });
+                this.tableData = this.filterTableDataEnd;
+                this.filterTableDataEnd = [];
+                this.$message({
+                    type: 'success',
+                    message: '删除成功!'
+                });*/
                 this.$confirm('你确定要删除这条记录吗？','提示',{
                     confirmButtonText:'确定',
                     cancelButtonText:'取消',
@@ -407,9 +384,9 @@
                             this.filterTableDataEnd = [];
 
                             //删除从数据源中tableData获得的数据
-                            this.tableData.forEach((value, i) => {
+                            this.tableData.forEach((value) => {
                                 //通过主码快速过滤
-                                if (value.gid != delItem.gid || value.gname != delItem.gname || value.categories != delItem.categories || value.address != delItem.address || value.charge_unit != delItem.charge_unit || value.gdate != delItem.gdate) {
+                                if (value.gid !== delItem.gid || value.gName !== delItem.gName || value.categories !== delItem.categories || value.address !== delItem.address || value.chargeUnit !== delItem.chargeUnit || value.gdate !== delItem.gdate) {
                                     this.filterTableDataEnd.push(value);
                                 }
                             });
@@ -444,43 +421,43 @@
             //去商品分类
             goToClass(){
               let role = sessionStorage.getItem("role");
-              if(role == "1"){
+              if(role === "1"){
                   this.$router.replace("/home/goodClass");
-              }else if(role =="2") {
+              }else if(role ==="2") {
                   this.$router.replace("/homet/goodClass");
 
-              }else if(role == "3"){
+              }else if(role === "3"){
                   this.$router.replace("/homes/goodClass");
               }
             },
             //新增表单操作
             addGoods(){
                 //前端代码测试
-                // this.addSuccessful = true;
-                // //将信息刷新到表格中
-                // this.tableData.unshift(this.dataInfo);
-                // this.tableDataEnd.unshift(this.dataInfo);
-                // this.$message({
-                //     message: '成功添加一条记录',
-                //     type: 'success',
-                // });
-                // //清空填写单的信息放到请求体中，避免请求延迟已经被清空才刷新在信息到表格中
-                // this.dataInfo = {
-                //     gid : '',
-                //     gname : '',
-                //     categories: '',
-                //     address : '',
-                //     charge_unit : '',
-                //     gdate: '',
-                // };
+              /*  this.dialogFormVisible = false;
+                //将信息刷新到表格中
+                this.tableData.unshift(this.dataInfo);
+                this.tableDataEnd.unshift(this.dataInfo);
+                this.$message({
+                    message: '成功添加一条记录',
+                    type: 'success',
+                });
+                //清空填写单的信息放到请求体中，避免请求延迟已经被清空才刷新在信息到表格中
+                this.dataInfo = {
+                    gid : '',
+                    gName : '',
+                    categories: '',
+                    address : '',
+                    chargeUnit : '',
+                    gdate: '',
+                };*/
                 this.$refs.dataInfo.validate()
-                    .then(res =>{
+                    .then(() =>{
                         this.$axios.post('/home/Goods',{
                             gid:this.dataInfo.gid,
-                            gname:this.dataInfo.gname,
+                            gName:this.dataInfo.gName,
                             categories:this.dataInfo.categories,
                             address:this.dataInfo.address,
-                            charge_unit:this.dataInfo.charge_unit,
+                            chargeUnit:this.dataInfo.chargeUnit,
                             gdate:this.dataInfo.gdate
                         }).then(successResponse =>{
                             if(successResponse.data.code === 200){
@@ -495,10 +472,10 @@
                                 //清空填写单的信息放到请求体中，避免请求延迟已经被清空才刷新在信息到表格中
                                 this.dataInfo = {
                                     gid : '',
-                                    gname : '',
+                                    gName : '',
                                     categories: '',
                                     address : '',
-                                    charge_unit : '',
+                                    chargeUnit : '',
                                     gdate: '',
                                 };
                             }else {
@@ -514,7 +491,7 @@
                             });
 
                         } );
-                    }).catch(error =>{
+                    }).catch(() =>{
                     this.$message({
                         message: '无法提交，表单中数据有错误',
                         type: 'error'
@@ -529,15 +506,6 @@
 </script>
 
 <style scoped>
-
-  .text {
-    font-size: 14px;
-  }
-
-  .item {
-    margin-bottom: 50px;
-
-  }
   .box-card {
     width: 75%;
   }

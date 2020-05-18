@@ -1,7 +1,7 @@
 <template>
   <div class="GoodPrice">
   <el-card class="box-card">
-    <div slot="header" class="clearfix">
+    <div slot="header" class="clearFix">
       <span>商品定价</span>
       <el-button style="float: right; padding: 3px 0" type="text" @click="dialogFormVisible = true">新建</el-button>
       <el-dialog title="商品定价" :visible.sync="dialogFormVisible">
@@ -9,39 +9,31 @@
           <el-form-item label="商品代码" :label-width="formLabelWidth" prop="gid">
             <el-input v-model="dataInfo.gid" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="商品名称" :label-width="formLabelWidth" prop="gname">
-            <el-input v-model="dataInfo.gname" autocomplete="off"></el-input>
+          <el-form-item label="商品名称" :label-width="formLabelWidth" prop="gName">
+            <el-input v-model="dataInfo.gName" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="历史价格" :label-width="formLabelWidth" prop="pold_price">
-            <el-input v-model="dataInfo.pold_price" autocomplete="off"></el-input>
+          <el-form-item label="历史价格" :label-width="formLabelWidth" prop="pOldPrice">
+            <el-input v-model="dataInfo.pOldPrice" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="调整价格" :label-width="formLabelWidth" prop="pnew_price">
-            <el-input v-model="dataInfo.pnew_price" autocomplete="off"></el-input>
+          <el-form-item label="调整价格" :label-width="formLabelWidth" prop="pNewPrice">
+            <el-input v-model="dataInfo.pNewPrice" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="调整原因" :label-width="formLabelWidth" prop="preason">
-            <el-input v-model="dataInfo.preason" autocomplete="off"></el-input>
+          <el-form-item label="调整原因" :label-width="formLabelWidth" prop="pReason">
+            <el-input v-model="dataInfo.pReason" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="调整日期" :label-width="formLabelWidth" prop="pdate">
-            <el-input v-model="dataInfo.pdate" autocomplete="off"></el-input>
+          <el-form-item label="调整日期" :label-width="formLabelWidth" prop="pDate">
+            <el-input v-model="dataInfo.pDate" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="操作人员" :label-width="formLabelWidth" prop="phandler">
-            <el-input v-model="dataInfo.phandler" autocomplete="off"></el-input>
+          <el-form-item label="操作人员" :label-width="formLabelWidth" prop="pHandler">
+            <el-input v-model="dataInfo.pHandler" autocomplete="off"></el-input>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisible = false">取 消</el-button>
-          <el-button type="primary" @click="addcommodityPricing">确 定</el-button>
+          <el-button type="primary" @click="addCommodityPricing">确 定</el-button>
         </div>
       </el-dialog>
     </div>
-<!--    <div class="text item">-->
-<!--      <el-input style="width: 300px"-->
-<!--                placeholder="请输入商品编号"-->
-<!--                v-model="searchInput"-->
-<!--                clearable>-->
-<!--      </el-input>-->
-<!--      <el-button round @click="beginSearch">查询</el-button>-->
-<!--    </div>-->
     <div class="form">
       <el-select v-model="selectTags" clearable size="medium"  placeholder="请选择" value="" >
         <el-option
@@ -55,7 +47,7 @@
       <el-button type="primary" icon="el-icon-search" @click="doFilter"  size="medium" round  plain>搜索</el-button>
       <el-button type="primary" icon="el-icon-refresh" @click="doReset" size="medium"  round  plain >重置</el-button>
       <el-table
-        :data="tableDataEnd.slice((currentPage-1)*pagesize,currentPage*pagesize)"
+        :data="tableDataEnd.slice((currentPage-1)*pageSize,currentPage*pageSize)"
         border
         style="width: 100%"   ref="filterTable" @sort-change="changeTableSort">
         <el-table-column
@@ -66,26 +58,26 @@
         >
         </el-table-column>
         <el-table-column
-          prop="gname"
+          prop="gName"
           label="商品名称"
           width="120">
         </el-table-column>
         <el-table-column
-          prop="pold_price"
+          prop="pOldPrice"
           label="历史价格"
           width="80">
         </el-table-column>
         <el-table-column
-          prop="pnew_price"
+          prop="pNewPrice"
           label="调整价格"
           width="80">
         </el-table-column>
         <el-table-column
-          prop="preason"
+          prop="pReason"
           label="调整原因">
         </el-table-column>
         <el-table-column
-          prop="pdate"
+          prop="pDate"
           label="日期"
           :formatter="dateFormat"
 
@@ -96,11 +88,11 @@
         >
         </el-table-column>
         <el-table-column
-          prop="phandler"
+          prop="pHandler"
           label="操作人">
         </el-table-column>
         <el-table-column
-          prop="esalary"
+          prop="pHandle"
           label="操作">
           <template slot-scope="scope">
             <el-button style="float: left; padding-right: 3px;" type="text">
@@ -114,7 +106,7 @@
         @current-change="handleCurrentChange"
         :current-page="currentPage"
         :page-sizes="[3,5, 10, 20]"
-        :page-size="pagesize"
+        :page-size="pageSize"
         layout="total, sizes, prev, pager, next, jumper"
         :total="tableDataEnd.length">
       </el-pagination>
@@ -145,52 +137,52 @@
                 // 在基础表格中展示的数据
                 tableData: [{
                     gid: 1231231231234,
-                    gname: 'ioio',
-                    pold_price: 2.3,
-                    pnew_price: 3.4,
-                    preason: "坏了",
-                    pdate: '2020-01-01',
-                    phandler: '李妮',
+                    gName: '西瓜',
+                    pOldPrice: 2.3,
+                    pNewPrice: 3.4,
+                    pReason: "坏了",
+                    pDate: '2020-01-01',
+                    pHandler: '李妮',
                 },{
                     gid: 1231231231235,
-                    gname: 'oooo',
-                    pold_price: 5.3,
-                    pnew_price: 4.4,
-                    preason: "坏了",
-                    pdate: '2020-05-01',
-                    phandler: '李子妮',
+                    gName: '火龙果',
+                    pOldPrice: 5.3,
+                    pNewPrice: 4.4,
+                    pReason: "坏了",
+                    pDate: '2020-05-01',
+                    pHandler: '李子妮',
                 },{
                     gid: 1231231231236,
-                    gname: 'erere',
-                    pold_price: 3.3,
-                    pnew_price: 2.4,
-                    preason: "好的",
-                    pdate: '2020-01-12',
-                    phandler: '李顺妮',
+                    gName: '奶茶',
+                    pOldPrice: 3.3,
+                    pNewPrice: 2.4,
+                    pReason: "好的",
+                    pDate: '2020-01-12',
+                    pHandler: '李顺妮',
                 },{
                     gid: 1231231231234,
-                    gname: 'ioio',
-                    pold_price: 2.3,
-                    pnew_price: 3.4,
-                    preason: "坏了",
-                    pdate: '2020-01-01',
-                    phandler: '李妮',
+                    gName: '火锅',
+                    pOldPrice: 2.3,
+                    pNewPrice: 3.4,
+                    pReason: "坏了",
+                    pDate: '2020-01-01',
+                    pHandler: '李妮',
                 },{
                     gid: 1231231231234,
-                    gname: 'ioio',
-                    pold_price: 2.3,
-                    pnew_price: 3.4,
-                    preason: "坏了",
-                    pdate: '2020-01-01',
-                    phandler: '李妮',
+                    gName: '饺子',
+                    pOldPrice: 2.3,
+                    pNewPrice: 3.4,
+                    pReason: "坏了",
+                    pDate: '2020-01-01',
+                    pHandler: '李妮',
                 },{
                     gid: 1231231231234,
-                    gname: 'ioio',
-                    pold_price: 2.3,
-                    pnew_price: 3.4,
-                    preason: "坏了",
-                    pdate: '2020-01-01',
-                    phandler: '李妮',
+                    gName: '面条',
+                    pOldPrice: 2.3,
+                    pNewPrice: 3.4,
+                    pReason: "坏了",
+                    pDate: '2020-01-01',
+                    pHandler: '李妮',
                 }
 
                 ],
@@ -202,15 +194,15 @@
                 // 用于新增数据绑定
                 dataInfo: {
                     gid: '',
-                    gname: '',
-                    pold_price: '',
-                    pnew_price: '',
-                    preason: '',
-                    pdate: '',
-                    phandler: '',
+                    gName: '',
+                    pOldPrice: '',
+                    pNewPrice: '',
+                    pReason: '',
+                    pDate: '',
+                    pHandler: '',
                 },
                 formLabelWidth: '120px',
-                pagesize:5,  //分页数量
+                pageSize:5,  //分页数量
                 currentPage:1 ,//初始页
 
                 totalItems:0,
@@ -226,23 +218,23 @@
                     value: 'gid',
                     label: '商品编号'
                 }, {
-                    value: 'gname',
+                    value: 'gName',
                     label: '商品名称'
                 }, {
-                    value: 'pold_price',
+                    value: 'pOldPrice',
                     label: '历史价格'
 
                 }, {
-                    value: 'pnew_price',
+                    value: 'pNewPrice',
                     label: '调整价格'
                 }, {
-                    value: 'preason',
+                    value: 'pReason',
                     label: '调整原因'
                 },{
-                    value: 'pdate',
+                    value: 'pDate',
                     label: '调整日期'
                 },{
-                    value: 'phandler',
+                    value: 'pHandler',
                     label: '操作人'
                 }
                 ],
@@ -252,22 +244,22 @@
                     gid:[
                         {required:true ,validator: reg_gid,  trigger: 'blur'}
                     ],
-                    gname:[
+                    gName:[
                         {required:true ,validator: reg_gname,  trigger: 'blur'}
                     ],
-                    pold_price:[
+                    pOldPrice:[
                         {required:true ,validator: reg_money,  trigger: 'blur'}
                     ],
-                    pnew_price:[
+                    pNewPrice:[
                         {required:true ,validator: reg_money,  trigger: 'blur'}
                     ],
-                    preason:[
+                    pReason:[
                         {required:true ,validator: reg_reason,  trigger: 'blur'}
                     ],
-                    pdate:[
+                    pDate:[
                         {required:true ,validator: reg_date,  trigger: 'blur'}
                     ],
-                    phandler:[
+                    pHandler:[
                         {required:true ,validator: reg_ename,  trigger: 'blur'}
                     ]
                 },
@@ -276,21 +268,21 @@
         // 创建的时候发送请求获取显示数据库所有退货单的列表数据
         created() {
             //前端测试部分
-            // this.tableDataEnd=[];
-            // this.tableData.forEach((value,index)=>{
-            //     this.tableDataEnd.push(value);
-            // });
+            /*this.tableDataEnd=[];
+            this.tableData.forEach((value,index)=>{
+                this.tableDataEnd.push(value);
+            });*/
             this.tableData=[];
             this.$axios.get("/home/commodityPricing").then(res=>{
                 if(res.data.code === 200){
                     this.tableData = res.data.data;
-                    this.itemCount = res.data.data.length;
+                    this.totalItems = res.data.data.length;
                     this.tableDataEnd=[];
                     this.tableData.forEach((value)=>{
                         this.tableDataEnd.push(value);
                     });
                 }
-            }).catch(failResponse=>{
+            }).catch(()=>{
                 this.$message({
                     type: 'info',
                     message: '无法获取数据'
@@ -303,10 +295,10 @@
             changeTableSort(column){
                 console.log(column);
                 //获取字段名称和排序类型
-                var fieldName = column.prop;
-                var sortingType = column.order;
+                let fieldName = column.prop;
+                let sortingType = column.order;
                 //按照降序排序
-                if(sortingType == "descending"){
+                if(sortingType === "descending"){
                     this.tableDataEnd = this.tableData.sort((a, b) => b[fieldName] - a[fieldName]);
                 }
                 //按照升序排序
@@ -316,10 +308,10 @@
                 }
             },
 
-            // 初始页currentPage、初始每页数据数pagesize和数据data
+            // 初始页currentPage、初始每页数据数pageSize和数据data
             handleSizeChange: function (size) {
-                this.pagesize = size;
-                console.log(this.pagesize)
+                this.pageSize = size;
+                console.log(this.pageSize)
             },
             handleCurrentChange: function (currentPage) {
                 this.currentPage = currentPage;
@@ -332,10 +324,11 @@
             //日期格式化显示
             dateFormat:function(row,column){
 
-                var date = row[column.property];
+                let date = row[column.property];
 
-                if(date == undefined){return ''};
-
+                if(date === undefined){
+                    return '';
+                }
                 return moment(date).format("YYYY-MM-DD")
 
             },
@@ -349,7 +342,7 @@
                 // return row[property] == value;
             },
             doFilter(){
-                var selectTag = this.selectTags;
+                let selectTag = this.selectTags;
                 if(this.searchInput === ""){
                     this.$message.warning("查询信息不能为空！！！");
                     return;
@@ -361,8 +354,8 @@
                 this.searchInput = this.searchInput.trim();
                 this.tableDataEnd=[];
                 this.filterTableDataEnd=[];
-                this.tableData.forEach((value,index)=>{
-                    if(selectTag=="gid"){
+                this.tableData.forEach((value)=>{
+                    if(selectTag==="gid"){
                         if(value.gid){
                             let gid = "" + value.gid;
                             if(gid.search(this.searchInput)!==-1){
@@ -370,50 +363,50 @@
                             }
                         }
                     }
-                    if(selectTag=="gname"){
-                        if(value.gname){
-                            let gname = ""+value.gname;
-                            if(gname.search(this.searchInput)!==-1){
+                    if(selectTag==="gName"){
+                        if(value.gName){
+                            let gName = ""+value.gName;
+                            if(gName.search(this.searchInput)!==-1){
                                 this.filterTableDataEnd.push(value)
                             }
                         }
                     }
-                    if(selectTag=="pold_price"){
-                        if(value.pold_price){
-                            let pold_price = "" + value.pold_price;
-                            if(pold_price.search(this.searchInput)!==-1){
+                    if(selectTag==="pOldPrice"){
+                        if(value.pOldPrice){
+                            let pOldPrice = "" + value.pOldPrice;
+                            if(pOldPrice.search(this.searchInput)!==-1){
                                 this.filterTableDataEnd.push(value)
                             }
                         }
                     }
-                    if(selectTag=="pnew_price"){
-                        if(value.pnew_price){
-                            let pnew_price = "" + value.pnew_price;
-                            if(pnew_price.search(this.searchInput)!==-1){
+                    if(selectTag==="pNewPrice"){
+                        if(value.pNewPrice){
+                            let pNewPrice = "" + value.pNewPrice;
+                            if(pNewPrice.search(this.searchInput)!==-1){
                                 this.filterTableDataEnd.push(value)
                             }
                         }
                     }
-                    if(selectTag=="preason"){
-                        if(value.preason){
-                            let preason = ""+ value.preason;
-                            if(preason.search(this.searchInput)!==-1){
+                    if(selectTag==="pReason"){
+                        if(value.pReason){
+                            let pReason = ""+ value.pReason;
+                            if(pReason.search(this.searchInput)!==-1){
                                 this.filterTableDataEnd.push(value)
                             }
                         }
                     }
-                    if(selectTag=="pdate"){
-                        if(value.pdate){
-                            let pdate = ""+value.pdate;
-                            if(pdate.search(this.searchInput)!==-1){
+                    if(selectTag==="pDate"){
+                        if(value.pDate){
+                            let pDate = ""+value.pDate;
+                            if(pDate.search(this.searchInput)!==-1){
                                 this.filterTableDataEnd.push(value)
                             }
                         }
                     }
-                    if(selectTag=="phandler"){
-                        if(value.phandler){
-                            let phandler = ""+value.phandler;
-                            if(phandler.search(this.searchInput)!==-1){
+                    if(selectTag==="pHandler"){
+                        if(value.pHandler){
+                            let pHandler = ""+value.pHandler;
+                            if(pHandler.search(this.searchInput)!==-1){
                                 this.filterTableDataEnd.push(value)
                             }
                         }
@@ -426,58 +419,39 @@
             doReset(){
                 this.searchInput="";
                 this.tableDataEnd=[];
-                this.tableData.forEach((value,index)=>{
+                this.tableData.forEach((value)=>{
                     this.tableDataEnd.push(value);
                 });
             },
-            //查询
-            beginSearch(){
-                this.$axios.get('/home/querycommodityPricing',{
-                    params:{
-                        gid:this.searchInput,
-                    }
-                }).then(successfulResponse=>{
-                    console.log('this.tableData'+successfulResponse.data);
-                    this.tableData=[];
-                    this.tableData.push(successfulResponse.data);
-                    this.$message({
-                        message: '成功找到记录',
-                        type: 'success'
-                    });
-                }).catch(failedResponse=>{
-                    this.$message('没有找到记录哦');
-                });
-                this.searchInput='';
-            },
-            addcommodityPricing() {
+            addCommodityPricing() {
                 //前端测试部分
-                // this.dialogFormVisible = false;
-                // this.tableData.unshift(this.dataInfo);
-                // this.tableDataEnd.unshift(this.dataInfo);
-                // // 将填写框置空，方便下次填写
-                // this.dataInfo = {
-                //     gid: '',
-                //     gname: '',
-                //     pold_price: '',
-                //     pnew_price: '',
-                //     preason: '',
-                //     pdate: '',
-                //     phandler: '',
-                // };
-                // this.$message({
-                //     message: '成功添加一条记录',
-                //     type: 'success'
-                // });
+             /*   this.dialogFormVisible = false;
+                this.tableData.unshift(this.dataInfo);
+                this.tableDataEnd.unshift(this.dataInfo);
+                // 将填写框置空，方便下次填写
+                this.dataInfo = {
+                    gid: '',
+                    gName: '',
+                    pOldPrice: '',
+                    pNewPrice: '',
+                    pReason: '',
+                    pDate: '',
+                    pHandler: '',
+                };
+                this.$message({
+                    message: '成功添加一条记录',
+                    type: 'success'
+                });*/
                 this.$refs.dataInfo.validate()
-                    .then(res =>{
+                    .then(() =>{
                         this.$axios.post('/home/addcommodityPricing', {
                             gid: this.dataInfo.gid,
-                            gname: this.dataInfo.gname,
-                            poldPrice: this.dataInfo.pold_price,
-                            pnewPrice: this.dataInfo.pnew_price,
-                            preason: this.dataInfo.preason,
-                            pdate: this.dataInfo.pdate,
-                            phandler: this.dataInfo.phandler,
+                            gName: this.dataInfo.gName,
+                            pOldPrice: this.dataInfo.pOldPrice,
+                            pNewPrice: this.dataInfo.pNewPrice,
+                            pReason: this.dataInfo.pReason,
+                            pDate: this.dataInfo.pDate,
+                            pHandler: this.dataInfo.pHandler,
                         }).then(successResponse => {
                             if (successResponse.data.code === 200) {
                                 this.dialogFormVisible = false;
@@ -486,12 +460,12 @@
                                 // 将填写框置空，方便下次填写
                                 this.dataInfo = {
                                     gid: '',
-                                    gname: '',
-                                    pold_price: '',
-                                    pnew_price: '',
-                                    preason: '',
-                                    pdate: '',
-                                    phandler: '',
+                                    gName: '',
+                                    pOldPrice: '',
+                                    pNewPrice: '',
+                                    pReason: '',
+                                    pDate: '',
+                                    pHandler: '',
                                 };
                                 this.$message({
                                     message: '成功添加一条记录',
@@ -503,11 +477,11 @@
                                     type: 'error'
                                 });
                             }
-                        }).catch(failedResponse => {
+                        }).catch(() => {
                             this.$message.error('插入数据失败');
                         });
 
-                    }).catch(error =>{
+                    }).catch(() =>{
                     this.$message({
                         message: '无法提交，表单中数据有错误',
                         type: 'error'
@@ -520,31 +494,31 @@
             // 删除选中下标的一行数据，index由click处的scope.$index传过来的下标，delItem由scope.$row传过来的元素
             del(delItem, index) {
                 //前端测试部分
-                // this.filterTableDataEnd=[];
-                // //删除在表格中tableDataEnd显示的哪个数据
-                // this.tableDataEnd.forEach((value,i)=>{
-                //     if(i !==index){
-                //         this.filterTableDataEnd.push(value);
-                //     }
-                // });
-                // this.tableDataEnd=this.filterTableDataEnd;
-                // this.filterTableDataEnd=[];
-                //
-                // //删除从数据源中tableData获得的数据
-                // this.tableData.forEach((value,i)=>{
-                //     //通过主码快速过滤
-                //     if(value.gid!=delItem.gid||value.gname!=delItem.gname||value.pold_price!=delItem.pold_price||value.pnew_price!=delItem.pnew_price||value.preason!=delItem.preason||value.pdate!=delItem.pdate||value.phandler!=delItem.phandler){
-                //
-                //         this.filterTableDataEnd.push(value);
-                //     }
-                // });
-                // this.tableData = this.filterTableDataEnd;
-                // this.filterTableDataEnd=[];
-                //
-                // this.$message({
-                //     type: 'success',
-                //     message: '删除成功!'
-                // });
+             /*   this.filterTableDataEnd=[];
+                //删除在表格中tableDataEnd显示的哪个数据
+                this.tableDataEnd.forEach((value,i)=>{
+                    if(i !==index){
+                        this.filterTableDataEnd.push(value);
+                    }
+                });
+                this.tableDataEnd=this.filterTableDataEnd;
+                this.filterTableDataEnd=[];
+
+                //删除从数据源中tableData获得的数据
+                this.tableData.forEach((value,i)=>{
+                    //通过主码快速过滤
+                    if(value.gid!=delItem.gid||value.gName!=delItem.gName||value.pOldPrice!=delItem.pOldPrice||value.pNewPrice!=delItem.pNewPrice||value.pReason!=delItem.pReason||value.pDate!=delItem.pDate||value.pHandler!=delItem.pHandler){
+
+                        this.filterTableDataEnd.push(value);
+                    }
+                });
+                this.tableData = this.filterTableDataEnd;
+                this.filterTableDataEnd=[];
+
+                this.$message({
+                    type: 'success',
+                    message: '删除成功!'
+                });*/
                 console.log(delItem);
                 this.$confirm('你确定要删这条记录？', '提示', {
                     confirmButtonText: '确定',
@@ -570,9 +544,9 @@
                             this.filterTableDataEnd=[];
 
                             //删除从数据源中tableData获得的数据
-                            this.tableData.forEach((value,i)=>{
+                            this.tableData.forEach((value)=>{
                                 //通过主码快速过滤
-                                if(value.gid!=delItem.gid||value.gname!=delItem.gname||value.pold_price!=delItem.pold_price||value.pnew_price!=delItem.pnew_price||value.preason!=delItem.preason||value.pdate!=delItem.pdate||value.phandler!=delItem.phandler){
+                                if(value.gid!==delItem.gid||value.gName!==delItem.gName||value.pOldPrice!==delItem.pOldPrice||value.pNewPrice!==delItem.pNewPrice||value.pReason!==delItem.pReason||value.pDate!==delItem.pDate||value.pHandler!==delItem.pHandler){
 
                                     this.filterTableDataEnd.push(value);
                                 }
@@ -591,7 +565,7 @@
                             });
                         }
 
-                    }).catch(failedResponse => {
+                    }).catch(() => {
                         this.$message({
                             type: 'info',
                             message: '删除失败'
@@ -611,14 +585,6 @@
 </script>
 
 <style scoped>
-  .text {
-    font-size: 14px;
-  }
-
-  .item {
-    margin-bottom: 50px;
-
-  }
   .box-card {
     width: 75%;
   }

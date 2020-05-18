@@ -283,11 +283,11 @@
         // 创建的时候发送请求获取显示数据库所有员工的列表数据
         created() {
             //前端测试代码
-            /*this.tableDataEnd=[];
+            this.tableDataEnd=[];
             this.tableData.forEach((value,index)=>{
                 this.tableDataEnd.push(value);
             });
-            this.tableData =  [];*/
+            /*this.tableData =  [];*/
             this.$axios.get("/staff/stockInList").then(res => {
                 if (res.data.code===200) {
                     this.tableData = res.data.data;
@@ -311,14 +311,6 @@
         },
 
         methods: {
-            /*//初始化加载列表
-            getDeviceTypes() {
-                this.loading = true;         //将“创建时间”转换为所需的时间格式
-                 this.tableData.map(item => {
-                     item.createTime = this.$moment(item.createTime).format("YYYY-MM-DD HH:mm:ss");
-                 });
-                 this.loading = false;
-                 },*/
 
             //分页排序整体表格数据
             changeTableSort(column){
