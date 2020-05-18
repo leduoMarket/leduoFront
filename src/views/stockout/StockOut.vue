@@ -259,19 +259,17 @@
       // 创建的时候发送请求获取显示数据库所有员工的列表数据
       created() {
 
-          this.tableData.forEach((value,index)=>{
-              this.tableDataEnd.push(value);
-          });
-
+         this.tableData=[];
           this.$axios.get("/staff/stockOut").then(res => {
-              if (res.data) {
-                  console.log(res);
-                  this.tableData = res.data;
+              if (res.data.code === 200) {
+
+                  this.tableData = res.data.data;
                   this.totalItems = this.tableData.length;
-                  this.tableData.forEach((value,index)=>{
+                  this.tableDataEnd= [];
+                  this.tableData.forEach((value)=>{
                       this.tableDataEnd.push(value);
                   });
-                  console.log(this.tableData.length);
+
               }
           }).catch(failResponse => {
 
@@ -414,23 +412,23 @@
             addStockOut() {
                 //前端测试部分
                 // 让表格消失
-                this.dialogFormVisible = false;
-                this.tableData.unshift(this.dataInfo);
-                this.tableDataEnd.unshift(this.dataInfo);
-                // 将填写框置空，方便下次填写
-                this.dataInfo = {
-                    gid: '',
-                    vname: '',
-                    onumber: '',
-                    odate: '',
-                    oprice: '',
-                    opayment: '',
-                    ocount: ''
-                };
-                this.$message({
-                    message: '成功添加一条记录',
-                    type: 'success'
-                });
+                // this.dialogFormVisible = false;
+                // this.tableData.unshift(this.dataInfo);
+                // this.tableDataEnd.unshift(this.dataInfo);
+                // // 将填写框置空，方便下次填写
+                // this.dataInfo = {
+                //     gid: '',
+                //     vname: '',
+                //     onumber: '',
+                //     odate: '',
+                //     oprice: '',
+                //     opayment: '',
+                //     ocount: ''
+                // };
+                // this.$message({
+                //     message: '成功添加一条记录',
+                //     type: 'success'
+                // });
 
                 this.$refs.dataInfo.validate()
                     .then(res =>{
@@ -486,30 +484,30 @@
 
             // 删除选中下标的一行数据，index由click处的scope.$index传过来的小标，delItem由scope.$row传过来的元素
             del(delItem, index){
-                console.log(delItem);
-                this.filterTableDataEnd=[];
-                //删除在表格中tableDataEnd显示的哪个数据
-                this.tableDataEnd.forEach((value,i)=>{
-                    if(i !==index){
-                        this.filterTableDataEnd.push(value);
-                    }
-                });
-                this.tableDataEnd=this.filterTableDataEnd;
-                this.filterTableDataEnd=[];
-
-                //删除从数据源中tableData获得的数据
-                this.tableData.forEach((value,i)=>{
-                    //通过主码快速过滤
-                    if(value.onumber!=delItem.onumber){
-                        this.filterTableDataEnd.push(value);
-                    }
-                });
-                this.tableData = this.filterTableDataEnd;
-                this.filterTableDataEnd=[];
-                this.$message({
-                    type: 'success',
-                    message: '删除成功!'
-                });
+                // console.log(delItem);
+                // this.filterTableDataEnd=[];
+                // //删除在表格中tableDataEnd显示的哪个数据
+                // this.tableDataEnd.forEach((value,i)=>{
+                //     if(i !==index){
+                //         this.filterTableDataEnd.push(value);
+                //     }
+                // });
+                // this.tableDataEnd=this.filterTableDataEnd;
+                // this.filterTableDataEnd=[];
+                //
+                // //删除从数据源中tableData获得的数据
+                // this.tableData.forEach((value,i)=>{
+                //     //通过主码快速过滤
+                //     if(value.onumber!=delItem.onumber){
+                //         this.filterTableDataEnd.push(value);
+                //     }
+                // });
+                // this.tableData = this.filterTableDataEnd;
+                // this.filterTableDataEnd=[];
+                // this.$message({
+                //     type: 'success',
+                //     message: '删除成功!'
+                // });
                 this.$confirm('你确定要删除这条记录吗？','提示',{
                     confirmButtonText:'确定',
                     cancelButtonText:'取消',

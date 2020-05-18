@@ -292,13 +292,13 @@
                     this.tableData = res.data.data;
                     this.totalItems = this.tableData.length;
                     this.tableDataEnd=[];
-                    this.tableData.forEach((value,index)=>{
+                    this.tableData.forEach((value)=>{
                         this.tableDataEnd.push(value);
                     });
                 }else{
                     this.$message({
                         type: 'info',
-                        message: this.res.data.message
+                        message: res.data.message
                     });
                 }
             }).catch(failResponse => {
@@ -541,10 +541,6 @@
                 // this.dialogFormVisible = false;
                 this.$refs.addform.validate()  //判断表单验证是否通过，验证通过执行.then()，否则执行.catch()
                     .then(res =>{
-                        console.log("正则成功");
-                        // if(this.addLastForm===this.addform){
-                        //     this.$message.warning('您已经提交过，请勿重复提交');
-                        // }
                         this.$axios.post('/staff/stockInAdd',{
                             inumber:this.addform.inumber,
                             gid:this.addform.gid,

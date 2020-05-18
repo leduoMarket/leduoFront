@@ -134,7 +134,7 @@
         reg_gchange_unit,
         reg_date,
     } from "../login/validator";
-    import moment from 'moment'
+    import moment from 'moment';
     export default {
         name: "Goods",
         data() {
@@ -226,23 +226,25 @@
         // 创建的时候发送请求获取显示数据库列表数据
         created() {
             //前端代码测试
-            this.tableDataEnd=[];
-            this.tableData.forEach((value,index)=>{
-                this.tableDataEnd.push(value);
-            });
+            // this.tableDataEnd=[];
+            // this.tableData.forEach((value,)=>{
+            //     this.tableDataEnd.push(value);
+            // });
+            this.tableData=[];
             this.$axios.get("/home/goods").then(res => {
-                if(res.data){
-                    console.log(res);
-                    this.tableData = res.data;
-                    this.itemCount = res.data.length;
+                if(res.data.code === 200){
+                    this.tableData = res.data.data;
+                    this.itemCount = res.data.data.length;
                     this.tableDataEnd=[];
-                    this.tableData.forEach((value,index)=>{
+                    this.tableData.forEach((value)=>{
                         this.tableDataEnd.push(value);
                     });
-                    console.log(this.itemCount);
                 }
             }).catch(failResponse => {
-
+                this.$message({
+                    type: 'info',
+                    message: failResponse.data.message
+                });
             })
         },
         methods: {
@@ -357,7 +359,7 @@
             // 删除选中下标的一行数据，index由click处的scope.$index传过来的小标，delItem由scope.$row传过来的元素
             del(delItem, index){
                 // //前端代码测试
-                // //数据库删除成功在table表里进行删除,
+                //数据库删除成功在table表里进行删除,
                 // this.filterTableDataEnd = [];
                 // //删除在表格中tableDataEnd显示的哪个数据
                 // this.tableDataEnd.forEach((value, i) => {
@@ -417,12 +419,17 @@
                                 type: 'success',
                                 message: '删除成功!'
                             });
+                        }else {
+                            this.$message({
+                                type: 'info',
+                                message: successResponse.data.message
+                            });
                         }
                     }).catch(failResponse =>{
                         //用户同意删除情况下数据库删除失败
                         this.$message({
                             type: 'info',
-                            message: '删除失败'
+                            message: failResponse.data.message
                         });
                     })
                 }).catch(() =>{
@@ -476,8 +483,8 @@
                             charge_unit:this.dataInfo.charge_unit,
                             gdate:this.dataInfo.gdate
                         }).then(successResponse =>{
-                            if(successResponse.data.code == 200){
-                                this.addSuccessful = true;
+                            if(successResponse.data.code === 200){
+                                this.dialogFormVisible = false;
                                 //将信息刷新到表格中
                                 this.tableData.unshift(this.dataInfo);
                                 this.tableDataEnd.unshift(this.dataInfo);
@@ -494,20 +501,19 @@
                                     charge_unit : '',
                                     gdate: '',
                                 };
+                            }else {
+                                this.$message({
+                                    message: successResponse.data.message,
+                                    type: 'error'
+                                });
                             }
                         }).catch(failedResponse =>{
+                            this.$message({
+                                message: failedResponse.data.message,
+                                type: 'error'
+                            });
 
                         } );
-                        // 让表格消失
-                        this.dataInfo = {
-                            gid : '',
-                            gname : '',
-                            categories:'',
-                            address : '',
-                            charge_unit : '',
-                            gdate: '',
-                        };
-                        this.dialogFormVisible = false;
                     }).catch(error =>{
                     this.$message({
                         message: '无法提交，表单中数据有错误',

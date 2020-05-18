@@ -200,24 +200,26 @@
         // 创建的时候发送请求获取显示数据库所有退货单的列表数据
         created() {
             //前端代码测试
-            // this.tableDataEnd=[];
-            // this.tableData.forEach((value,index)=>{
-            //     this.tableDataEnd.push(value);
-            // });
-            // console.log("tabledata"+this.tableData);
-            // console.log("tabledataend"+this.tableDataEnd);
+            this.tableData=[];
             this.$axios.get("/home/goodsReturn").then(res=>{
-                if(res.data.code==200){
+                if(res.data.code===200){
                     console.log(res);
-                    this.tableData = res.data;
-                    this.itemCount = res.data.length;
+                    this.tableData = res.data.data;
                     this.tableDataEnd=[];
-                    this.tableData.forEach((value,index)=>{
+                    this.tableData.forEach((value)=>{
                         this.tableDataEnd.push(value);
                     });
-                    console.log(this.itemCount);
+                }else{
+                    this.$message({
+                        type: 'info',
+                        message: this.res.data.message
+                    });
                 }
             }).catch(failResponse=>{
+                this.$message({
+                    type: 'info',
+                    message: failResponse.data.message
+                });
 
             })
         },
@@ -342,13 +344,13 @@
             },
             addGoodsReturn() {
                 // 前端测试代码，将push改为unshift
-                    // this.addSuccessful = true;
-                    // this.tableData.unshift(this.dataInfo);
-                    // this.tableDataEnd.unshift(this.dataInfo);
-                    // this.$message({
-                    //     message: '成功添加一条记录',
-                    //     type: 'success'
-                    // })
+                //     this.addSuccessful = true;
+                //     this.tableData.unshift(this.dataInfo);
+                //     this.tableDataEnd.unshift(this.dataInfo);
+                //     this.$message({
+                //         message: '成功添加一条记录',
+                //         type: 'success'
+                //     });
                     this.$refs.dataInfo.validate()
                         .then(res => {
                             this.$axios.post('/home/addgoodsReturn', {
@@ -358,7 +360,8 @@
                                 rcount: this.dataInfo.rcount,
                             }).then(successResponse => {
                                 if (successResponse.data.code === 200) {
-                                    this.addSuccessful = true;
+
+                                    this.dialogFormVisible = false;
                                     this.tableData.unshift(this.dataInfo);
                                     this.tableDataEnd.unshift(this.dataInfo);
                                     this.dataInfo = {
@@ -372,25 +375,20 @@
                                         type: 'success'
                                     });
                                 } else {
-                                    this.addSuccessful = false;
-                                    this.$message.error('插入数据失败');
+                                    this.$message({
+                                        message: successResponse.data.message,
+                                        type: 'error',
+                                    });
                                 }
                             }).catch(failedResponse => {
                                 this.addSuccessful = false;
-                                this.$message.error('插入数据失败');
+                                this.$message({
+                                    message:failedResponse.data.message,
+                                    type: 'error'
+                                });
                             });
 
-                            // 让表格消失
-                            this.dialogFormVisible = false;
-                            // 将填写框置空，方便下次填写
-                            // this.dataInfo = {
-                            //     gid: '',
-                            //     rdate: '',
-                            //     rreason: '',
-                            //     rcount: '',
-                            // };
                         }).catch(error => {
-                        console.log("提交失败");
                         this.$message({
                             message: '无法提交，表单中数据有错误',
                             type: 'error'
@@ -403,7 +401,7 @@
             // 删除选中下标的一行数据，index由click处的scope.$index传过来的下标，delItem由scope.$row传过来的元素
             del(delItem, index) {
                 //删除前端测试
-                // //数据库删除成功在table表里进行删除,
+                //数据库删除成功在table表里进行删除,
                 // this.filterTableDataEnd = [];
                 // //删除在表格中tableDataEnd显示的哪个数据
                 // this.tableDataEnd.forEach((value, i) => {
@@ -427,8 +425,7 @@
                 //     type: 'success',
                 //     message: '删除成功!'
                 // });
-                //
-                // console.log(delItem);
+
                 this.$confirm('你确定要删这条记录？', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
@@ -465,6 +462,11 @@
                                 type: 'success',
                                 message: '删除成功!'
                             });
+                        }else {
+                            this.$message({
+                                type: 'info',
+                                message: '删除失败'
+                            });
                         }
                     }).catch(failedResponse => {
                         this.$message({
@@ -479,7 +481,6 @@
                         message: '已删除取消'
                     });
                 });
-                console.log(delItem);
             }
         }
     }

@@ -275,22 +275,26 @@
         },
         // 创建的时候发送请求获取显示数据库所有退货单的列表数据
         created() {
-            this.tableDataEnd=[];
-            this.tableData.forEach((value,index)=>{
-                this.tableDataEnd.push(value);
-            });
+            //前端测试部分
+            // this.tableDataEnd=[];
+            // this.tableData.forEach((value,index)=>{
+            //     this.tableDataEnd.push(value);
+            // });
+            this.tableData=[];
             this.$axios.get("/home/commodityPricing").then(res=>{
-                if(res.data){
-                    console.log(res);
-                    this.tableData = res.data;
-                    this.itemCount = res.data.length;
+                if(res.data.code === 200){
+                    this.tableData = res.data.data;
+                    this.itemCount = res.data.data.length;
                     this.tableDataEnd=[];
-                    this.tableData.forEach((value,index)=>{
+                    this.tableData.forEach((value)=>{
                         this.tableDataEnd.push(value);
                     });
-                    console.log(this.itemCount);
                 }
             }).catch(failResponse=>{
+                this.$message({
+                    type: 'info',
+                    message: '无法获取数据'
+                });
 
             })
         },
@@ -447,23 +451,23 @@
             },
             addcommodityPricing() {
                 //前端测试部分
-                this.dialogFormVisible = false;
-                this.tableData.unshift(this.dataInfo);
-                this.tableDataEnd.unshift(this.dataInfo);
-                // 将填写框置空，方便下次填写
-                this.dataInfo = {
-                    gid: '',
-                    gname: '',
-                    pold_price: '',
-                    pnew_price: '',
-                    preason: '',
-                    pdate: '',
-                    phandler: '',
-                };
-                this.$message({
-                    message: '成功添加一条记录',
-                    type: 'success'
-                });
+                // this.dialogFormVisible = false;
+                // this.tableData.unshift(this.dataInfo);
+                // this.tableDataEnd.unshift(this.dataInfo);
+                // // 将填写框置空，方便下次填写
+                // this.dataInfo = {
+                //     gid: '',
+                //     gname: '',
+                //     pold_price: '',
+                //     pnew_price: '',
+                //     preason: '',
+                //     pdate: '',
+                //     phandler: '',
+                // };
+                // this.$message({
+                //     message: '成功添加一条记录',
+                //     type: 'success'
+                // });
                 this.$refs.dataInfo.validate()
                     .then(res =>{
                         this.$axios.post('/home/addcommodityPricing', {
@@ -516,31 +520,31 @@
             // 删除选中下标的一行数据，index由click处的scope.$index传过来的下标，delItem由scope.$row传过来的元素
             del(delItem, index) {
                 //前端测试部分
-                this.filterTableDataEnd=[];
-                //删除在表格中tableDataEnd显示的哪个数据
-                this.tableDataEnd.forEach((value,i)=>{
-                    if(i !==index){
-                        this.filterTableDataEnd.push(value);
-                    }
-                });
-                this.tableDataEnd=this.filterTableDataEnd;
-                this.filterTableDataEnd=[];
-
-                //删除从数据源中tableData获得的数据
-                this.tableData.forEach((value,i)=>{
-                    //通过主码快速过滤
-                    if(value.gid!=delItem.gid||value.gname!=delItem.gname||value.pold_price!=delItem.pold_price||value.pnew_price!=delItem.pnew_price||value.preason!=delItem.preason||value.pdate!=delItem.pdate||value.phandler!=delItem.phandler){
-
-                        this.filterTableDataEnd.push(value);
-                    }
-                });
-                this.tableData = this.filterTableDataEnd;
-                this.filterTableDataEnd=[];
-
-                this.$message({
-                    type: 'success',
-                    message: '删除成功!'
-                });
+                // this.filterTableDataEnd=[];
+                // //删除在表格中tableDataEnd显示的哪个数据
+                // this.tableDataEnd.forEach((value,i)=>{
+                //     if(i !==index){
+                //         this.filterTableDataEnd.push(value);
+                //     }
+                // });
+                // this.tableDataEnd=this.filterTableDataEnd;
+                // this.filterTableDataEnd=[];
+                //
+                // //删除从数据源中tableData获得的数据
+                // this.tableData.forEach((value,i)=>{
+                //     //通过主码快速过滤
+                //     if(value.gid!=delItem.gid||value.gname!=delItem.gname||value.pold_price!=delItem.pold_price||value.pnew_price!=delItem.pnew_price||value.preason!=delItem.preason||value.pdate!=delItem.pdate||value.phandler!=delItem.phandler){
+                //
+                //         this.filterTableDataEnd.push(value);
+                //     }
+                // });
+                // this.tableData = this.filterTableDataEnd;
+                // this.filterTableDataEnd=[];
+                //
+                // this.$message({
+                //     type: 'success',
+                //     message: '删除成功!'
+                // });
                 console.log(delItem);
                 this.$confirm('你确定要删这条记录？', '提示', {
                     confirmButtonText: '确定',
