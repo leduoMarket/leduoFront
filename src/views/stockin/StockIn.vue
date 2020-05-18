@@ -468,36 +468,38 @@
                     type:'warning'
                 }).then(() =>{
                     //如果用户确实要删除，则用delete方式删除，并且传递要删除的记录的eid
-                    this.$axios.delete('/staff/delstockIn?stockInId='+delItem.inumber).then(successResponse =>{
-                        this.filterTableDataEnd=[];
-                        //删除在表格中tableDataEnd显示的哪个数据
-                        this.tableDataEnd.forEach((value,i)=>{
-                            if(i !==index){
-                                this.filterTableDataEnd.push(value);
-                            }
-                        });
-                        this.tableDataEnd=this.filterTableDataEnd;
-                        this.filterTableDataEnd=[];
+                    this.$axios.delete('/staff/delstockIn?inumber='+delItem.inumber)
+                        .then(successResponse =>{
+                            if(successResponse.data.code===200){
+                                this.filterTableDataEnd=[];
+                                //删除在表格中tableDataEnd显示的哪个数据
+                                this.tableDataEnd.forEach((value,i)=>{
+                                    if(i !==index){
+                                        this.filterTableDataEnd.push(value);
+                                    }
+                                });
+                                this.tableDataEnd=this.filterTableDataEnd;
+                                this.filterTableDataEnd=[];
+                                //删除从数据源中tableData获得的数据
+                                this.tableData.forEach((value,i)=>{
+                                    //通过主码快速过滤
+                                    if(value.inumber!=delItem.inumber){
+                                        this.filterTableDataEnd.push(value);
+                                    }
+                                });
+                                this.tableData = this.filterTableDataEnd;
+                                this.filterTableDataEnd=[];
 
-                        //删除从数据源中tableData获得的数据
-                        this.tableData.forEach((value,i)=>{
-                            //通过主码快速过滤
-                            if(value.inumber!=delItem.inumber){
-                                this.filterTableDataEnd.push(value);
+                                this.$message({
+                                    type: 'success',
+                                    message: successResponse.data.message
+                                });
                             }
-                        });
-                        this.tableData = this.filterTableDataEnd;
-                        this.filterTableDataEnd=[];
-
-                        this.$message({
-                            type: 'success',
-                            message: '删除成功!'
-                        });
                     }).catch(failResponse =>{
                         //用户同意删除情况下数据库删除失败
                         this.$message({
                             type: 'info',
-                            message: '删除失败'
+                            message: '删除失败!'
                         });
                     })
                 }).catch(() =>{
