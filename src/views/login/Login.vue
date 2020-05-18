@@ -144,27 +144,27 @@
             },
             login () {
                 //前端测试代码
-                // if(this.loginForm.uid == this.user1.username){
-                //     console.log(this.user1.role);
-                //     sessionStorage.setItem('user','1234567');
-                //     sessionStorage.setItem('role','1');
-                //     sessionStorage.setItem('uid',JSON.stringify(this.loginForm.uid));
-                //     this.$router.replace({path: '/home/firstPage'});
-                // }else if(this.loginForm.uid == this.user2.username){
-                //     console.log(this.user2.role);
-                //     sessionStorage.setItem('user','2234567');
-                //     sessionStorage.setItem('role','2');
-                //
-                //     sessionStorage.setItem('uid',JSON.stringify(this.loginForm.uid));
-                //     this.$router.replace({path:'/homet/firstPage'});
-                //
-                // }else if(this.loginForm.uid == this.user3.username){
-                //     console.log(this.user3.role);
-                //     sessionStorage.setItem('user','3234567');
-                //     sessionStorage.setItem('role','3');
-                //     sessionStorage.setItem('uid',JSON.stringify(this.loginForm.uid));
-                //     this.$router.replace({path:'/homes/firstPage'})
-                // }
+                if(this.loginForm.uid == this.user1.username){
+                    console.log(this.user1.role);
+                    sessionStorage.setItem('user','1234567');
+                    sessionStorage.setItem('role','1');
+                    sessionStorage.setItem('uid',JSON.stringify(this.loginForm.uid));
+                    this.$router.replace({path: '/home/firstPage'});
+                }else if(this.loginForm.uid == this.user2.username){
+                    console.log(this.user2.role);
+                    sessionStorage.setItem('user','2234567');
+                    sessionStorage.setItem('role','2');
+
+                    sessionStorage.setItem('uid',JSON.stringify(this.loginForm.uid));
+                    this.$router.replace({path:'/homet/firstPage'});
+
+                }else if(this.loginForm.uid == this.user3.username){
+                    console.log(this.user3.role);
+                    sessionStorage.setItem('user','3234567');
+                    sessionStorage.setItem('role','3');
+                    sessionStorage.setItem('uid',JSON.stringify(this.loginForm.uid));
+                    this.$router.replace({path:'/homes/firstPage'})
+                }
                 this.$refs.loginForm.validate()
                     .then(res => {
                         this.loadingBtn = false;
@@ -219,7 +219,7 @@
 
                    }).catch(error =>{
                      this.$message({
-                      message: '无法提交，用户名或者密码格式错误',
+                      message: '无法提交，用户名或者密码格式错误或者验证码错误',
                        type: 'error'
                     });
                 });

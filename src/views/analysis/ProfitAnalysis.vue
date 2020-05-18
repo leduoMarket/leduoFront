@@ -10,8 +10,6 @@
     </el-card>
   </div>
 </template>
-
-
 <script>
     import Chart from '@/components/Charts/MixChart'
     export default {
