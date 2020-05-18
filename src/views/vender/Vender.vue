@@ -73,24 +73,28 @@
         <el-table-column
           prop="vname"
           label="供应商名称"
-          width="180"
+          width="100"
         >
         </el-table-column>
         <el-table-column
           prop="vaddress"
-          label="地址">
+          label="地址"
+          width="100"
+        >
         </el-table-column>
         <el-table-column
           prop="vphone"
+          width="130"
           label="电话">
         </el-table-column>
         <el-table-column
           prop="vemail"
           label="E-mail"
-          width="150">
+          width="180">
         </el-table-column>
         <el-table-column
           prop="vfax"
+          width="120"
           label="传真">
         </el-table-column>
         <el-table-column
@@ -147,42 +151,54 @@
                 // 从后台传来的初始数据
                 tableData: [
                     {
-                        vid: '20200401',
+                        vid: 1234567,
+                        vname: 'weqwe',
+                        vaddress: 'wewew',
+                        vphone: 13112122323,
+                        vemail:'123@qq.com',
+                        vfax: '12321312',
+                        vcredit: 12,
+                        vsettle_account: 898
+                    },
+                    {
+                        vid: 20200401,
                         vname: '王二虎',
                         vaddress: '北极西南',
-                        vphone: '13677273048',
+                        vphone: 13677273048,
                         vemail:'2409981311@qq.com',
-                        vfax: '123',
-                        vcredit: '1',
-                        vsettle_account: '10000'
+                        vfax: 123,
+                        vcredit: 1,
+                        vsettle_account: 10000
                     },{
-                        vid: '20200402',
-                        vname: '王小虎',
-                        vaddress: '成都双流',
-                        vphone: '17289891212',
-                        vemail:'230339223@qq.com',
-                        vfax: '3333',
-                        vcredit: '2',
-                        vsettle_account: '40.0'
-                    },{
-                        vid: '20180901',
-                        vname: '李承',
-                        vaddress: '甘肃金山',
-                        vphone: '18922002121',
-                        vemail:'12902229@qq.com',
-                        vfax: '2ss',
-                        vcredit: '3',
-                        vsettle_account: '5222'
-                    },{
-                        vid: '20180203',
-                        vname: '宋丽',
-                        vaddress: '甘肃成安',
-                        vphone: '13711293939',
-                        vemail:'676710@qq.com',
-                        vfax: 'wewee',
-                        vcredit: '2',
-                        vsettle_account: '10000'
-                    }
+                        vid: 20200403,
+                        vname: '王二虎',
+                        vaddress: '北极西南',
+                        vphone: 13677273048,
+                        vemail:'2409981311@qq.com',
+                        vfax: 123,
+                        vcredit: 1,
+                        vsettle_account: 10000
+                    },
+                    {
+                        vid: 20200404,
+                        vname: '王二虎',
+                        vaddress: '北极西南',
+                        vphone: 13677273048,
+                        vemail:'2409981311@qq.com',
+                        vfax: 123,
+                        vcredit: 1,
+                        vsettle_account: 10000
+                    },
+                    {
+                        vid: 20200405,
+                        vname: '王二虎',
+                        vaddress: '北极西南',
+                        vphone: 13677273048,
+                        vemail:'2409981311@qq.com',
+                        vfax: 123,
+                        vcredit: 1,
+                        vsettle_account: 10000
+                    },
                 ],
                 //删除的元素是谁
                 delItem: [
@@ -216,7 +232,6 @@
                 filterTableDataEnd:[],
                 flag:false,
                 selectTags:"",
-
                 //正则规则加载
                 venderRules:{
                     vid:[
@@ -276,7 +291,7 @@
         },
       // 创建的时候发送请求获取显示数据库所有员工的列表数据
       created() {
-            this.tableData=[];
+          this.tableData = [];
           this.$axios.get("/staff/getAllVenders").then(res=>{
               if(res.data.code===200){
                   let item = {
@@ -312,7 +327,7 @@
                   });
                   this.totalItems = this.tableData.length;
                   this.tableDataEnd=[];
-                  this.tableData.forEach((value,index)=>{
+                  this.tableData.forEach((value)=>{
                       this.tableDataEnd.push(value);
                   });
                   console.log(this.tableData.length);
@@ -341,7 +356,7 @@
                 },
 
             doFilter(){
-                var selectTag = this.selectTags;
+                let selectTag = this.selectTags;
                 if(this.searchInput == ""){
                     this.$message.warning("查询信息不能为空！！！");
                     return;
@@ -350,57 +365,67 @@
                     this.$message.warning("查询条件不能为空！！！");
                     return;
                 }
+                this.searchInput =this.searchInput.trim();
                 this.tableDataEnd=[];
                 this.filterTableDataEnd=[];
                 this.tableData.forEach((value,index)=>{
                     if(selectTag=="vid"){
                         if(value.vid){
-                            if(value.vid.search(this.searchInput)!==-1){
+                            //int 与  string
+                            let vid = ""+value.vid;
+                            if(vid.search(this.searchInput)!==-1){
                                 this.filterTableDataEnd.push(value)
                             }
                         }
                     }
                     if(selectTag=="vname"){
                         if(value.vname){
-                            if(value.vname.search(this.searchInput)!==-1){
+                            let vname =""+ value.vname;
+                            if(vname.search(this.searchInput)!==-1){
                                 this.filterTableDataEnd.push(value)
                             }
                         }
                     }
                     if(selectTag=="vaddress"){
                         if(value.vaddress){
-                            if(value.vaddress.search(this.searchInput)!==-1){
+                            let vaddress = value.vaddress;
+                            if(vaddress.search(this.searchInput)!==-1){
                                 this.filterTableDataEnd.push(value)
                             }
                         }
                     }
                     if(selectTag=="vphone"){
                         if(value.vphone){
-                            if(value.vphone.search(this.searchInput)!==-1){
+                            let vphone ="" + value.vphone;
+                            if(vphone.search(this.searchInput)!==-1){
                                 this.filterTableDataEnd.push(value)
                             }
                         }
                     }if(selectTag=="vemail"){
                         if(value.vemail){
-                            if(value.vemail.search(this.searchInput)!==-1){
+                            let vemail ="" + value.vemail;
+                            if(vemail.search(this.searchInput)!==-1){
                                 this.filterTableDataEnd.push(value)
                             }
                         }
                     }if(selectTag=="vfax"){
                         if(value.vfax){
-                            if(value.vfax.search(this.searchInput)!==-1){
+                            let vfax = ""+value.vfax;
+                            if(vfax.search(this.searchInput)!==-1){
                                 this.filterTableDataEnd.push(value)
                             }
                         }
                     }if(selectTag=="vcredit"){
                         if(value.vcredit){
-                            if(value.vcredit.search(this.searchInput)!==-1){
+                            let vcredit = ""+value.vcredit;
+                            if(vcredit.search(this.searchInput)!==-1){
                                 this.filterTableDataEnd.push(value)
                             }
                         }
                     }if(selectTag=="vsettle_account"){
                         if(value.vsettle_account){
-                            if(value.vsettle_account.search(this.searchInput)!==-1){
+                            let vsettle_account = ""+value.vsettle_account;
+                            if(vsettle_account.search(this.searchInput)!==-1){
                                 this.filterTableDataEnd.push(value)
                             }
                         }
@@ -428,6 +453,21 @@
                 console.log(this.currentPage)
             },
             addVender(){
+                //前端测试部分
+                // this.tableData.unshift(this.addform);
+                // this.tableDataEnd.unshift(this.addform);
+                // //清空填写单的信息放到请求体中，避免请求延迟已经被清空才刷新在信息到表格中
+                // this.addform = {
+                //     vid: '',
+                //     vname: '',
+                //     vaddress: '',
+                //     vphone: '',
+                //     vemail:'',
+                //     vfax: '',
+                //     vcredit: '',
+                //     vsettle_account: ''
+                // };
+                // this.dialogFormVisible = false;
                 this.$refs.addform.validate()
                     .then(res =>{
                         this.$axios.post('/staff/addVender', {
@@ -448,8 +488,8 @@
                                     type: 'success',
                                 });
                                 //将信息刷新到表格中
-                                this.tableData.push(this.addform);
-                                this.tableDataEnd.push(this.addform);
+                                this.tableData.unshift(this.addform);
+                                this.tableDataEnd.unshift(this.addform);
                                 //清空填写单的信息放到请求体中，避免请求延迟已经被清空才刷新在信息到表格中
                                 this.addform = {
                                     vid: '',
@@ -461,25 +501,11 @@
                                     vcredit: '',
                                     vsettle_account: ''
                                 };
+                                this.dialogFormVisible = false;
                             }
                         }).catch(failedResponse => {
-                            this.addSuccessful = false;
+                            this.$message.error(failedResponse.data.message);
                         });
-
-                        // 将填写框置空，方便下次填写
-                        this.addform = {
-                            vid: '',
-                            vname: '',
-                            vaddress: '',
-                            vphone: '',
-                            vemail:'',
-                            vfax: '',
-                            vcredit: '',
-                            vsettle_account: ''
-                        };
-                        // 让表格消失
-                        this.dialogFormVisible = false;
-
                     }).catch(error =>{
                         console.log("提交失败");
                         this.$message({
@@ -489,7 +515,30 @@
                 });
             },
             del(delItem, index) {
-                console.log(delItem);
+                //前端测试部分
+                //数据库删除成功在table表里进行删除,
+                // this.filterTableDataEnd=[];
+                // //删除在表格中tableDataEnd显示的哪个数据
+                // this.tableDataEnd.forEach((value,i)=>{
+                //     if(i !==index){
+                //         this.filterTableDataEnd.push(value);
+                //     }
+                // });
+                // this.tableDataEnd=this.filterTableDataEnd;
+                // this.filterTableDataEnd=[];
+                // //删除从数据源中tableData获得的数据
+                // this.tableData.forEach((value,i)=>{
+                //     //通过主码快速过滤
+                //     if(value.vid!=delItem.vid){
+                //         this.filterTableDataEnd.push(value);
+                //     }
+                // });
+                // this.tableData = this.filterTableDataEnd;
+                // this.filterTableDataEnd=[];
+                // this.$message({
+                //     type: 'success',
+                //     message: '删除成功!'
+                // });
                 this.$confirm('你确定要删除这条记录吗？','提示',{
                     confirmButtonText:'确定',
                     cancelButtonText:'取消',
@@ -498,30 +547,34 @@
                     //如果用户确实要删除，则用delete方式删除，并且传递要删除的记录的eid
                     this.$axios.delete('/staff/delVender?venderId='+delItem.vid
                     ).then(successResponse =>{
-                        //数据库删除成功在table表里进行删除,
-                        this.filterTableDataEnd=[];
-                        //删除在表格中tableDataEnd显示的哪个数据
-                        this.tableDataEnd.forEach((value,i)=>{
-                            if(i !==index){
-                                this.filterTableDataEnd.push(value);
-                            }
-                        });
-                        this.tableDataEnd=this.filterTableDataEnd;
-                        this.filterTableDataEnd=[];
+                        if(successResponse.data.code === 200){
+                            //数据库删除成功在table表里进行删除,
+                            this.filterTableDataEnd=[];
+                            //删除在表格中tableDataEnd显示的哪个数据
+                            this.tableDataEnd.forEach((value,i)=>{
+                                if(i !==index){
+                                    this.filterTableDataEnd.push(value);
+                                }
+                            });
+                            this.tableDataEnd=this.filterTableDataEnd;
+                            this.filterTableDataEnd=[];
+                            //删除从数据源中tableData获得的数据
+                            this.tableData.forEach((value,i)=>{
+                                //通过主码快速过滤
+                                if(value.vid!=delItem.vid){
+                                    this.filterTableDataEnd.push(value);
+                                }
+                            });
+                            this.tableData = this.filterTableDataEnd;
+                            this.filterTableDataEnd=[];
+                            this.$message({
+                                type: 'success',
+                                message: '删除成功!'
+                            });
+                        }else {
+                            this.$message.error("删除失败");
+                        }
 
-                        //删除从数据源中tableData获得的数据
-                        this.tableData.forEach((value,i)=>{
-                            //通过主码快速过滤
-                            if(value.vid!=delItem.vid){
-                                this.filterTableDataEnd.push(value);
-                            }
-                        });
-                        this.tableData = this.filterTableDataEnd;
-                        this.filterTableDataEnd=[];
-                        this.$message({
-                            type: 'success',
-                            message: '删除成功!'
-                        });
                     }).catch(failResponse =>{
                         //用户同意删除情况下数据库删除失败
                         this.$message({
