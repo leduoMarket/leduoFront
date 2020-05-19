@@ -3,7 +3,7 @@
   <el-card class="box-card">
     <div slot="header" class="clearFix">
       <span>商品定价</span>
-      <el-button style="float: right; padding: 3px 0" type="text" @click="dialogFormVisible = true">新建</el-button>
+      <el-button style="float: right; padding: 3px 0" type="text" @click="addForm">新建</el-button>
       <el-dialog title="商品定价" :visible.sync="dialogFormVisible">
         <el-form :model="dataInfo" :rules="goodPriceRules" ref="dataInfo">
           <el-form-item label="商品代码" :label-width="formLabelWidth" prop="gid">
@@ -25,7 +25,7 @@
             <el-input v-model="dataInfo.pDate" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item label="操作人员" :label-width="formLabelWidth" prop="pHandler">
-            <el-input v-model="dataInfo.pHandler" autocomplete="off"></el-input>
+            <el-input v-model="dataInfo.pHandler" autocomplete="off" readonly></el-input>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -91,15 +91,15 @@
           prop="pHandler"
           label="操作人">
         </el-table-column>
-        <el-table-column
-          prop="pHandle"
-          label="操作">
-          <template slot-scope="scope">
-            <el-button style="float: left; padding-right: 3px;" type="text">
-              <span style="color: red" @click="del(scope.row,scope.$index)">删除</span>
-            </el-button>
-          </template>
-        </el-table-column>
+<!--        <el-table-column-->
+<!--          prop="pHandle"-->
+<!--          label="操作">-->
+<!--          <template slot-scope="scope">-->
+<!--            <el-button style="float: left; padding-right: 3px;" type="text">-->
+<!--              <span style="color: red" @click="del(scope.row,scope.$index)">删除</span>-->
+<!--            </el-button>-->
+<!--          </template>-->
+<!--        </el-table-column>-->
       </el-table>
       <el-pagination
         @size-change="handleSizeChange"
@@ -116,21 +116,14 @@
 </template>
 
 <script>
-  import {
-      reg_gid,
-      reg_gname,
-      reg_money,
-      reg_reason,
-      reg_date,
-      reg_ename
+    import {reg_date, reg_ename, reg_gid, reg_gname, reg_money, reg_reason} from "../login/validator";
+    import moment from 'moment'
 
-  } from "../login/validator";
-  import moment from 'moment'
-
-  export default {
+    export default {
         name: "GoodPrice",
       data() {
             return {
+                readonly:true,
                 scope:null,
                 // 标记删除或者添加是否成功
                 addSuccessful: false,
@@ -269,11 +262,11 @@
         // 创建的时候发送请求获取显示数据库所有退货单的列表数据
         created() {
             //前端测试部分
-            /*this.tableDataEnd=[];
+            this.tableDataEnd=[];
             this.tableData.forEach((value,index)=>{
                 this.tableDataEnd.push(value);
-            });*/
-            this.tableData=[];
+            });
+            //this.tableData=[];
             this.$axios.get("/home/commodityPricing").then(res=>{
                 if(res.data.code === 200){
                     let item = {
@@ -319,7 +312,12 @@
             })
         },
         methods: {
-            //分页排序整体表格数据
+            //新增表单的显示
+            addForm(){
+              this.dialogFormVisible=true;
+              this.dataInfo.pHandler=JSON.parse(sessionStorage.getItem("uid"));
+            },
+            // 分页排序整体表格数据
             changeTableSort(column){
                 console.log(column);
                 //获取字段名称和排序类型
