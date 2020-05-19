@@ -18,7 +18,7 @@
       <el-button type="primary" icon="el-icon-search" @click="doFilter"  size="medium" round  plain>搜索</el-button>
       <el-button type="primary" icon="el-icon-refresh" @click="doReset" size="medium"  round  plain >重置</el-button>
       <el-table
-        :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)"
+        :data="tableDataEnd.slice((currentPage-1)*pageSize,currentPage*pageSize)"
         border
         style="width: 100%"  @sort-change="changeTableSort">
         <el-table-column
@@ -28,7 +28,7 @@
         >
         </el-table-column>
         <el-table-column
-          prop="gname"
+          prop="gName"
           label="商品名称"
           width="180">
         </el-table-column>
@@ -48,9 +48,9 @@
         @current-change="handleCurrentChange"
         :current-page="currentPage"
         :page-sizes="[3,5, 10, 20]"
-        :page-size="pagesize"
+        :page-size="pageSize"
         layout="total, sizes, prev, pager, next, jumper"
-        :total="tableData.length">
+        :total="tableDataEnd.length">
       </el-pagination>
     </div>
   </el-card>
@@ -58,29 +58,28 @@
 </template>
 
 <script>
-    import moment from 'moment'
     export default {
         name: "Inventory",
         data() {
             return {
                 tableData: [{
                     gid:'24518',
-                    gname:'苹果',
+                    gName:'苹果',
                     counts:14,
                 },{
                     gid:'201',
-                    gname:'饮料',
+                    gName:'饮料',
                     counts:51,
                 },{
                     gid:'134',
-                    gname:'面包',
+                    gName:'面包',
                     counts:14,
                 },{
                     gid:'309',
-                    gname:'薯片',
+                    gName:'薯片',
                     counts:14,
                 }],
-                pagesize:5,  //分页数量
+                pageSize:5,  //分页数量
                 currentPage:1, //初始页
 
 
@@ -104,7 +103,7 @@
                     value: 'gid',
                     label: '商品代码'
                 }, {
-                    value: 'gname',
+                    value: 'gName',
                     label: '商品名称'
                 }, {
                     value: 'counts',
@@ -117,21 +116,23 @@
         },
         // 创建的时候发送请求获取显示数据库列表数据
         created() {
-            this.tableData.forEach((value,index)=>{
-                this.tableDataEnd.push(value);
-            });
+            // this.tableData.forEach((value)=>{
+            //     this.tableDataEnd.push(value);
+            // });
+            this.tableData=[];
             this.$axios.get("/home/inventory").then(res => {
                 if (res.data.code===200) {
                     console.log(res);
                     this.tableData = res.data;
                     this.totalItems = this.tableData.length;
                     this.tableDataEnd=[];
-                    this.tableData.forEach((value,index)=>{
+                    this.tableData.forEach((value)=>{
                         this.tableDataEnd.push(value);
                     });
                     console.log(this.tableData.length);
                 }
-            }).catch(failResponse => {
+            }).catch(() => {
+
 
             })
         },
@@ -140,10 +141,10 @@
             changeTableSort(column){
                 console.log(column);
                 //获取字段名称和排序类型
-                var fieldName = column.prop;
-                var sortingType = column.order;
+                let fieldName = column.prop;
+                let sortingType = column.order;
                 //按照降序排序
-                if(sortingType == "descending"){
+                if(sortingType === "descending"){
                     this.tableDataEnd = this.tableData.sort((a, b) => b[fieldName] - a[fieldName]);
                 }
                 //按照升序排序
@@ -175,10 +176,10 @@
                             }
                         }
                     }
-                    if(selectTag==="gname"){
-                        if(value.gname){
-                            let gname = ""+value.gname;
-                            if(gname.search(this.searchInput)!==-1){
+                    if(selectTag==="gName"){
+                        if(value.gName){
+                            let gName = ""+value.gName;
+                            if(gName.search(this.searchInput)!==-1){
                                 this.filterTableDataEnd.push(value)
                             }
                         }
@@ -208,10 +209,10 @@
                 });
             },
 
-            // 初始页currentPage、初始每页数据数pagesize和数据data
+            // 初始页currentPage、初始每页数据数pageSize和数据data
             handleSizeChange: function (size) {
-                this.pagesize = size;
-                console.log(this.pagesize)
+                this.pageSize = size;
+                console.log(this.pageSize)
             },
             handleCurrentChange: function (currentPage) {
                 this.currentPage = currentPage;
@@ -222,14 +223,7 @@
 </script>
 
 <style scoped>
-  .text {
-    font-size: 14px;
-  }
 
-  .item {
-    margin-bottom: 50px;
-
-  }
   .box-card {
     width: 75%;
   }

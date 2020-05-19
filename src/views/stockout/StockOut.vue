@@ -103,7 +103,7 @@
         </el-table-column>
 
         <el-table-column
-          prop="oHandle"
+          prop="eSalary"
           fixed="right"
           label="操作">
 
@@ -141,13 +141,14 @@
         name: "StockOut",
         data() {
             return {
+                scope:null,
                 // 标记删除或者添加是否成功
                 addSuccessful: false,
                 // delSuccessful: false,
                 // 在基础表格中展示的数据
                 tableData: [{
                     gid: 1302021121123,
-                    vName: '水果店',
+                    vName: 'ioio',
                     oNumber: 'O2020010190',
                     oDate: '2020-01-01',
                     oPrice: 90.0,
@@ -155,7 +156,7 @@
                     oCount: 20
                 },{
                     gid: 1234123412342,
-                    vName: "面包商",
+                    vName: "iiii",
                     oNumber: 'O232390901002',
                     oDate: '2020-02-03',
                     oPrice: 100.2,
@@ -163,7 +164,7 @@
                     oCount: 20.2
                 },{
                     gid: 1234123412342,
-                    vName: "小吃店",
+                    vName: "iiii",
                     oNumber: 'O232390901002',
                     oDate: '2020-02-03',
                     oPrice: 100.2,
@@ -258,18 +259,51 @@
         },
       // 创建的时候发送请求获取显示数据库所有员工的列表数据
       created() {
-            //前端测试代码
-          /*this.tableDataEnd= [];
-          this.tableData.forEach((value)=>{
-              this.tableDataEnd.push(value);
-          });*/
-         // this.tableData=[];
+
+          // this.tableData.forEach((value)=>{
+          //     this.tableDataEnd.push(value);
+          // });
+
+         this.tableData=[];
           this.$axios.get("/staff/stockOut").then(res => {
               if (res.data.code === 200) {
+                  let item = {
+                      oNumber:'',
+                      gid:'',
+                      vName:'',
+                      oDate:'',
+                      oPrice:'',
+                      oPayment:'',
+                      oCount:''
 
+                  };
+                  res.data.data.forEach(value=>{
+                      item.oNumber=value.onumber;
+                      item.gid=value.gid;
+                      item.vName=value.vname;
+                      item.oDate=value.odate;
+                      item.oPrice=value.oprice;
+                      item.oPayment=value.opayment;
+                      item.oCount=value.ocount;
+                      this.tableData.push(item);
+                      item = {
+                          oNumber:'',
+                          gid:'',
+                          vName:'',
+                          oDate:'',
+                          oPrice:'',
+                          oPayment:'',
+                          oCount:''
+                      };
+                  });
+                  this.totalItems = this.tableData.length;
+                  this.tableDataEnd=[];
+                  this.tableData.forEach((value)=>{
+                      this.tableDataEnd.push(value);
+                  });
                   this.tableData = res.data.data;
                   this.totalItems = this.tableData.length;
-                  this.tableDataEnd= [];
+                  this.tableDataEnd=[];
                   this.tableData.forEach((value)=>{
                       this.tableDataEnd.push(value);
                   });
@@ -368,6 +402,7 @@
                     if(selectTag==="oDate"){
                         if(value.oDate){
                             let oDate = ""+value.oDate;
+                            console.log("oDate"+oDate);
                             if(oDate.search(this.searchInput)!==-1){
                                 this.filterTableDataEnd.push(value)
                             }
@@ -392,7 +427,7 @@
                     if(selectTag==="oCount"){
                         if(value.oCount){
                             let oCount = ""+value.oCount;
-                            if(value.oCount.search(this.searchInput)!==-1){
+                            if(oCount.search(this.searchInput)!==-1){
                                 this.filterTableDataEnd.push(value)
                             }
                         }
@@ -400,7 +435,6 @@
 
                     console.log(index);
                 });
-                this.tableDataEnd=[];
                 this.tableDataEnd=this.filterTableDataEnd;
                 this.filterTableDataEnd=[];
             },
@@ -416,34 +450,34 @@
             addStockOut() {
                 //前端测试部分
                 //让表格消失
-                this.dialogFormVisible = false;
-                this.tableData.unshift(this.dataInfo);
-                this.tableDataEnd.unshift(this.dataInfo);
-                // 将填写框置空，方便下次填写
-                this.dataInfo = {
-                    gid: '',
-                    vName: '',
-                    oNumber: '',
-                    oDate: '',
-                    oPrice: '',
-                    oPayment: '',
-                    oCount: ''
-                };
-                this.$message({
-                    message: '成功添加一条记录',
-                    type: 'success'
-                });
+                // this.dialogFormVisible = false;
+                // this.tableData.unshift(this.dataInfo);
+                // this.tableDataEnd.unshift(this.dataInfo);
+                // // 将填写框置空，方便下次填写
+                // this.dataInfo = {
+                //     gid: '',
+                //     vName: '',
+                //     oNumber: '',
+                //     oDate: '',
+                //     oPrice: '',
+                //     oPayment: '',
+                //     oCount: ''
+                // };
+                // this.$message({
+                //     message: '成功添加一条记录',
+                //     type: 'success'
+                // });
 
                 this.$refs.dataInfo.validate()
                     .then(() =>{
                         this.$axios.post('/staff/addstockOut', {
                             gid: this.dataInfo.gid,
-                            vName: this.dataInfo.vName,
-                            oNumber: this.dataInfo.oNumber,
-                            oDate: this.dataInfo.oDate,
-                            oPrice: this.dataInfo.oPrice,
-                            oPayment: this.dataInfo.oPayment,
-                            oCount: this.dataInfo.oCount
+                            vname: this.dataInfo.vName,
+                            onumber: this.dataInfo.oNumber,
+                            odate: this.dataInfo.oDate,
+                            oprice: this.dataInfo.oPrice,
+                            opayment: this.dataInfo.oPayment,
+                            ocount: this.dataInfo.oCount
                         }).then(successResponse => {
                             if (successResponse.data.code === 200) {
                                 //表格中回显
@@ -488,41 +522,37 @@
 
             // 删除选中下标的一行数据，index由click处的scope.$index传过来的小标，delItem由scope.$row传过来的元素
             del(delItem, index){
-                console.log(delItem);
-                this.filterTableDataEnd=[];
-                //删除在表格中tableDataEnd显示的哪个数据
-                this.tableDataEnd.forEach((value,i)=>{
-                    if(i !==index){
-                        this.filterTableDataEnd.push(value);
-                    }
-                });
-                this.tableDataEnd=this.filterTableDataEnd;
-                this.filterTableDataEnd=[];
-
-                //删除从数据源中tableData获得的数据
-                this.tableData.forEach((value,i)=>{
-                    //通过主码快速过滤
-                    if(value.oNumber!==delItem.oNumber){
-                        this.filterTableDataEnd.push(value);
-                    }
-                });
-                this.tableData = this.filterTableDataEnd;
-                this.filterTableDataEnd=[];
-                this.$message({
-                    type: 'success',
-                    message: '删除成功!'
-                });
+                // this.filterTableDataEnd=[];
+                // //删除在表格中tableDataEnd显示的哪个数据
+                // this.tableDataEnd.forEach((value,i)=>{
+                //     if(i !==index){
+                //         this.filterTableDataEnd.push(value);
+                //     }
+                // });
+                // this.tableDataEnd=this.filterTableDataEnd;
+                // this.filterTableDataEnd=[];
+                //
+                // //删除从数据源中tableData获得的数据
+                // this.tableData.forEach((value)=>{
+                //     //通过主码快速过滤
+                //     if(value.oNumber!==delItem.oNumber){
+                //         this.filterTableDataEnd.push(value);
+                //     }
+                // });
+                // this.tableData = this.filterTableDataEnd;
+                // this.filterTableDataEnd=[];
+                // this.$message({
+                //     type: 'success',
+                //     message: '删除成功!'
+                // });
                 this.$confirm('你确定要删除这条记录吗？','提示',{
                     confirmButtonText:'确定',
                     cancelButtonText:'取消',
                     type:'warning'
                 }).then(() =>{
                     //如果用户确实要删除，则用delete方式删除，并且传递要删除的记录的eid
-                    this.$axios.delete('/staff/delstockOut',{
-                        params:{
-                            stockOutId: delItem.oNumber
-                        }
-                    }).then(successResponse =>{
+                    this.$axios.delete('/staff/delstockOut='+delItem.oNumber)
+                        .then(successResponse =>{
                         if(successResponse.data.code === 200){
 
                             this.filterTableDataEnd=[];

@@ -84,9 +84,9 @@
         created(){
             let eid = JSON.parse(sessionStorage.getItem('uid'));
             let role =sessionStorage.getItem('role');
-            if(role == '1'){
+            if(role === '1'){
                 this.form.erole='管理员';
-            }else if (role == '2'){
+            }else if (role === '2'){
                 this.form.erole='财务';
             }else{
                 this.form.erole='员工';
@@ -122,7 +122,7 @@
             },
             submit(){
                 this.$refs.form.validate()
-                    .then(res =>{
+                    .then(() =>{
                         if(this.form.epwd1 === this.from.epwd2){
                             this.$message.info("两次密码一样");
                             return;

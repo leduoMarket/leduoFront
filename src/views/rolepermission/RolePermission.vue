@@ -81,6 +81,8 @@
         name: "RolePermission",
         data() {
             return {
+                scope1:null,
+                scope:null,
                 options: [{
                     value:"管理员",
                     label:"经理"
