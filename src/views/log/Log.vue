@@ -26,7 +26,7 @@
         <el-table-column
           prop="id"
           label="序号"
-          width="180"
+          width="150"
 
         >
         </el-table-column>
@@ -38,6 +38,7 @@
         </el-table-column>
         <el-table-column
           prop="levelString"
+          width="100"
           label="级别">
         </el-table-column>
         <el-table-column
