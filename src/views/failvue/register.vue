@@ -1,7 +1,7 @@
 <template >
   <div class="register">
     <!--  <RandomCode></RandomCode>-->
-    <body id="poster">
+    <div id="poster">
     <div id="logo">
       <!--    <img src="../../assets/pic/logo.png" style="width: 100px; height: 100px" alt=""/>-->
     </div>
@@ -44,7 +44,7 @@
       </el-form-item>
       <el-button type="text" style="width: 100%; margin-left: 45%" size="mini" v-on:click="gotoLogin" >返回登录</el-button>
     </el-form>
-    </body>
+    </div>
   </div>
 </template>
 
@@ -115,7 +115,7 @@
             },
             addRegister() {
                 this.$refs.registerForm.validate()
-                    .then(res => {
+                    .then(() => {
                         this.$axios.post('/register', {
                             uid: this.registerForm.userId,
                             userName: this.registerForm.userName,
@@ -124,7 +124,7 @@
                             password: md5(this.registerForm.userpassword),
                             status: 0,
                         }).then(successResponse => {
-                            if (successResponse.data.code == 200) {
+                            if (successResponse.data.code === 200) {
                                 this.addSuccessful = true;
                                 this.$message({
                                     message: successResponse.data.message,
@@ -145,7 +145,7 @@
                             this.$message.warning(failedResponse.data.message);
                         });
 
-                    }).catch(error => {
+                    }).catch(() => {
                     console.log("提交失败");
                     this.$message({
                         message: '无法提交，数据有错误',
@@ -182,11 +182,11 @@
     position: fixed;
   }
   #poster{
-    margin: 0px;
+    margin: 1px;
   }
-  img{
-    margin: 40px;
-  }
+  /*img{*/
+  /*  margin: 40px;*/
+  /*}*/
   #logo{
     text-align: center;
   }
