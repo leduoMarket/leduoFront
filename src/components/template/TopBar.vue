@@ -25,13 +25,13 @@ export default {
             // this.$router.replace({path: '/'});
 
             this.$axios.get("/staff/logout").then(successfulResponse=>{
-                if(successfulResponse.data.code==405){
+                if(successfulResponse.data.code===405){
                     sessionStorage.removeItem('user');
                     sessionStorage.removeItem('role');
                     sessionStorage.removeItem('uid');
                     this.$router.replace({path: '/'});
                 }
-            }).catch(failedResponse=>{
+            }).catch(()=>{
                 this.$notify({
                     title: '对不起',
                     message: '中断服务器连接了',
