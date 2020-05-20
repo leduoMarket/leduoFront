@@ -229,7 +229,6 @@
                 value: '',
 
 
-
                 //表单验证规则
                 stockOutRules:{
                     gid:[
@@ -263,9 +262,8 @@
           // this.tableData.forEach((value)=>{
           //     this.tableDataEnd.push(value);
           // });
-
          this.tableData=[];
-          this.$axios.get("/staff/stockOut").then(res => {
+          this.$axios.get("/staff/getStockOutList").then(res => {
               if (res.data.code === 200) {
                   let item = {
                       oNumber:'',
@@ -301,13 +299,6 @@
                   this.tableData.forEach((value)=>{
                       this.tableDataEnd.push(value);
                   });
-                  this.tableData = res.data.data;
-                  this.totalItems = this.tableData.length;
-                  this.tableDataEnd=[];
-                  this.tableData.forEach((value)=>{
-                      this.tableDataEnd.push(value);
-                  });
-
               }
           }).catch(() => {
 
@@ -470,7 +461,7 @@
 
                 this.$refs.dataInfo.validate()
                     .then(() =>{
-                        this.$axios.post('/staff/addstockOut', {
+                        this.$axios.post('/staff/addStockOutRecord', {
                             gid: this.dataInfo.gid,
                             vname: this.dataInfo.vName,
                             onumber: this.dataInfo.oNumber,
@@ -551,7 +542,7 @@
                     type:'warning'
                 }).then(() =>{
                     //如果用户确实要删除，则用delete方式删除，并且传递要删除的记录的eid
-                    this.$axios.delete('/staff/delstockOut='+delItem.oNumber)
+                    this.$axios.delete('/staff/delStockOutRecord?stockOutId='+delItem.oNumber)
                         .then(successResponse =>{
                         if(successResponse.data.code === 200){
 

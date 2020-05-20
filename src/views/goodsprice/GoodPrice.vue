@@ -274,7 +274,7 @@
                 this.tableDataEnd.push(value);
             });*/
             this.tableData=[];
-            this.$axios.get("/home/commodityPricing").then(res=>{
+            this.$axios.get("/staff/getProductPricingInfo").then(res=>{
                 if(res.data.code === 200){
                     let item = {
                         gid: '',
@@ -289,8 +289,8 @@
                     res.data.data.forEach(value=>{
                         item.gid=value.gid;
                         item.gName=value.gname;
-                        item.pNewPrice=value.pnewprice;
-                        item.pOldPrice=value.poldprice;
+                        item.pNewPrice=value.pnewPrice;
+                        item.pOldPrice=value.poldPrice;
                         item.pReason=value.preason;
                         item.pDate=value.pdate;
                         item.pHandler=value.phandler;
@@ -472,11 +472,11 @@
                 });*/
                 this.$refs.dataInfo.validate()
                     .then(() =>{
-                        this.$axios.post('/home/addcommodityPricing', {
+                        this.$axios.post('/staff/addProductPricingInfo', {
                             gid: this.dataInfo.gid,
                             gname: this.dataInfo.gName,
-                            poldprice: this.dataInfo.pOldPrice,
-                            pnewprice: this.dataInfo.pNewPrice,
+                            poldPrice: this.dataInfo.pOldPrice,
+                            pnewPrice: this.dataInfo.pNewPrice,
                             preason: this.dataInfo.pReason,
                             pdate: this.dataInfo.pDate,
                             phandler: this.dataInfo.pHandler,
@@ -554,7 +554,7 @@
                     type: 'warning'
                 }).then(() => {
                     //如果用户确实要删除，则用delete方式删除，并且传递要删除的记录的eid
-                    this.$axios.delete('/home/delcommodityPricing=').then(successResponse => {
+                    this.$axios.delete('/staff/delProductPricingInfo?priceId=').then(successResponse => {
                         if(successResponse.data.code ===200){
                             //数据库删除成功在table表里进行删除,
                             this.filterTableDataEnd=[];
