@@ -47,7 +47,7 @@
         </el-table-column>
         <el-table-column
           prop="handler"
-          label="创建时间">
+          label="操作人">
         </el-table-column>
       </el-table>
       <el-pagination
@@ -101,11 +101,10 @@
         },
         // 创建的时候发送请求获取显示数据库所有的列表数据
         created() {
-
-            this.$axios.get("/allLog").then(res => {
-                if (res.data) {
+            this.$axios.get("/someLog").then(res => {
+                if (res.data.code===200) {
                     console.log(res);
-                    this.tableData = res.data;
+                    this.tableData = res.data.data;
                     this.totalItems = this.tableData.length;
                     this.tableDataEnd=[];
                     this.tableData.forEach((value)=>{
@@ -185,9 +184,9 @@
             getMore(){
                 this.$axios.get('/allLog')
                     .then(res => {
-                    if (res.data) {
+                    if (res.data.data.code==200) {
                         console.log(res);
-                        res.data.forEach(value =>{
+                        res.data.data.forEach(value =>{
                             this.tableData.push(value);
                         });
                         this.totalItems = this.tableData.length;

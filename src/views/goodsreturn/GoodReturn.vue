@@ -196,8 +196,8 @@
                 this.tableDataEnd.push(value);
             });*/
             this.tableData=[];
-            this.$axios.get("/home/goodsReturn").then(res=>{
-                if(res.data.code===200){
+            this.$axios.get("/staff/productReturnList").then(res=>{
+                if(res.data.data.code===200){
                     console.log(res);
                     let item = {
                         gid: '',
@@ -354,7 +354,7 @@
                 });*/
                     this.$refs.dataInfo.validate()
                         .then(() => {
-                            this.$axios.post('/home/addgoodsReturn', {
+                            this.$axios.post('/staff/addProductReturn', {
                                 gid: this.dataInfo.gid,
                                 rdate: this.dataInfo.rDate,
                                 rreason: this.dataInfo.rReason,
@@ -433,12 +433,9 @@
                     type: 'warning'
                 }).then(() => {
                     //如果用户确实要删除，则用delete方式删除，并且传递要删除的记录的eid
-                    this.$axios.delete('/home/delgoodsReturn', {
-                        params: {
-                            goodsId: delItem.gid
-                        }
-                    }).then(successResponse => {
-                        if(successResponse.data.code===200) {
+                    this.$axios.delete('/staff/delProductReturn?gid='+delItem.gid
+                    ).then(successResponse => {
+                        if(successResponse.data.data.code===200) {
                             //数据库删除成功在table表里进行删除,
                             this.filterTableDataEnd = [];
                             //删除在表格中tableDataEnd显示的哪个数据

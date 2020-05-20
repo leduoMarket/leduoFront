@@ -325,12 +325,6 @@
                     this.tableData.forEach((value)=>{
                         this.tableDataEnd.push(value);
                     });
-                    this.tableData = res.data.data;
-                    this.totalItems = this.tableData.length;
-                    this.tableDataEnd=[];
-                    this.tableData.forEach((value)=>{
-                        this.tableDataEnd.push(value);
-                    });
                 }else{
                     this.$message({
                         type: 'info',
@@ -574,7 +568,7 @@
                 //     iCount: '',
                 // };
                 // this.dialogFormVisible = false;
-                this.$refs.addform.validate()  //判断表单验证是否通过，验证通过执行.then()，否则执行.catch()
+                this.$refs.addForm.validate()  //判断表单验证是否通过，验证通过执行.then()，否则执行.catch()
                     .then(() =>{
                         this.$axios.post('/staff/stockInAdd',{
                             inumber:this.addForm.iNumber,

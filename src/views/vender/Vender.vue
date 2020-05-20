@@ -465,7 +465,7 @@
                 //     vSettleAccount: ''
                 // };
                 // this.dialogFormVisible = false;
-                this.$refs.addform.validate()
+                this.$refs.addForm.validate()
                     .then(() =>{
                         this.$axios.post('/staff/addVender', {
                             vid: this.addForm.vid,
