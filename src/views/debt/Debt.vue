@@ -166,9 +166,31 @@
         // 创建的时候发送请求获取显示数据库所有的列表数据
         created() {
             this.tableData=[];
-            this.$axios.get("/home/debt").then(res => {
+            this.$axios.get("/treasure/debt").then(res => {
                 if(res.data.code === 200){
-                    this.tableData = res.data.data;
+                    let item ={
+                        dNumber: '',
+                        gid: '',
+                        vName: '',
+                        dDate: '',
+                        dDebt: '',
+                    };
+                    this.tableData = [];
+                    res.data.data.forEach(value=>{
+                        item.dNumber = value.dnumber;
+                        item.gid = value.gid;
+                        item.vName = value.vname;
+                        item.dDate = value.ddate;
+                        item.dDebt = value.ddebt;
+                        this.tableData.push(item);
+                        item = {
+                            dNumber: '',
+                            gid: '',
+                            vName: '',
+                            dDate: '',
+                            dDebt: '',
+                        };
+                    })
                     this.tableDataEnd=[];
                     this.tableData.forEach((value)=>{
                         this.tableDataEnd.push(value);
@@ -304,7 +326,7 @@
                     //前端测试代码
 
                     //如果用户确实要删除，则用delete方式删除，并且传递要删除的记录的eid
-                    this.$axios.delete('/delDebt？dNumber='+delItem.dNumber)
+                    this.$axios.delete('/treasure/delDebt?debtId='+delItem.dNumber)
                         .then(successResponse => {
                             if(successResponse.data.code===200){
                         //数据库删除成功在table表里进行删除,

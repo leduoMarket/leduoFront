@@ -1001,7 +1001,15 @@
                 console.log(this.currentPage)
             },
             goBack(){
-                this.$router.go(-1);
+                let role = sessionStorage.getItem("role");
+                if(role === "1"){
+                    this.$router.replace("/home/goods");
+                }else if(role ==="2") {
+                    this.$router.replace("/homet/goods");
+
+                }else if(role === "3"){
+                    this.$router.replace("/homes/goods");
+                }
             }
         },
     }

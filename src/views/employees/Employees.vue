@@ -171,7 +171,11 @@
                         item.user_name=value.userName;
                         item.phone=value.phone;
                         item.role=value.role;
-                        item.status=""+value.status;
+                        if(value.status===0){
+                            item.status ="锁定";
+                        }else{
+                            item.status = "正常";
+                        }
                         this.tableData.push(item);
                         item = {
                             uid:"",

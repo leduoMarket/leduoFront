@@ -29,11 +29,11 @@
           </div>
         </el-form-item>
         <div class="label2">
-        <el-form-item label="原始密码"  :label-width="formLabelWidth" prop="epwd1" >
-          <el-input type="password" show-password v-model="form.epwd1" style="width: 133%"  placeholder="请输入原始密码"></el-input>
+        <el-form-item label="原始密码"  :label-width="formLabelWidth">
+          <el-input type="password" show-password v-model="form.epwd1" prop="epwd1"  style="width: 133%"  placeholder="请输入原始密码"></el-input>
         </el-form-item>
-        <el-form-item label="修改密码" :label-width="formLabelWidth" prop="epwd2">
-          <el-input type="password" show-password v-model="form.epwd2" style="width: 133%"  placeholder="请输入新密码"></el-input>
+        <el-form-item label="修改密码" :label-width="formLabelWidth">
+          <el-input type="password" show-password v-model="form.epwd2" prop="epwd2" style="width: 133%"  placeholder="请输入新密码"></el-input>
         </el-form-item>
           <div class="button1">
           <el-button style="width: 120%" type="primary" plain @click="submit">修改密码</el-button>
@@ -121,8 +121,10 @@
             },
             submit(){
                 this.$refs.form.validate()
-                    .then(() =>{
-                        if(this.form.epwd1 === this.from.epwd2){
+                    .then(success =>{
+                        if(this.form.epwd1 === this.form.epwd2){
+                            console.log("原始密码"+this.form.epwd1);
+                            console.log("新密码"+this.form.epwd2);
                             this.$message.info("两次密码一样");
                             return;
                         }
@@ -149,22 +151,16 @@
                                     type: 'info',
                                     message: failedResponse.message
                                 });
-
-
                             } );
-
-                        }).catch(() => {
+                        }).catch((failure) => {
                             this.$message({
                                 type: 'info',
                                 message: '已取消修改'
                             });
                         });
-                    }).catch(() =>{
+                    }).catch((failure) =>{
                         this.$message.error("密码格式不对");
-
                 });
-
-
             }
         }
        /* methods: {

@@ -204,7 +204,7 @@
         created() {
             //前端代码测试
             this.tableData=[];
-            this.$axios.get("/home/goods").then(res => {
+            this.$axios.get("/staff/productList").then(res => {
                 if(res.data.code === 200){
                     let item = {
                         gid:'',
@@ -221,7 +221,7 @@
                         item.categories=value.categories;
                         item.address=value.address;
                         item.chargeUnit=value.chargeUnit;
-                        item.gDate=value.gDate;
+                        item.gDate=value.gdate;
                         this.tableData.push(item);
                         item = {
                             gid:'',
@@ -345,11 +345,9 @@
                     type:'warning'
                 }).then(() =>{
                     //如果用户确实要删除，则用delete方式删除，并且传递要删除的记录的eid
-                    this.$axios.delete('/home/delGoods',{
-                        params:{
-                            GoodsId: delItem.gid
-                        }
-                    }).then(successResponse =>{
+                    console.log(typeof (delItem.gid));
+                    this.$axios.delete('/staff/delProduct?gid='+delItem.gid
+                        ).then(successResponse =>{
                         if(successResponse.data.code===200) {
                             //数据库删除成功在table表里进行删除,
                             this.filterTableDataEnd = [];
@@ -414,13 +412,13 @@
                 //前端代码测试
                 this.$refs.dataInfo.validate()
                     .then(() =>{
-                        this.$axios.post('/home/Goods',{
+                        this.$axios.post('/staff/addProduct',{
                             gid:this.dataInfo.gid,
-                            gName:this.dataInfo.gName,
+                            gname:this.dataInfo.gName,
                             categories:this.dataInfo.categories,
                             address:this.dataInfo.address,
                             chargeUnit:this.dataInfo.chargeUnit,
-                            gDate:this.dataInfo.gDate
+                            gdate:this.dataInfo.gDate
                         }).then(successResponse =>{
                             if(successResponse.data.code === 200){
                                 this.dialogFormVisible = false;

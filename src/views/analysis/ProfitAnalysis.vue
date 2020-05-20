@@ -90,11 +90,24 @@
                 },
             }
         },
-        create(){
+        created(){
             //从后端获取数据
-            this.$axios.get("/analyseinsum").then(res =>{
+            this.$axios.get("/treasure/analyseinsum").then(res =>{
                 if(res.data.code === 200){
-                    this.iData=res.data.data;
+                    this.iData = [];
+                    let item = {
+                        "idate":"",
+                        "sumin":""
+                    }
+                    res.data.data.forEach(value=>{
+                        item.idate = ""+value.idate;
+                        item.sumin = value.sumin;
+                        this.iData.push(item);
+                        item = {
+                            "idate":"",
+                            "sumin":""
+                        }
+                    })
                 }else{
                     this.$message({
                         type:'info',
@@ -107,9 +120,22 @@
                     message: failResponse.message
                 });
             });
-            this.$axios.get("/analyseoutsum").then(res =>{
+            this.$axios.get("/treasure/analyseoutsum").then(res =>{
                 if(res.data.code === 200){
-                    this.oData=res.data.data;
+                    this.oData=[];
+                    let item = {
+                        "sumout":"",
+                        "odate":""
+                    };
+                    res.data.data.forEach(value=>{
+                        item.odate = ""+value.odate;
+                        item.sumout = value.sumout;
+                        this.oData.push(item);
+                        item = {
+                            "sumout":"",
+                            "odate":""
+                        };
+                    });
                 }else{
                     this.$message({
                         type:'info',
@@ -132,9 +158,15 @@
             dataProcessing(type) {
 
                 //日期处理函数
-                let getDate = function (str) {
+                let getDate = function (str1) {
+                    let str = str1+"";
+                    if(str.length!==10){
+                        return null;
+                    }
                     let tempDate = new Date();
+                    console.log(str);
                     let list = str.split("-");
+                    console.log(list);
                     tempDate.setFullYear(list[0]);
                     tempDate.setMonth(list[1] - 1);
                     tempDate.setDate(list[2]);

@@ -102,9 +102,27 @@
         created() {
 
             this.tableData=[];
-            this.$axios.get("/home/inventory").then(res => {
+            this.$axios.get("/staff/incentoryAccounts").then(res => {
                 if (res.data.code===200) {
-                    this.tableData = res.data.data;
+                    let item = {
+                        gid:"",
+                        gName:"",
+                        counts:"",
+                        stockAlert:""
+                    };
+                    res.data.data.forEach(value=>{
+                        item.gid = value.gid;
+                        item.gName = value.gname;
+                        item.counts = value.counts;
+                        item.stockAlert = value.stockAlert;
+                        this.tableData.push(item);
+                        item = {
+                            gid:"",
+                            gName:"",
+                            counts:"",
+                            stockAlert:""
+                        };
+                    });
                     this.totalItems = this.tableData.length;
                     this.tableDataEnd=[];
                     this.tableData.forEach((value)=>{

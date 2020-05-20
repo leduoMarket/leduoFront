@@ -180,7 +180,8 @@
             getMore(){
                 this.$axios.get('/allLog')
                     .then(res => {
-                    if (res.data.data.code===200) {
+                    if (res.data.code===200) {
+                        this.tableData = [];
                         res.data.data.forEach(value =>{
                             this.tableData.push(value);
                         });
@@ -192,7 +193,6 @@
                     }
                 }).catch(failResponse => {
                     this.$message.error(failResponse.message);
-
                 })
             }
 
