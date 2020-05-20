@@ -141,57 +141,7 @@
                 //添加表单成功吗
                 addSuccessful:false,
                 // 从后台传来的初始数据
-                tableData: [
-                    {
-                        vid: 1234567,
-                        vName: 'weqwe',
-                        vAddress: 'wewew',
-                        vPhone: 13112122323,
-                        vEmail:'123@qq.com',
-                        vFax: '12321312',
-                        vCredit: 12,
-                        vSettleAccount: 898
-                    },
-                    {
-                        vid: 20200401,
-                        vName: '王二虎',
-                        vAddress: '北极西南',
-                        vPhone: 13677273048,
-                        vEmail:'2409981311@qq.com',
-                        vFax: 123,
-                        vCredit: 1,
-                        vSettleAccount: 10000
-                    },{
-                        vid: 20200403,
-                        vName: '王二虎',
-                        vAddress: '北极西南',
-                        vPhone: 13677273048,
-                        vEmail:'2409981311@qq.com',
-                        vFax: 123,
-                        vCredit: 1,
-                        vSettleAccount: 10000
-                    },
-                    {
-                        vid: 20200404,
-                        vName: '王二虎',
-                        vAddress: '北极西南',
-                        vPhone: 13677273048,
-                        vEmail:'2409981311@qq.com',
-                        vFax: 123,
-                        vCredit: 1,
-                        vSettleAccount: 10000
-                    },
-                    {
-                        vid: 20200405,
-                        vName: '王二虎',
-                        vAddress: '北极西南',
-                        vPhone: 13677273048,
-                        vEmail:'2409981311@qq.com',
-                        vFax: 123,
-                        vCredit: 1,
-                        vSettleAccount: 10000
-                    },
-                ],
+                tableData: [],
                 //删除的元素是谁
                 delItem: [
                 ],
@@ -283,10 +233,6 @@
         },
       // 创建的时候发送请求获取显示数据库所有员工的列表数据
       created() {
-          // this.tableDataEnd=[];
-          // this.tableData.forEach((value)=>{
-          //     this.tableDataEnd.push(value);
-          // });
           this.tableData = [];
           this.$axios.get("/staff/getAllVenders").then(res=>{
               if(res.data.code===200){
@@ -326,7 +272,6 @@
                   this.tableData.forEach((value)=>{
                       this.tableDataEnd.push(value);
                   });
-                  console.log(this.tableData.length);
               }
           }).catch(()=>{
 
@@ -337,7 +282,6 @@
         methods: {
             //分页排序整体表格数据
             changeTableSort(column){
-                console.log(column);
                 //获取字段名称和排序类型
                 let fieldName = column.prop;
                 let sortingType = column.order;
@@ -348,7 +292,6 @@
                 //按照升序排序
                 else{
                 this.tableDataEnd = this.tableData.sort((a, b) => a[fieldName] - b[fieldName]);
-                console.log(this.tableDataEnd)
                 }
                 },
 
@@ -365,7 +308,7 @@
                 this.searchInput =this.searchInput.trim();
                 this.tableDataEnd=[];
                 this.filterTableDataEnd=[];
-                this.tableData.forEach((value,index)=>{
+                this.tableData.forEach((value)=>{
                     if(selectTag==="vid"){
                         if(value.vid){
                             //int 与  string
@@ -427,7 +370,6 @@
                             }
                         }
                     }
-                    console.log(index);
                 });
                 this.tableDataEnd=this.filterTableDataEnd;
                 this.filterTableDataEnd=[];
@@ -443,28 +385,12 @@
             // 初始页currentPage、初始每页数据数pageSize和数据data
             handleSizeChange: function (size) {
                 this.pageSize = size;
-                console.log(this.pageSize)
             },
             handleCurrentChange: function (currentPage) {
                 this.currentPage = currentPage;
-                console.log(this.currentPage)
             },
             addVender(){
                 //前端测试部分
-                // this.tableData.unshift(this.addForm);
-                // this.tableDataEnd.unshift(this.addForm);
-                // //清空填写单的信息放到请求体中，避免请求延迟已经被清空才刷新在信息到表格中
-                // this.addForm = {
-                //     vid: '',
-                //     vName: '',
-                //     vAddress: '',
-                //     vPhone: '',
-                //     vEmail:'',
-                //     vFax: '',
-                //     vCredit: '',
-                //     vSettleAccount: ''
-                // };
-                // this.dialogFormVisible = false;
                 this.$refs.addForm.validate()
                     .then(() =>{
                         this.$axios.post('/staff/addVender', {
@@ -501,10 +427,9 @@
                                 this.dialogFormVisible = false;
                             }
                         }).catch(failedResponse => {
-                            this.$message.error(failedResponse.data.message);
+                            this.$message.error(failedResponse.message);
                         });
                     }).catch(()=>{
-                        console.log("提交失败");
                         this.$message({
                         message: '无法提交，表单中数据有错误',
                         type: 'error'
@@ -513,29 +438,6 @@
             },
             del(delItem, index) {
                 //前端测试部分
-                //数据库删除成功在table表里进行删除,
-                // this.filterTableDataEnd=[];
-                // //删除在表格中tableDataEnd显示的哪个数据
-                // this.tableDataEnd.forEach((value,i)=>{
-                //     if(i !==index){
-                //         this.filterTableDataEnd.push(value);
-                //     }
-                // });
-                // this.tableDataEnd=this.filterTableDataEnd;
-                // this.filterTableDataEnd=[];
-                // //删除从数据源中tableData获得的数据
-                // this.tableData.forEach((value,i)=>{
-                //     //通过主码快速过滤
-                //     if(value.vid!==delItem.vid){
-                //         this.filterTableDataEnd.push(value);
-                //     }
-                // });
-                // this.tableData = this.filterTableDataEnd;
-                // this.filterTableDataEnd=[];
-                // this.$message({
-                //     type: 'success',
-                //     message: '删除成功!'
-                // });
                 this.$confirm('你确定要删除这条记录吗？','提示',{
                     confirmButtonText:'确定',
                     cancelButtonText:'取消',

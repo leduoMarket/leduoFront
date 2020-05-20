@@ -106,6 +106,7 @@
 
         <el-table-column
           prop="eSalary"
+          fixed="right"
           label="操作">
 <!--          默认为每一行增加删除操作，只需要在methods里面定义就好-->
           <template slot-scope="scope">
@@ -145,52 +146,7 @@
                 // 标记删除或者添加是否成功
                 addSuccessful: false,
                 //显示页面的表单数据
-                tableData: [
-                    {
-                        iNumber:'I2020040101',
-                        gid:1234567890123,
-                        vName:'雪碧',
-                        iDate:'2020-04-01T00:00:00.0000000',
-                        iPrice:10,
-                        iPayment:300,
-                        iCount:40
-                    },
-                    {
-                        iNumber:'I2020040302',
-                        gid:1234567890123,
-                        vName:'橙汁',
-                        iDate:'2020-04-03T00:00:00.0000000',
-                        iPrice:9,
-                        iPayment:9090,
-                        iCount:10
-                    },
-                    {
-                        iNumber:'I2020040502',
-                        gid:1234567890124,
-                        vName:'橙汁',
-                        iDate:'2020-04-05T00:00:00.0000000',
-                        iPrice:15.5,
-                        iPayment:9090,
-                        iCount:10
-                    },
-                    {
-                        iNumber:'I2020040201',
-                        gid:1234567890125,
-                        vName:'可乐',
-                        iDate:'2019-04-02T00:00:00.0000000',
-                        iPrice:12.2,
-                        iPayment:9090,
-                        iCount:10
-                    },{
-                        iNumber:'I2020040301',
-                        gid:1234567890126,
-                        vName:'橙汁',
-                        iDate:'2020-04-03T00:00:00.0000000',
-                        iPrice:13.7,
-                        iPayment:9090,
-                        iCount:10
-                    },
-                ],
+                tableData: [],
                 nowDate:"",   //当前日期
 
                 //删除的元素是谁
@@ -283,11 +239,6 @@
         //过滤器
         // 创建的时候发送请求获取显示数据库所有员工的列表数据
         created() {
-            //前端测试代码
-            // this.tableDataEnd=[];
-            // this.tableData.forEach((value)=>{
-            //     this.tableDataEnd.push(value);
-            // });
             this.tableData =  [];
             this.$axios.get("/staff/stockInList").then(res => {
                 if (res.data.code===200) {
@@ -334,7 +285,7 @@
             }).catch(failResponse => {
                 this.$message({
                     type: 'info',
-                    message: failResponse.data.message
+                    message: failResponse.message
                 });
             })
         },
@@ -342,7 +293,6 @@
         methods: {
             //分页排序整体表格数据
             changeTableSort(column){
-                console.log(column);
                 //获取字段名称和排序类型
                 let fieldName = column.prop;
                 let sortingType = column.order;
@@ -355,7 +305,6 @@
                 //按照升序排序
                 else{
                     this.tableDataEnd = this.tableData.sort((a, b) => a[fieldName] - b[fieldName]);
-                    console.log(this.tableDataEnd)
                 }
             },
 
@@ -392,7 +341,7 @@
                 this.tableDataEnd=[];
                 this.filterTableDataEnd=[];
 
-                this.tableData.forEach((value,index)=>{
+                this.tableData.forEach((value)=>{
                     if(selectTag==="iNumber"){
                         if(value.iNumber){
                             let iNumber = ""+value.iNumber;
@@ -412,7 +361,6 @@
                     if(selectTag==="gid"){
                         if(value.gid){
                             let gid =""+ value.gid;
-                            console.log("gid"+typeof(gid)+gid);
                             if(gid.search(this.searchInput)!==-1){
                                 this.filterTableDataEnd.push(value)
                             }
@@ -450,8 +398,6 @@
                             }
                         }
                     }
-
-                    console.log(index);
                 });
                 this.tableDataEnd=[];
                 this.tableDataEnd=this.filterTableDataEnd;
@@ -467,34 +413,13 @@
             // 初始页currentPage、初始每页数据数pageSize和数据data
             handleSizeChange: function (size) {
                 this.pageSize = size;
-                console.log(this.pageSize)
             },
             handleCurrentChange: function (currentPage) {
                 this.currentPage = currentPage;
-                console.log(this.currentPage)
             },
 
             // 删除选中下标的一行数据，index由click处的scope.$index传过来的小标，delItem由scope.$row传过来的元素
             del(delItem, index){
-                // this.filterTableDataEnd=[];
-                // //删除在表格中tableDataEnd显示的哪个数据
-                // this.tableDataEnd.forEach((value,i)=>{
-                //     if(i !==index){
-                //         this.filterTableDataEnd.push(value);
-                //     }
-                // });
-                // this.tableDataEnd=this.filterTableDataEnd;
-                // this.filterTableDataEnd=[];
-                // //删除从数据源中tableData获得的数据
-                // this.tableData.forEach((value)=>{
-                //     //通过主码快速过滤
-                //     if(value.iNumber!==delItem.iNumber){
-                //         this.filterTableDataEnd.push(value);
-                //     }
-                // });
-                // this.tableData = this.filterTableDataEnd;
-                // this.filterTableDataEnd=[];
-                // console.log(delItem);
                 this.$confirm('你确定要删除这条记录吗？','提示',{
                     confirmButtonText:'确定',
                     cancelButtonText:'取消',
@@ -552,22 +477,6 @@
             //新增表单操作
             addStockIn(){
                 //逻辑前端判断
-                // this.submitBtn=true;
-                // //前端测试部分
-                // //将信息刷新到表格中，指向同一个数据源所以只添加一次
-                // this.tableDataEnd.unshift(this.addForm);
-                // this.tableData.unshift(this.addForm);
-                // //清空填写单的信息放到请求体中，避免请求延迟已经被清空才刷新在信息到表格中
-                // this.addForm = {
-                //     iNumber : '',
-                //     gid : '',
-                //     vName : '',
-                //     iDate : '',
-                //     iPrice: '',
-                //     iPayment: '',
-                //     iCount: '',
-                // };
-                // this.dialogFormVisible = false;
                 this.$refs.addForm.validate()  //判断表单验证是否通过，验证通过执行.then()，否则执行.catch()
                     .then(() =>{
                         this.$axios.post('/staff/stockInAdd',{
@@ -613,13 +522,12 @@
                             this.addSuccessful = false;
                             this.submitBtn=false;
                             this.$message({
-                                message:failedResponse.data.message,
+                                message:failedResponse.message,
                                 type: 'error'
                             });
 
                         } );
                     }).catch(() =>{
-                        console.log("提交失败");
                     this.submitBtn=false;
                     this.$message({
                         message: '无法提交，表单中数据有错误',

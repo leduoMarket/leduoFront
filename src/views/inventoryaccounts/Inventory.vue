@@ -62,23 +62,7 @@
         name: "Inventory",
         data() {
             return {
-                tableData: [{
-                    gid:'24518',
-                    gName:'苹果',
-                    counts:14,
-                },{
-                    gid:'201',
-                    gName:'饮料',
-                    counts:51,
-                },{
-                    gid:'134',
-                    gName:'面包',
-                    counts:14,
-                },{
-                    gid:'309',
-                    gName:'薯片',
-                    counts:14,
-                }],
+                tableData: [],
                 pageSize:5,  //分页数量
                 currentPage:1, //初始页
 
@@ -116,20 +100,16 @@
         },
         // 创建的时候发送请求获取显示数据库列表数据
         created() {
-            // this.tableData.forEach((value)=>{
-            //     this.tableDataEnd.push(value);
-            // });
+
             this.tableData=[];
             this.$axios.get("/home/inventory").then(res => {
                 if (res.data.code===200) {
-                    console.log(res);
-                    this.tableData = res.data;
+                    this.tableData = res.data.data;
                     this.totalItems = this.tableData.length;
                     this.tableDataEnd=[];
                     this.tableData.forEach((value)=>{
                         this.tableDataEnd.push(value);
                     });
-                    console.log(this.tableData.length);
                 }
             }).catch(() => {
 
@@ -139,7 +119,6 @@
         methods: {
             //分页排序整体表格数据
             changeTableSort(column){
-                console.log(column);
                 //获取字段名称和排序类型
                 let fieldName = column.prop;
                 let sortingType = column.order;
@@ -150,7 +129,6 @@
                 //按照升序排序
                 else{
                     this.tableDataEnd = this.tableData.sort((a, b) => a[fieldName] - b[fieldName]);
-                    console.log(this.tableDataEnd)
                 }
             },
 
@@ -167,7 +145,7 @@
                 this.searchInput=this.searchInput.trim();
                 this.tableDataEnd=[];
                 this.filterTableDataEnd=[];
-                this.tableData.forEach((value,index)=>{
+                this.tableData.forEach((value,)=>{
                     if(selectTag==="gid"){
                         if(value.gid){
                             let gid = ""+value.gid;
@@ -192,16 +170,12 @@
                             }
                         }
                     }
-
-                    console.log(index);
                 });
                 this.tableDataEnd=[];
                 this.tableDataEnd=this.filterTableDataEnd;
                 this.filterTableDataEnd=[];
             },
             doReset(){
-                /*this.searchInput="";
-                this.tableDataEnd = this.tableData;*/
                 this.searchInput="";
                 this.tableDataEnd=[];
                 this.tableData.forEach((value)=>{
@@ -212,11 +186,9 @@
             // 初始页currentPage、初始每页数据数pageSize和数据data
             handleSizeChange: function (size) {
                 this.pageSize = size;
-                console.log(this.pageSize)
             },
             handleCurrentChange: function (currentPage) {
                 this.currentPage = currentPage;
-                console.log(this.currentPage)
             },
         },
     }

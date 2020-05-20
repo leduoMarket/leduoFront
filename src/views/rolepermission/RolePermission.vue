@@ -95,30 +95,7 @@
                 }
                 ],
                 //从数据中获得的数据
-                tableData: [{
-                    uid:"1234567",
-                    userName:"张三",
-                    password:"1234567",
-                    phone:"1231231231",
-                    role:"管理员",
-                    status:"0",
-
-                },{
-                    uid:"2234567",
-                    userName:"张三",
-                    password:"1234567",
-                    phone:"1231231231",
-                    role:"财务",
-                    status:"1",
-                },{
-                    uid:"3234567",
-                    userName:"张三",
-                    password:"1234567",
-                    phone:"1231231231",
-                    role:"员工",
-                    status:"0",
-
-                }],
+                tableData: [],
                 //最后显示在表单的内容
                 tableDataEnd:[],
                 pageSize:5,
@@ -127,33 +104,10 @@
         },
         created(){
             // 前端测试部分
-            // this.tableDataEnd=[];
-            // let item={
-            //     uid:'',
-            //     uName:'',
-            //     uStatus:'',
-            //     uRole:'',
-            // };
-            //
-            // this.tableData.forEach((value) =>{
-            //     item.uid=value.uid;
-            //     item.uName=value.userName;
-            //     item.uRole=value.role;
-            //     item.uStatus=value.status;
-            //     console.log(item);
-            //     this.tableDataEnd.push(item);
-            //     item={
-            //         uid:'',
-            //         uName:'',
-            //         uStatus:'',
-            //         uRole:'',
-            //     };
-            // });
             this.tableData = [];
             // 从后端获得数据
             this.$axios.get("/admin/getAllemployees").then(res =>{
                 if(res.data.code ===200){
-                    console.log(res.data.data);
                     this.tableData=res.data.data;
                     this.tableDataEnd=[];
                     let item={
@@ -167,7 +121,6 @@
                         item.uName=value.userName;
                         item.uRole=value.role;
                         item.uStatus=""+value.status;
-                        console.log(item);
                         this.tableDataEnd.push(item);
                         item={
                             uid:'',
@@ -177,20 +130,16 @@
                         };
 
                     });
-                    console.log(this.tableDataEnd);
                 }
             }).catch(fail =>{
-                this.$message.warning(fail.data.message);
+                this.$message.warning(fail.message);
             });
 
         },
 
         methods: {
             changeRole(item){
-                console.log("item："+item);
-                console.log(item.uid);
-                console.log(item.uRole);
-                console.log(item.uStatus);
+
                     this.$axios.put('/admin/changeStatus',{
                         uid:item.uid,
                         role:item.uRole,
@@ -209,7 +158,6 @@
 
             },
             changeStatus(item){
-                console.log(item);
                 this.$axios.put('/admin/changeStatus',{
                     uid:item.uid,
                     role:item.uRole,
@@ -229,11 +177,9 @@
             //初始页currentPage、初始每页数据数pageSize和数据data
             handleSizeChange: function (size) {
                 this.pageSize = size;
-                console.log(this.pageSize)
             },
             handleCurrentChange: function (currentPage) {
                 this.currentPage = currentPage;
-                console.log(this.currentPage)
             },
         }
 

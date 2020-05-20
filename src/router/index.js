@@ -529,19 +529,16 @@ router.beforeEach((to, from, next) => {
   //从SessionStorage里面取出需要的角色和user ==> cookie
   let user = sessionStorage.getItem("user");
   let role = sessionStorage.getItem("role");
-  console.log(user);
-  console.log(typeof (role),role);
   //不允许未登录的可以访问的页面
   if (to.meta.requireAuth) { // 判断该路由是否需要登录权限
     if (user) { // 判断本地是否存在cookie
       if (to.meta.roles.length !== 0) {
         //1,2,3,分别代表什么权限？
         for (let i = 0; i < to.meta.roles.length; i++) {
-          if (role==to.meta.roles[i]) {
-            console.log("相等");
+          if (role===to.meta.roles[i]) {
             next();
             break;
-          } else if (i == to.meta.roles.length - 1) {
+          } else if (i === to.meta.roles.length - 1) {
             next({
               path: '/404'
             })
@@ -558,35 +555,6 @@ router.beforeEach((to, from, next) => {
   } else {
     next()
   }
-
-
-  // if (to.matched.some(record => record.meta.requireAuth)) {
-  //   console.log("true");
-  //   if(to.path == '/'){
-  //     sessionStorage.removeItem("user");
-  //     sessionStorage.removeItem("role")
-  //   }
-  //   let user = JSON.parse(sessionStorage.getItem("user"));
-  //   let role = JSON.parse(sessionStorage.getItem("role"));
-  //   console.log(role);
-  //   console.log(user);
-  //   //如果没有用户，且去的地址不是login
-  //   if(!user&&(to.path!='/'||to.path!='/404')){
-  //     next({path:'/404'});
-  //   }else {
-  //       next();
-  //   }
-  //   if(role==2&&to.path=='home'){
-  //     next({path:'/404'});
-  //   }else{
-  //     next();
-  //   }
-  //
-  // }//允许不登录而访问的页面
-  // else {
-  //   next() // 确保一定要调用 next()
-  // }
-
 
 });
 export default router

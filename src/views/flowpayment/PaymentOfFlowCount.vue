@@ -123,48 +123,7 @@
                 // 标记删除或者添加是否成功
                 addSuccessful: false,
                 //显示页面的表单数据
-                tableData: [
-                    {
-                        pNumber: 'P2020040101',
-                        pDate: '2020-04-01T00:00:00.0000000',
-                        pCategory: '入库',
-                        pSourceShop: '天猫',
-                        pTradingAmount: 180,
-                        pRemainingAmount: 23
-                    },
-                    {
-                        pNumber: 'P2020040102',
-                        pDate: '2020-04-01T00:00:00.0000000',
-                        pCategory: '出库',
-                        pSourceShop: '京东',
-                        pTradingAmount: 129,
-                        pRemainingAmount: 172
-                    },
-                    {
-                        pNumber: 'P2020040103',
-                        pDate: '2020-04-01T00:00:00.0000000',
-                        pCategory: '入库',
-                        pSourceShop: '淘宝',
-                        pTradingAmount: 21,
-                        pRemainingAmount: 210
-                    },
-                    {
-                        pNumber: 'P2020040104',
-                        pDate: '2020-04-02T00:00:00.0000000',
-                        pCategory: '出库',
-                        pSourceShop: '天猫',
-                        pTradingAmount: 80,
-                        pRemainingAmount:19
-                    },
-                    {
-                        pNumber: 'P2020040105',
-                        pDate: '2020-04-03T00:00:00.0000000',
-                        pCategory: '入库',
-                        pSourceShop: '拼多多',
-                        pTradingAmount: 180,
-                        pRemainingAmount: 510
-                    },
-                ],
+                tableData: [],
 
                 nowDate:"",   //当前日期
 
@@ -239,22 +198,14 @@
         },
       created(){
           //前端测试部分
-          // this.tableDataEnd=[];
-          // this.tableData.forEach((value)=>{
-          //     this.tableDataEnd.push(value);
-          // });
-          // console.log('tableData'+this.tableData);
-          // console.log('tableDataEnd'+this.tableDataEnd);
           this.tableData =  [];
           this.$axios.get("/home/payments").then(res =>{
               if(res.data.code === 200){
-                  console.log(res);
                   this.tableData = res.data.data;
                   this.tableDataEnd=[];
                   this.tableData.forEach((value)=>{
                       this.tableDataEnd.push(value);
                   });
-                  console.log(this.tableData.length);
               }else{
                   this.$message({
                       type: 'info',
@@ -264,7 +215,7 @@
         }).catch(failResponse =>{
               this.$message({
                   type: 'info',
-                  message:failResponse.data.message
+                  message:failResponse.message
               });
         });
 
@@ -272,7 +223,6 @@
         methods: {
             //分页排序整体表格数据
             changeTableSort(column){
-                console.log(column);
                 //获取字段名称和排序类型
                 let fieldName = column.prop;
                 let sortingType = column.order;
@@ -283,7 +233,6 @@
                 //按照升序排序
                 else{
                     this.tableDataEnd = this.tableData.sort((a, b) => a[fieldName] - b[fieldName]);
-                    console.log(this.tableDataEnd)
                 }
             },
 
@@ -300,7 +249,7 @@
                 this.searchInput=this.searchInput.trim();
                 this.tableDataEnd=[];
                 this.filterTableDataEnd=[];
-                this.tableData.forEach((value,index)=>{
+                this.tableData.forEach((value)=>{
                     if(selectTag==="pNumber"){
                         if(value.pNumber){
                             let pNumber = ""+value.pNumber;
@@ -341,8 +290,6 @@
                             }
                         }
                     }
-
-                    console.log(index);
                 });
                 this.tableDataEnd=[];
                 this.tableDataEnd=this.filterTableDataEnd;
@@ -358,11 +305,9 @@
             // 初始页currentPage、初始每页数据数pageSize和数据data
             handleSizeChange: function (size) {
                 this.pageSize = size;
-                console.log(this.pageSize)
             },
             handleCurrentChange: function (currentPage) {
                 this.currentPage = currentPage;
-                console.log(this.currentPage)
             },
             //日期格式化显示
             dateFormat:function(row,column){
@@ -401,7 +346,6 @@
                 // this.dialogFormVisible = false;
                 this.$refs.form.validate()
                     .then(() => {
-                        console.log("正则成功");
                         this.$axios.post('/home/addPayment', {
                             pNumber: this.form.pNumber,
                             pDate: this.form.pDate,
@@ -441,13 +385,12 @@
                             this.addSuccessful = false;
                             this.submitBtn = false;
                             this.$message({
-                                message: failedResponse.data.message,
+                                message: failedResponse.message,
                                 type: 'error'
                             });
 
                         });
                     }).catch(() => {
-                    console.log("提交失败");
                     this.submitBtn=false;
                     this.$message({
                         message: '无法提交，表单中数据有错误',
@@ -457,33 +400,12 @@
                 });
             },
             del(delItem, index){
-                console.log(delItem);
                 this.$confirm('你确定要删除这条记录吗？','提示',{
                     confirmButtonText:'确定',
                     cancelButtonText:'取消',
                     type:'warning'
                 }).then(() =>{
                     //前端测试代码
-                    // this.filterTableDataEnd=[];
-                    // //删除在表格中tableDataEnd显示的哪个数据
-                    // this.tableDataEnd.forEach((value,i)=>{
-                    //     if(i !==index){
-                    //         this.filterTableDataEnd.push(value);
-                    //     }
-                    // });
-                    // this.tableDataEnd=this.filterTableDataEnd;
-                    // this.filterTableDataEnd=[];
-                    //
-                    // //删除从数据源中tableData获得的数据
-                    // this.tableData.forEach((value)=>{
-                    //     //通过主码快速过滤
-                    //     if(value.pNumber!==delItem.pNumber){
-                    //         this.filterTableDataEnd.push(value);
-                    //     }
-                    // });
-                    // this.tableData = this.filterTableDataEnd;
-                    // this.filterTableDataEnd=[];
-                    //如果用户确实要删除，则用delete方式删除，并且传递要删除的记录的eid
                     this.$axios.delete('/home/delpayment?pNumber='+delItem.pNumber)
                         .then(successResponse =>{
                             if(successResponse.data.code===200){

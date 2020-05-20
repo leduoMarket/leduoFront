@@ -146,32 +146,7 @@
                 addSuccessful: false,
                 // delSuccessful: false,
                 // 在基础表格中展示的数据
-                tableData: [{
-                    gid: 1302021121123,
-                    vName: 'ioio',
-                    oNumber: 'O2020010190',
-                    oDate: '2020-01-01',
-                    oPrice: 90.0,
-                    oPayment: 110.0,
-                    oCount: 20
-                },{
-                    gid: 1234123412342,
-                    vName: "iiii",
-                    oNumber: 'O232390901002',
-                    oDate: '2020-02-03',
-                    oPrice: 100.2,
-                    oPayment: 20.3,
-                    oCount: 20.2
-                },{
-                    gid: 1234123412342,
-                    vName: "iiii",
-                    oNumber: 'O232390901002',
-                    oDate: '2020-02-03',
-                    oPrice: 100.2,
-                    oPayment: 20.3,
-                    oCount: 20.2
-                }
-                ],
+                tableData: [],
                 // 控制新增页面的form表单可见性
                 dialogFormVisible: false,
                 //删除的元素是谁
@@ -259,9 +234,6 @@
       // 创建的时候发送请求获取显示数据库所有员工的列表数据
       created() {
 
-          // this.tableData.forEach((value)=>{
-          //     this.tableDataEnd.push(value);
-          // });
          this.tableData=[];
           this.$axios.get("/staff/getStockOutList").then(res => {
               if (res.data.code === 200) {
@@ -307,7 +279,6 @@
         methods: {
             //分页排序整体表格数据
             changeTableSort(column){
-                console.log(column);
                 //获取字段名称和排序类型
                 let fieldName = column.prop;
                 let sortingType = column.order;
@@ -318,18 +289,15 @@
                 //按照升序排序
                 else{
                     this.tableDataEnd = this.tableData.sort((a, b) => a[fieldName] - b[fieldName]);
-                    console.log(this.tableDataEnd)
                 }
             },
 
             // 初始页currentPage、初始每页数据数pageSize和数据data
             handleSizeChange: function (size) {
                 this.pageSize = size;
-                console.log(this.pageSize)
             },
             handleCurrentChange: function (currentPage) {
                 this.currentPage = currentPage;
-                console.log(this.currentPage)
             },
             openAddPage() {
                 this.dialogFormVisible = true;
@@ -365,7 +333,7 @@
                 this.searchInput=this.searchInput.trim();
                 this.tableDataEnd=[];
                 this.filterTableDataEnd=[];
-                this.tableData.forEach((value,index)=>{
+                this.tableData.forEach((value)=>{
                     if(selectTag==="oNumber"){
                         if(value.oNumber){
                             let oNumber =""+ value.oNumber;
@@ -393,7 +361,6 @@
                     if(selectTag==="oDate"){
                         if(value.oDate){
                             let oDate = ""+value.oDate;
-                            console.log("oDate"+oDate);
                             if(oDate.search(this.searchInput)!==-1){
                                 this.filterTableDataEnd.push(value)
                             }
@@ -423,8 +390,6 @@
                             }
                         }
                     }
-
-                    console.log(index);
                 });
                 this.tableDataEnd=this.filterTableDataEnd;
                 this.filterTableDataEnd=[];
@@ -440,25 +405,6 @@
             //新增出库单
             addStockOut() {
                 //前端测试部分
-                //让表格消失
-                // this.dialogFormVisible = false;
-                // this.tableData.unshift(this.dataInfo);
-                // this.tableDataEnd.unshift(this.dataInfo);
-                // // 将填写框置空，方便下次填写
-                // this.dataInfo = {
-                //     gid: '',
-                //     vName: '',
-                //     oNumber: '',
-                //     oDate: '',
-                //     oPrice: '',
-                //     oPayment: '',
-                //     oCount: ''
-                // };
-                // this.$message({
-                //     message: '成功添加一条记录',
-                //     type: 'success'
-                // });
-
                 this.$refs.dataInfo.validate()
                     .then(() =>{
                         this.$axios.post('/staff/addStockOutRecord', {
@@ -503,7 +449,6 @@
                             });
                         });
                     }).catch(() =>{
-                    console.log("提交失败");
                     this.$message({
                         message: '无法提交，表单中数据有错误',
                         type: 'error'
@@ -513,29 +458,6 @@
 
             // 删除选中下标的一行数据，index由click处的scope.$index传过来的小标，delItem由scope.$row传过来的元素
             del(delItem, index){
-                // this.filterTableDataEnd=[];
-                // //删除在表格中tableDataEnd显示的哪个数据
-                // this.tableDataEnd.forEach((value,i)=>{
-                //     if(i !==index){
-                //         this.filterTableDataEnd.push(value);
-                //     }
-                // });
-                // this.tableDataEnd=this.filterTableDataEnd;
-                // this.filterTableDataEnd=[];
-                //
-                // //删除从数据源中tableData获得的数据
-                // this.tableData.forEach((value)=>{
-                //     //通过主码快速过滤
-                //     if(value.oNumber!==delItem.oNumber){
-                //         this.filterTableDataEnd.push(value);
-                //     }
-                // });
-                // this.tableData = this.filterTableDataEnd;
-                // this.filterTableDataEnd=[];
-                // this.$message({
-                //     type: 'success',
-                //     message: '删除成功!'
-                // });
                 this.$confirm('你确定要删除这条记录吗？','提示',{
                     confirmButtonText:'确定',
                     cancelButtonText:'取消',

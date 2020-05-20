@@ -19,10 +19,6 @@ export default {
             this.$router.go(-1);
         },
         logOut(){
-            // sessionStorage.removeItem('user');
-            // sessionStorage.removeItem('role');
-            // sessionStorage.removeItem('uid');
-            // this.$router.replace({path: '/'});
 
             this.$axios.get("/staff/logout").then(successfulResponse=>{
                 if(successfulResponse.data.code===405){
@@ -30,6 +26,12 @@ export default {
                     sessionStorage.removeItem('role');
                     sessionStorage.removeItem('uid');
                     this.$router.replace({path: '/'});
+                }else{
+                    this.$message.info("退出失败,服务器出错");
+                    sessionStorage.removeItem('user');
+                    sessionStorage.removeItem('role');
+                    sessionStorage.removeItem('uid');
+                    this.$router.replace({path:'/'});
                 }
             }).catch(()=>{
                 this.$notify({

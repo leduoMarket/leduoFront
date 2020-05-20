@@ -134,21 +134,7 @@
                 // 标记删除或者添加是否成功
                 addSuccessful: false,
                 //显示页面的表单数据
-                tableData: [{
-                    gid:1234567,
-                    gName:'肥皂1',
-                    categories:'生活用品',
-                    address:'世纪金都',
-                    chargeUnit:'1',
-                    gDate:'2020-09-04'},
-                {
-                    gid:2345678,
-                    gName:'肥皂2',
-                    categories:'生活用品2',
-                    address:'世纪金都2',
-                    chargeUnit:'2',
-                    gDate:'2020-10-04'}
-                ],
+                tableData: [],
                 //删除的元素是谁
                 delItem: [
                 ],
@@ -217,10 +203,6 @@
         // 创建的时候发送请求获取显示数据库列表数据
         created() {
             //前端代码测试
-           /* this.tableDataEnd=[];
-            this.tableData.forEach((value,)=>{
-                this.tableDataEnd.push(value);
-            });*/
             this.tableData=[];
             this.$axios.get("/home/goods").then(res => {
                 if(res.data.code === 200){
@@ -259,14 +241,13 @@
             }).catch(failResponse => {
                 this.$message({
                     type: 'info',
-                    message: failResponse.data.message
+                    message: failResponse.message
                 });
             })
         },
         methods: {
             //分页排序整体表格数据
             changeTableSort(column){
-                console.log(column);
                 //获取字段名称和排序类型
                 let fieldName = column.prop;
                 let sortingType = column.order;
@@ -277,7 +258,6 @@
                 //按照升序排序
                 else{
                     this.tableDataEnd = this.tableData.sort((a, b) => a[fieldName] - b[fieldName]);
-                    console.log(this.tableDataEnd)
                 }
             },
 
@@ -295,7 +275,7 @@
                 this.searchInput = this.searchInput.trim();
                 this.tableDataEnd=[];
                 this.filterTableDataEnd=[];
-                this.tableData.forEach((value,index)=>{
+                this.tableData.forEach((value)=>{
                     if(selectTag==="gid"){
                         if(value.gid){
                             let gid = ""+value.gid;
@@ -320,7 +300,6 @@
                             }
                         }
                     }
-                    console.log(index);
                 });
                 this.tableDataEnd=[];
                 this.tableDataEnd=this.filterTableDataEnd;
@@ -353,39 +332,13 @@
             // 初始页currentPage、初始每页数据数pageSize和数据data
             handleSizeChange: function (size) {
                 this.pageSize = size;
-                console.log(this.pageSize)
             },
             handleCurrentChange: function (currentPage) {
                 this.currentPage = currentPage;
-                console.log(this.currentPage)
             },
             // 删除选中下标的一行数据，index由click处的scope.$index传过来的小标，delItem由scope.$row传过来的元素
             del(delItem, index){
                 // //前端代码测试
-                /*//数据库删除成功在table表里进行删除,
-                this.filterTableDataEnd = [];
-                //删除在表格中tableDataEnd显示的哪个数据
-                this.tableDataEnd.forEach((value, i) => {
-                    if (i !== index) {
-                        this.filterTableDataEnd.push(value);
-                    }
-                });
-                this.tableDataEnd = this.filterTableDataEnd;
-                this.filterTableDataEnd = [];
-
-                //删除从数据源中tableData获得的数据
-                this.tableData.forEach((value, i) => {
-                    //通过主码快速过滤
-                    if (value.gid !== delItem.gid || value.gName !== delItem.gName || value.categories !== delItem.categories || value.address !== delItem.address || value.chargeUnit !== delItem.chargeUnit || value.gDate !== delItem.gDate) {
-                        this.filterTableDataEnd.push(value);
-                    }
-                });
-                this.tableData = this.filterTableDataEnd;
-                this.filterTableDataEnd = [];
-                this.$message({
-                    type: 'success',
-                    message: '删除成功!'
-                });*/
                 this.$confirm('你确定要删除这条记录吗？','提示',{
                     confirmButtonText:'确定',
                     cancelButtonText:'取消',
@@ -432,7 +385,7 @@
                         //用户同意删除情况下数据库删除失败
                         this.$message({
                             type: 'info',
-                            message: failResponse.data.message
+                            message: failResponse.message
                         });
                     })
                 }).catch(() =>{
@@ -459,23 +412,6 @@
             //新增表单操作
             addGoods(){
                 //前端代码测试
-              /*  this.dialogFormVisible = false;
-                //将信息刷新到表格中
-                this.tableData.unshift(this.dataInfo);
-                this.tableDataEnd.unshift(this.dataInfo);
-                this.$message({
-                    message: '成功添加一条记录',
-                    type: 'success',
-                });
-                //清空填写单的信息放到请求体中，避免请求延迟已经被清空才刷新在信息到表格中
-                this.dataInfo = {
-                    gid : '',
-                    gName : '',
-                    categories: '',
-                    address : '',
-                    chargeUnit : '',
-                    gDate: '',
-                };*/
                 this.$refs.dataInfo.validate()
                     .then(() =>{
                         this.$axios.post('/home/Goods',{
@@ -512,7 +448,7 @@
                             }
                         }).catch(failedResponse =>{
                             this.$message({
-                                message: failedResponse.data.message,
+                                message: failedResponse.message,
                                 type: 'error'
                             });
 

@@ -1,7 +1,7 @@
 <template >
   <div class="login">
     <!--  <RandomCode></RandomCode>-->
-    <body id="poster">
+    <div  id="poster">
     <div id="logo">
       <!--    <img src="../../assets/pic/logo.png" style="width: 100px; height: 100px" alt=""/>-->
     </div>
@@ -32,13 +32,12 @@
 
               <s-identify :identifyCode="identifyCode"><RandomCode :identifyCode="identifyCode">
               </RandomCode></s-identify>
-
             </div>
           </div>
         </el-col>
         <!--        &lt;!&ndash; 刷新验证码 &ndash;&gt;-->
         <el-col :span="8">
-          <el-button @click="refreshCode" type='text' class="textbtn">看不清，换一张</el-button>
+          <el-button @click="refreshCode" type='text' class="textBtn">看不清，换一张</el-button>
 
         </el-col>
       </el-form-item>
@@ -47,7 +46,7 @@
       </el-form-item>
       <el-button type="text" style="width: 100%; margin-left: 50%" size="mini" v-on:click="gotoRegister" >注册</el-button>
     </el-form>
-    </body>
+    </div>
   </div>
 </template>
 <script>
@@ -137,7 +136,6 @@
                 for (let i = 0; i < l; i++) {
                     this.identifyCode += o[this.randomNum(0, o.length)]
                 }
-                console.log(this.identifyCode)
             },
             gotoRegister(){
                 this.$router.replace('/register');
@@ -145,29 +143,26 @@
             login () {
 
                 //前端测试代码
-                if(this.loginForm.uid == this.user1.username){
-                    console.log(this.user1.role);
+                if(this.loginForm.uid === this.user1.username){
                     sessionStorage.setItem('user','1234567');
                     sessionStorage.setItem('role','1');
                     sessionStorage.setItem('uid',JSON.stringify(this.loginForm.uid));
                     this.$router.replace({path: '/home/firstPage'});
-                }else if(this.loginForm.uid == this.user2.username){
-                    console.log(this.user2.role);
+                }else if(this.loginForm.uid === this.user2.username){
                     sessionStorage.setItem('user','2234567');
                     sessionStorage.setItem('role','2');
 
                     sessionStorage.setItem('uid',JSON.stringify(this.loginForm.uid));
                     this.$router.replace({path:'/homet/firstPage'});
 
-                }else if(this.loginForm.uid == this.user3.username){
-                    console.log(this.user3.role);
+                }else if(this.loginForm.uid === this.user3.username){
                     sessionStorage.setItem('user','3234567');
                     sessionStorage.setItem('role','3');
                     sessionStorage.setItem('uid',JSON.stringify(this.loginForm.uid));
                     this.$router.replace({path:'/homes/firstPage'})
                 }
                 this.$refs.loginForm.validate()
-                    .then(res => {
+                    .then(() => {
                         this.loadingBtn = false;
                         //这里是验证码的地方
                         this.refreshCode();
@@ -179,46 +174,32 @@
                             .then(successResponse => {
                                 if (successResponse.data.code === 200) {
                                     sessionStorage.setItem('uid',JSON.stringify(this.loginForm.uid));
-                                    console.log("loginForm:"+this.loginForm.uid);
-                                    //得到响应中的role值，1：系统管理员，2.财务人员，3.普通员工
-                                    //获得从后端得到role的代码可能有误
-                                    let role = successResponse.data.data.role;
-                                    //键值对，值：string，不能是json
                                     sessionStorage.setItem('user',successResponse.data.data.sessionId);
-                                    // sessionStorage.setItem('uid',this.loginForm.uid);
-                                    console.log("role from dataBase:"+successResponse.data.data.role);
-                                    if(successResponse.data.data.role == 1){
-                                        // sessionStorage.setItem('role',successResponse.data.role);
+                                    if(successResponse.data.data.role === 1){
                                         sessionStorage.setItem('role','1');
-                                        console.log("管理员");
                                         this.$message.success(successResponse.data.message);
                                         this.$router.replace({path: '/home/firstPage'});
-                                    }else if(successResponse.data.data.role == 2){
+                                    }else if(successResponse.data.data.role === 2){
                                         sessionStorage.setItem('role','2');
                                         this.$message.success(successResponse.data.message);
-                                    //     sessionStorage.setItem('role',successResponse.data.role);
-                                        console.log("财务");
                                         this.$router.replace({path:'/homet/firstPage'})
-                                    }else if(successResponse.data.data.role == 3){
+                                    }else if(successResponse.data.data.role === 3){
                                         sessionStorage.setItem('role','3');
                                         this.$message.success(successResponse.data.message);
-                                        // sessionStorage.setItem('role',successResponse.data.role);
-                                        console.log("员工");
                                         this.$router.replace({path:'/homes/firstPage'})
                                     }
-
-                                    // this.$router.replace({path: '/homes/firstPage'})
+                                }else{
+                                    this.$message.error(successResponse.data.message);
                                 }
                             })
                             .catch(failResponse => {
-                                // this.$router.replace({path: '/404'})
                                 this.$message({
-                                    message: failResponse.data.message,
+                                    message: failResponse.message,
                                     type: 'error'
                                 });
                             })
 
-                   }).catch(error =>{
+                   }).catch(() =>{
                      this.$message({
                       message: '无法提交，用户名或者密码格式错误或者验证码错误',
                        type: 'error'
@@ -253,7 +234,7 @@
     position: fixed;
   }
   body{
-    margin: 0px;
+    margin: 1px;
   }
   img{
     margin: 40px;
@@ -261,12 +242,6 @@
   #logo{
     text-align: center;
   }
- /* .randomcodeuse{
-    width: 60%;
-    margin: auto;
-    display: flex;
-    align-items: center;
-  }*/
   .identifybox {
     display: flex;
     justify-content: space-between;

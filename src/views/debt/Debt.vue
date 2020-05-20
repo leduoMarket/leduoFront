@@ -97,25 +97,7 @@
                 addSuccessful: false,
                 // delSuccessful: false,
                 // 在基础表格中展示的数据
-                tableData: [{
-                    dNumber: 'd2020010301',
-                    gid: '21348329',
-                    vName: '方便面',
-                    dDate: '2020-01-03T00:00:00.0000000',
-                    dDebt: '1242',
-                },{
-                    dNumber: 'd2020020501',
-                    gid: '214412',
-                    vName: '橙汁',
-                    dDate: '2020-02-05T00:00:00.0000000',
-                    dDebt: '142',
-                },{
-                    dNumber: 'd2020200321',
-                    gid: '12423432',
-                    vName: '可乐',
-                    dDate: '2020-03-21T00:00:00.0000000',
-                    dDebt: '636',
-                }],
+                tableData: [],
                 // 控制新增页面的form表单可见性
                 dialogFormVisible: false,
                 //删除的元素是谁
@@ -183,31 +165,24 @@
         },
         // 创建的时候发送请求获取显示数据库所有的列表数据
         created() {
-            //前端测试代码
-            // this.tableData.forEach((value,index)=>{
-            //     this.tableDataEnd.push(value);
-            // });
-
             this.tableData=[];
             this.$axios.get("/home/debt").then(res => {
                 if(res.data.code === 200){
-                    console.log(res);
-                    this.tableData = res.data;
-                    this.itemCount = res.data.length;
+                    this.tableData = res.data.data;
                     this.tableDataEnd=[];
                     this.tableData.forEach((value)=>{
                         this.tableDataEnd.push(value);
                     });
-                    console.log(this.itemCount);
+
                 }
-            }).catch(() => {
+            }).catch(failResponse => {
+                this.$message.error(failResponse.message);
 
             })
         },
         methods: {
             //分页排序整体表格数据
             changeTableSort(column){
-                console.log(column);
                 //获取字段名称和排序类型
                 let fieldName = column.prop;
                 let sortingType = column.order;
@@ -218,7 +193,6 @@
                 //按照升序排序
                 else{
                     this.tableDataEnd = this.tableData.sort((a, b) => a[fieldName] - b[fieldName]);
-                    console.log(this.tableDataEnd)
                 }
             },
 
@@ -236,7 +210,7 @@
                 this.searchInput=this.searchInput.trim();
                 this.tableDataEnd=[];
                 this.filterTableDataEnd=[];
-                this.tableData.forEach((value,index)=>{
+                this.tableData.forEach((value)=>{
                     if(selectTag==="dNumber"){
                         if(value.dNumber){
                             let dNumber = ""+value.dNumber;
@@ -276,7 +250,6 @@
                             }
                         }
                     }
-                    console.log(index);
                 });
                 this.tableDataEnd=[];
                 this.tableDataEnd=this.filterTableDataEnd;
@@ -313,11 +286,9 @@
             // 初始页currentPage、初始每页数据数pageSize和数据data
             handleSizeChange: function (size) {
                 this.pageSize = size;
-                console.log(this.pageSize)
             },
             handleCurrentChange: function (currentPage) {
                 this.currentPage = currentPage;
-                console.log(this.currentPage)
             },
             openAddPage() {
                 this.dialogFormVisible = true;
@@ -325,33 +296,12 @@
             },
             // 删除选中下标的一行数据，index由click处的scope.$index传过来的下标，delItem由scope.$row传过来的元素
             del(delItem, index) {
-                console.log(delItem);
                 this.$confirm('你确定要删这条记录？', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
                     //前端测试代码
-                    //数据库删除成功在table表里进行删除,
-                    // this.filterTableDataEnd=[];
-                    // //删除在表格中tableDataEnd显示的哪个数据
-                    // this.tableDataEnd.forEach((value,i)=>{
-                    //     if(i !==index){
-                    //         this.filterTableDataEnd.push(value);
-                    //     }
-                    // });
-                    // this.tableDataEnd=this.filterTableDataEnd;
-                    // this.filterTableDataEnd=[];
-                    //
-                    // //删除从数据源中tableData获得的数据
-                    // this.tableData.forEach((value)=>{
-                    //     //通过主码快速过滤
-                    //     if(value.dNumber!==delItem.dNumber){
-                    //         this.filterTableDataEnd.push(value);
-                    //     }
-                    // });
-                    // this.tableData = this.filterTableDataEnd;
-                    // this.filterTableDataEnd=[];
 
                     //如果用户确实要删除，则用delete方式删除，并且传递要删除的记录的eid
                     this.$axios.delete('/delDebt？dNumber='+delItem.dNumber)

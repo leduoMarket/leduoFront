@@ -43,6 +43,7 @@
         </el-table-column>
         <el-table-column
           prop="createdTime"
+          width="120"
           label="创建时间">
         </el-table-column>
         <el-table-column
@@ -103,17 +104,15 @@
         created() {
             this.$axios.get("/someLog").then(res => {
                 if (res.data.code===200) {
-                    console.log(res);
                     this.tableData = res.data.data;
                     this.totalItems = this.tableData.length;
                     this.tableDataEnd=[];
                     this.tableData.forEach((value)=>{
                         this.tableDataEnd.push(value);
                     });
-                    console.log(this.tableData.length);
                 }
             }).catch(failResponse => {
-                this.$message.warning(failResponse.data.message);
+                this.$message.warning(failResponse.message);
 
             })
         },
@@ -141,7 +140,7 @@
                 this.searchInput=this.searchInput.trim();
                 this.tableDataEnd=[];
                 this.filterTableDataEnd=[];
-                this.tableData.forEach((value,index)=>{
+                this.tableData.forEach((value)=>{
                     if(selectTag === "id"){
                         if(value.id){
                             let id = ""+value.id;
@@ -166,7 +165,6 @@
                             }
                         }
                     }
-                    console.log(index);
                 });
                 this.tableDataEnd=this.filterTableDataEnd;
                 this.filterTableDataEnd=[];
@@ -175,17 +173,14 @@
             // 初始页currentPage、初始每页数据数pageSize和数据data
             handleSizeChange: function (size) {
                 this.pageSize = size;
-                console.log(this.pageSize)
             },
             handleCurrentChange: function (currentPage) {
                 this.currentPage = currentPage;
-                console.log(this.currentPage)
             },
             getMore(){
                 this.$axios.get('/allLog')
                     .then(res => {
-                    if (res.data.data.code==200) {
-                        console.log(res);
+                    if (res.data.data.code===200) {
                         res.data.data.forEach(value =>{
                             this.tableData.push(value);
                         });
@@ -194,10 +189,9 @@
                         this.tableData.forEach((value)=>{
                             this.tableDataEnd.push(value);
                         });
-                        console.log(this.tableData.length);
                     }
                 }).catch(failResponse => {
-                    this.$message.error(failResponse.data.message);
+                    this.$message.error(failResponse.message);
 
                 })
             }

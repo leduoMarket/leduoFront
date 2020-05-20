@@ -104,7 +104,7 @@
             }).catch( failResponse =>{
                 this.$message({
                     type: 'info',
-                    message: failResponse.data.message
+                    message: failResponse.message
                 });
             });
             this.$axios.get("/analyseoutsum").then(res =>{
@@ -119,7 +119,7 @@
             }).catch( failResponse =>{
                 this.$message({
                     type: 'info',
-                    message: failResponse.data.message
+                    message: failResponse.message
                 });
             });
 

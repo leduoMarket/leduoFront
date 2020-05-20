@@ -11,7 +11,7 @@
     import TopBar from "./template/TopBar";
     export default {
         name: "Home",
-        components:{Treassure,TopBar}
+        components:{ Treassure,TopBar}
     }
 </script>
 <style scoped>

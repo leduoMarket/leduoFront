@@ -142,7 +142,7 @@
                             }
                         }).catch(failedResponse => {
                             this.addSuccessful = false;
-                            this.$message.warning(failedResponse.data.message);
+                            this.$message.warning(failedResponse.message);
                         });
 
                     }).catch(() => {

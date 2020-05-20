@@ -83,7 +83,7 @@
   .card-panel-description {
     float: right;
     font-weight: bold;
-    margin: 26px 26px 26px 0px;
+    margin: 26px 26px 26px 1px;
   }
 
   .card-panel-text {

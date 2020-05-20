@@ -1,7 +1,7 @@
 <template>
-  <div class="loginuser">
+  <div class="loginUser">
   <el-card class="box-card">
-    <div slot="header" class="clearfix">
+    <div slot="header" class="clearFix">
       <span>登陆账号</span>
       <el-button style="float: right; padding: 3px 0" type="text" @click="goBack">返回首页</el-button>
     </div>
@@ -57,8 +57,8 @@
                 readonly:true,
                 form: {
                     eid: '',
-                    ename: '欧阳',
-                    ephone: '15760232967',
+                    ename: '',
+                    ephone: '',
                     erole: '',
                     epwd1:'',
                     epwd2:'',
@@ -104,7 +104,7 @@
                     this.form.erole=res.data.data.role;
                 }
             }).catch(failResponse =>{
-                this.$message.error(failResponse.data.message);
+                this.$message.error(failResponse.message);
             });
 
         },
@@ -118,7 +118,6 @@
                 }else if(role === "3"){
                     this.$router.replace({path:'/homes/firstPage'})
                 }
-                this.$router.go(-1);
             },
             submit(){
                 this.$refs.form.validate()
@@ -148,7 +147,7 @@
                             }).catch(failedResponse =>{
                                 this.$message({
                                     type: 'info',
-                                    message: failedResponse.data.message
+                                    message: failedResponse.message
                                 });
 
 
