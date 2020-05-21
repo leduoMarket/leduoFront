@@ -6,14 +6,14 @@
       <el-button style="float: right; padding: 3px 0" type="text" @click="addForm">新建</el-button>
       <el-dialog title="商品定价" :visible.sync="dialogFormVisible">
         <el-form :model="dataInfo" :rules="goodPriceRules" ref="dataInfo">
-          <el-form-item label="商品代码" :label-width="formLabelWidth" prop="gid">
-            <el-input v-model="dataInfo.gid" autocomplete="off"></el-input>
+          <el-form-item label="商品代码" :label-width="formLabelWidth" prop="gid" >
+            <el-input v-model="dataInfo.gid" autocomplete="off" @blur="getGood"></el-input>
           </el-form-item>
           <el-form-item label="商品名称" :label-width="formLabelWidth" prop="gName">
-            <el-input v-model="dataInfo.gName" autocomplete="off"></el-input>
+            <el-input v-model="dataInfo.gName" autocomplete="off" :readonly="status ? false : 'readonly'"></el-input>
           </el-form-item>
           <el-form-item label="历史价格" :label-width="formLabelWidth" prop="pOldPrice">
-            <el-input v-model="dataInfo.pOldPrice" autocomplete="off"></el-input>
+            <el-input v-model="dataInfo.pOldPrice" autocomplete="off" :readonly="status ? false : 'readonly'"></el-input>
           </el-form-item>
           <el-form-item label="调整价格" :label-width="formLabelWidth" prop="pNewPrice">
             <el-input v-model="dataInfo.pNewPrice" autocomplete="off"></el-input>
@@ -22,10 +22,10 @@
             <el-input v-model="dataInfo.pReason" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item label="调整日期" :label-width="formLabelWidth" prop="pDate">
-            <el-input v-model="dataInfo.pDate" autocomplete="off"></el-input>
+            <el-input v-model="dataInfo.pDate" autocomplete="off" ></el-input>
           </el-form-item>
           <el-form-item label="操作人员" :label-width="formLabelWidth" prop="pHandler">
-            <el-input v-model="dataInfo.pHandler" autocomplete="off" readonly></el-input>
+            <el-input v-model="dataInfo.pHandler" autocomplete="off"  readonly   ></el-input>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -124,6 +124,7 @@
       data() {
             return {
                 readonly:true,
+                status:true,
                 scope:null,
                 // 标记删除或者添加是否成功
                 addSuccessful: false,
@@ -258,10 +259,47 @@
             })
         },
         methods: {
+            getGood(){
+                this.status = false;
+                if(this.dataInfo.gid.length===13){
+                    this.$axios.get('/staff/getProductInfoByGid',{
+                        params:{
+                            gid:this.dataInfo.gid
+                        }
+                    }).then(res =>{
+                        if(res.data.code === 200){
+                            this.dataInfo.gName= res.data.data.gname;
+                            this.dataInfo.pOldPrice=res.data.data.chargeUnit;
+                        }
+                    }).catch(failResponse =>{
+                        this.$message.error(failResponse.message);
+                    });
+                }else {
+                    this.$message.error("请输入商品代码");
+                }
+
+
+            },
             //新增表单的显示
             addForm(){
               this.dialogFormVisible=true;
               this.dataInfo.pHandler=JSON.parse(sessionStorage.getItem("uid"));
+                let getNowFormatDate = function() {
+                    let date = new Date();
+                    let seperator1 = "-";
+                    let year = date.getFullYear();
+                    let month = date.getMonth() + 1;
+                    let strDate = date.getDate();
+                    if (month >= 1 && month <= 9) {
+                        month = "0" + month;
+                    }
+                    if (strDate >= 0 && strDate <= 9) {
+                        strDate = "0" + strDate;
+                    }
+                    let currentdate = year + seperator1 + month + seperator1 + strDate;
+                    return currentdate;
+                };
+                this.dataInfo.pDate=""+getNowFormatDate();
             },
             // 分页排序整体表格数据
             changeTableSort(column){
@@ -393,6 +431,7 @@
                 });
             },
             addCommodityPricing() {
+
                 //前端测试部分
                 this.$refs.dataInfo.validate()
                     .then(() =>{

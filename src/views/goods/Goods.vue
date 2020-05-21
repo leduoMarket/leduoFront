@@ -78,7 +78,7 @@
         </el-table-column>
         <el-table-column
           prop="chargeUnit"
-          label="计价单位"
+          label="价格"
           width="100">
         </el-table-column>
         <el-table-column
@@ -122,8 +122,8 @@
         reg_gname,
         reg_gcategories,
         reg_address,
-        reg_gchange_unit,
         reg_date,
+        reg_money,
     } from "../login/validator";
     import moment from 'moment';
     export default {
@@ -179,7 +179,7 @@
                         {required:true ,validator: reg_address,  trigger: 'blur'}
                     ],
                     chargeUnit:[
-                        {required:true ,validator: reg_gchange_unit,  trigger: 'blur'}
+                        {required:true ,validator: reg_money,  trigger: 'blur'}
                     ],
                     gDate:[
                         {required:true ,validator: reg_date,  trigger: 'blur'}
