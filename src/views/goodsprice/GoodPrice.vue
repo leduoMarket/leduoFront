@@ -270,12 +270,23 @@
                         if(res.data.code === 200){
                             this.dataInfo.gName= res.data.data.gname;
                             this.dataInfo.pOldPrice=res.data.data.chargeUnit;
+                        }else{
+                            this.$message({
+                                type: 'error',
+                                message: res.data.message
+                            });
+                            this.dataInfo.gName = "";
+                            this.dataInfo.pOldPrice = "";
                         }
                     }).catch(failResponse =>{
                         this.$message.error(failResponse.message);
+                        this.dataInfo.gName = "";
+                        this.dataInfo.pOldPrice = "";
                     });
                 }else {
                     this.$message.error("请输入商品代码");
+                    this.dataInfo.gName = "";
+                    this.dataInfo.pOldPrice = "";
                 }
 
 

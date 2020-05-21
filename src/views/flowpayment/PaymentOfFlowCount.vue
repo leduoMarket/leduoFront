@@ -199,9 +199,33 @@
       created(){
           //前端测试部分
           this.tableData =  [];
-          this.$axios.get("/home/payments").then(res =>{
+          this.$axios.get("/treasure/paymentsList").then(res =>{
               if(res.data.code === 200){
-                  this.tableData = res.data.data;
+                  let item ={
+                      pNumber: '',
+                      pDate: '',
+                      pCategory: '',
+                      pSourceShop: '',
+                      pTradingAmount: '',
+                      pRemainingAmount: ''
+                  };
+                  res.data.data.forEach(value=>{
+                      item.pNumber = value.pnumber;
+                      item.pDate = value.pdate;
+                      item.pCategory = value.pcategory;
+                      item.pSourceShop = value.psourceShop;
+                      item.pTradingAmount = value.ptradingAmount;
+                      item.pRemainingAmount = item.premainningAmount;
+                      this.tableData.push(item);
+                          item={
+                              pNumber: '',
+                              pDate: '',
+                              pCategory: '',
+                              pSourceShop: '',
+                              pTradingAmount: '',
+                              pRemainingAmount: ''
+                          }
+                  })
                   this.tableDataEnd=[];
                   this.tableData.forEach((value)=>{
                       this.tableDataEnd.push(value);
@@ -346,13 +370,13 @@
                 // this.dialogFormVisible = false;
                 this.$refs.form.validate()
                     .then(() => {
-                        this.$axios.post('/home/addPayment', {
-                            pNumber: this.form.pNumber,
-                            pDate: this.form.pDate,
-                            pCategory: this.form.pCategory,
+                        this.$axios.post('/treasure/addPayment', {
+                            pnumber: this.form.pNumber,
+                            pdate: this.form.pDate,
+                            pcategory: this.form.pCategory,
                             psourceShop: this.form.pSourceShop,
-                            ptradingAmount: this.pTradingAmount,
-                            pRemainingAmount: this.pRemainingAmount,
+                            ptradingAmount: this.form.pTradingAmount,
+                            premainningAmount: this.form.pRemainingAmount,
                         }).then(successResponse => {
                             if (successResponse.data.code === 200) {
                                 this.dialogFormVisible = false;
@@ -406,7 +430,7 @@
                     type:'warning'
                 }).then(() =>{
                     //前端测试代码
-                    this.$axios.delete('/home/delpayment?pNumber='+delItem.pNumber)
+                    this.$axios.delete('/treasure/delPayment?pnumber='+delItem.pNumber)
                         .then(successResponse =>{
                             if(successResponse.data.code===200){
                         this.filterTableDataEnd=[];

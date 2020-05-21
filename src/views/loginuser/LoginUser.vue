@@ -122,17 +122,17 @@
             submit(){
                 this.$refs.form.validate()
                     .then(()=>{
-                        if(this.form.epwd1 === this.form.epwd2){
-                            console.log("原始密码"+this.form.epwd1);
-                            console.log("新密码"+this.form.epwd2);
-                            this.$message.info("两次密码一样");
-                            return;
-                        }
                         this.$confirm('此操作将修改你的密码, 是否继续?', '提示', {
                             confirmButtonText: '确定',
                             cancelButtonText: '取消',
                             type: 'warning'
                         }).then(() => {
+                            if(this.form.epwd1 === this.form.epwd2){
+                                console.log("原始密码"+this.form.epwd1);
+                                console.log("新密码"+this.form.epwd2);
+                                this.$message.error("原始密码和新密码一样");
+                                return;
+                            }
                             this.$axios.get('/staff/changePassWd',{
                                 params:{
                                     uid:this.form.eid,
@@ -143,6 +143,11 @@
                                 if(successResponse.data.code === 200){
                                     this.$message({
                                         type: 'success',
+                                        message: successResponse.data.message
+                                    });
+                                }else{
+                                    this.$message({
+                                        type: 'error',
                                         message: successResponse.data.message
                                     });
                                 }

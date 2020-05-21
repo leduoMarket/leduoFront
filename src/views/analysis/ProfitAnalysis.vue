@@ -260,13 +260,10 @@
                     }
                     this.sumData.day=0;
                     for(let i=0;i<length;i++){
-                        lineChartData["day"].proData.push(lineChartData["day"].inData[i]-lineChartData["day"].outData[i]);
-                        console.log("i:"+i+",proData:"+(lineChartData["day"].inData[i]-lineChartData["day"].outData[i]));
-
+                        lineChartData["day"].proData.push(lineChartData["day"].outData[i]-lineChartData["day"].inData[i]);
                         this.sumData.day=this.sumData.day+lineChartData["day"].proData[i];
                     }
                 }
-
                  if(type==="month"){
                      lineChartData[type].dateArr=[];
                      lineChartData[type].inData=[];
@@ -330,7 +327,7 @@
                      lineChartData["month"].proData=[];
                      this.sumData.month=0;
                      for(let i=0;i<length;i++){
-                         let pro = lineChartData["month"].inData[i]-lineChartData["month"].outData[i];
+                         let pro = lineChartData["month"].outData[i] - lineChartData["month"].inData[i];
                          lineChartData["month"].proData.push(pro);
                          this.sumData.month=this.sumData.month+lineChartData["month"].proData[i];
                      }
@@ -386,13 +383,12 @@
                      lineChartData["year"].proData=[];
                      this.sumData.year=0;
                      for(let i=0;i<length;i++){
-                         let pro = lineChartData["year"].inData[i]-lineChartData["year"].outData[i];
+                         let pro = lineChartData["year"].outData[i] - lineChartData["year"].inData[i];
                          lineChartData["year"].proData.push(pro);
                          this.sumData.year=this.sumData.year+lineChartData["year"].proData[i];
                      }
 
                  }
-
             },
 
         }

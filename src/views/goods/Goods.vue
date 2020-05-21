@@ -21,7 +21,7 @@
           <el-form-item label="生产地址" :label-width="formLabelWidth" prop="address">
             <el-input v-model="dataInfo.address" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="计价单位" :label-width="formLabelWidth" prop="chargeUnit">
+          <el-form-item label="价格" :label-width="formLabelWidth" prop="chargeUnit">
             <el-input v-model="dataInfo.chargeUnit" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item label="生产日期" :label-width="formLabelWidth" prop="gDate">

@@ -27,7 +27,7 @@ export default {
                     sessionStorage.removeItem('uid');
                     this.$router.replace({path: '/'});
                 }else{
-                    this.$message.info("退出失败,服务器出错");
+                    this.$message.info("退出失败");
                     sessionStorage.removeItem('user');
                     sessionStorage.removeItem('role');
                     sessionStorage.removeItem('uid');

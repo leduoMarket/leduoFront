@@ -101,7 +101,7 @@
                         textStyle: {
                             color: '#90979c'
                         },
-                        data: ['入库单', '出库单', '总计']
+                        data: ['支出', '收入', '盈利']
                     },
                     calculable: true,
                     xAxis: [{
@@ -173,7 +173,7 @@
                         end: 35
                     }],
                     series: [{
-                        name: '入库单',
+                        name: '支出',
                         type: 'bar',
                         stack: 'total',
                         barMaxWidth: 35,
@@ -197,7 +197,7 @@
                     },
 
                         {
-                            name: '出库单',
+                            name: '收入',
                             type: 'bar',
                             stack: 'total',
                             itemStyle: {
@@ -215,7 +215,7 @@
                             },
                             data: outData
                         }, {
-                            name: '总计',
+                            name: '盈利',
                             type: 'line',
                             stack: 'total',
                             symbolSize: 10,

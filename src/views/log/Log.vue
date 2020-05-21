@@ -27,7 +27,6 @@
           prop="id"
           label="序号"
           width="150"
-
         >
         </el-table-column>
         <el-table-column
@@ -40,6 +39,11 @@
           prop="levelString"
           width="100"
           label="级别">
+          <template scope="scope">
+            <span v-if="scope.row.levelString === level1" style="color:red">{{ scope.row.levelString }}</span>
+            <span v-else-if="scope.row.levelString === level2" style="color: green">{{ scope.row.levelString }}</span>
+            <span v-else style="color: darkorange ">{{ scope.row.levelString }}</span>
+          </template>
         </el-table-column>
         <el-table-column
           prop="createdTime"
@@ -74,6 +78,9 @@
         name: "Log",
         data() {
             return {
+                level1:"ERROR",
+                level2:"INFO",
+                scope:null,
                 options: [{
                     value:'id',
                     label:'序号',
