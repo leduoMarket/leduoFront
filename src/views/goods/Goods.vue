@@ -69,7 +69,7 @@
         <el-table-column
         prop="categories"
         label="商品类别"
-        width="180">
+        width="130">
       </el-table-column>
         <el-table-column
           prop="address"
@@ -86,7 +86,7 @@
           prop="gDate"
           label="生产日期"
           sortable
-          width="180"
+          width="130"
           column-key="date"
           :filters="[{text: '今年', value: '2020-'}, {text: '去年', value: '2019-'}, {text: '本月', value: '2020-05'}, {text: '上月', value: '2020-04'}]"
           :filter-method="filterHandler"

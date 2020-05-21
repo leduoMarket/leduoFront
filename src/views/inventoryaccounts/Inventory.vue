@@ -24,13 +24,13 @@
         <el-table-column
           prop="gid"
           label="商品代码"
-          width="180"
+          width="230"
         >
         </el-table-column>
         <el-table-column
           prop="gName"
           label="商品名称"
-          width="180">
+          width="230">
         </el-table-column>
         <el-table-column
           prop="counts"
@@ -41,8 +41,8 @@
         <el-table-column
           prop="stockAlert"
           label="库存提醒">
-          <template scope="scope">
-            <span v-if="scope.row.stockAlert!==msg" style="color:red">{{ scope.row.stockAlert }}</span>
+          <template slot-scope="scope">
+            <span v-if="scope.row.stockAlert===msg" style="color:red">{{ scope.row.stockAlert }}</span>
             <span v-else style="color: #37B328">{{ scope.row.stockAlert }}</span>
           </template>
         </el-table-column>
@@ -120,7 +120,11 @@
                         item.gid = value.gid;
                         item.gName = value.gname;
                         item.counts = value.counts;
-                        item.stockAlert = value.stockAlert;
+                        if(item.counts<5){
+                            item.stockAlert = this.msg;
+                        }else{
+                            item.stockAlert = value.stockAlert;
+                        }
                         this.tableData.push(item);
                         item = {
                             gid:"",
