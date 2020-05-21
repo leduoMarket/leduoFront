@@ -82,7 +82,7 @@
                     },
                 ],
 
-                lineChartData:lineChartData.day,
+                lineChartData:lineChartData["day"],
                 sumData:{
                     "year" : 0,
                     "month":0,
@@ -98,7 +98,7 @@
                     let item = {
                         "idate":"",
                         "sumin":""
-                    }
+                    };
                     res.data.data.forEach(value=>{
                         item.idate = ""+value.idate;
                         item.sumin = value.sumin;
@@ -112,7 +112,7 @@
                     this.$message({
                         type:'info',
                         message:res.data.message
-                    })
+                    });
                 }
             }).catch( failResponse =>{
                 this.$message({
@@ -158,15 +158,9 @@
             dataProcessing(type) {
 
                 //日期处理函数
-                let getDate = function (str1) {
-                    let str = str1+"";
-                    if(str.length!==10){
-                        return null;
-                    }
+                let getDate = function (str) {
                     let tempDate = new Date();
-                    console.log(str);
                     let list = str.split("-");
-                    console.log(list);
                     tempDate.setFullYear(list[0]);
                     tempDate.setMonth(list[1] - 1);
                     tempDate.setDate(list[2]);
@@ -182,13 +176,14 @@
                 //数据处理函数
                 let dayMinN = DateToNumber(this.iData[0].idate);
                 let dayMaxN = DateToNumber(this.iData[this.iData.length - 1].idate);
-                let day;
-                let dayMin = this.iData[0].idate;
-                let dayMax = this.oData[this.iData.length-1].idate;
-                let length1 = this.iData.length;
-                let length2 = this.oData.length;
-                //找到最大日期和最小日期
-                for (let i = 1; i < length1 - 1; i++) {
+
+                 let day;
+                 let dayMin = this.iData[0].idate;
+                 let dayMax = this.iData[this.iData.length-1].idate;
+                 let length1 = this.iData.length;
+                 let length2 = this.oData.length;
+                 //找到最大日期和最小日期
+                for (let i = 0; i < length1; i++) {
                     day = DateToNumber(this.iData[i].idate);
                     if (day < dayMinN) {
                         dayMin = this.iData[i].idate
@@ -217,6 +212,7 @@
                     lineChartData[type].outData=[];
                     lineChartData[type].proData=[];
 
+
                     let date1 = getDate(day1);
                     let date2 = getDate(day2);
                     if (date1 > date2) {
@@ -224,7 +220,6 @@
                         date1 = date2;
                         date2 = tempDate;
                     }
-                    date1.setDate(date1.getDate() + 1);
                     let i = 0;
                     while (!(date1.getFullYear() === date2.getFullYear()
                         && date1.getMonth() === date2.getMonth() && date1.getDate() === date2.getDate())) {
@@ -241,13 +236,11 @@
                         i++;
                         date1.setDate(date1.getDate() + 1);
                     }
-                    lineChartData["day"].dateArr.splice(0,0,day1);
-                    lineChartData["day"].dateArr.push(day2);
-
-
-                    lineChartData["day"].inData = [];
-                    lineChartData["day"].outData = [];
-                    lineChartData["day"].proData = [];
+                    if(dayMin === dayMax){
+                        lineChartData["day"].dateArr.push(dayMin);
+                    }else {
+                        lineChartData["day"].dateArr.push(day2);
+                    }
 
                     let length = lineChartData["day"].dateArr.length;
                     for(let i=0 ;i<length ;i++){
@@ -268,6 +261,8 @@
                     this.sumData.day=0;
                     for(let i=0;i<length;i++){
                         lineChartData["day"].proData.push(lineChartData["day"].inData[i]-lineChartData["day"].outData[i]);
+                        console.log("i:"+i+",proData:"+(lineChartData["day"].inData[i]-lineChartData["day"].outData[i]));
+
                         this.sumData.day=this.sumData.day+lineChartData["day"].proData[i];
                     }
                 }
@@ -396,8 +391,6 @@
                          this.sumData.year=this.sumData.year+lineChartData["year"].proData[i];
                      }
 
-
-
                  }
 
             },
@@ -420,6 +413,7 @@
     width: 100%;
     margin-left: 5%;
     height: calc(100vh - 84px);
+    flex: auto;
   }
 </style>
 

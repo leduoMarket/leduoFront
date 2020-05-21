@@ -121,7 +121,7 @@
             },
             submit(){
                 this.$refs.form.validate()
-                    .then(success =>{
+                    .then(()=>{
                         if(this.form.epwd1 === this.form.epwd2){
                             console.log("原始密码"+this.form.epwd1);
                             console.log("新密码"+this.form.epwd2);
@@ -152,13 +152,13 @@
                                     message: failedResponse.message
                                 });
                             } );
-                        }).catch((failure) => {
+                        }).catch(() => {
                             this.$message({
                                 type: 'info',
                                 message: '已取消修改'
                             });
                         });
-                    }).catch((failure) =>{
+                    }).catch(() =>{
                         this.$message.error("密码格式不对");
                 });
             }

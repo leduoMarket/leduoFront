@@ -41,6 +41,10 @@
         <el-table-column
           prop="stockAlert"
           label="库存提醒">
+          <template scope="scope">
+            <span v-if="scope.row.stockAlert!==msg" style="color:red">{{ scope.row.stockAlert }}</span>
+            <span v-else style="color: #37B328">{{ scope.row.stockAlert }}</span>
+          </template>
         </el-table-column>
       </el-table>
       <el-pagination
@@ -62,6 +66,8 @@
         name: "Inventory",
         data() {
             return {
+                scope:null,
+                msg:"库存不足",
                 tableData: [],
                 pageSize:5,  //分页数量
                 currentPage:1, //初始页
