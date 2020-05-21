@@ -39,7 +39,7 @@
           prop="levelString"
           width="100"
           label="级别">
-          <template scope="scope">
+          <template slot-scope="scope">
             <span v-if="scope.row.levelString === level1" style="color:red">{{ scope.row.levelString }}</span>
             <span v-else-if="scope.row.levelString === level2" style="color: green">{{ scope.row.levelString }}</span>
             <span v-else style="color: darkorange ">{{ scope.row.levelString }}</span>
